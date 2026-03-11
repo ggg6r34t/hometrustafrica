@@ -1,65 +1,61 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Target, Eye } from "lucide-react";
 import SectionContainer from "@/components/ui/section-container";
-import {
-  staggerContainer,
-  fadeInUp,
-  viewportOptions,
-} from "@/lib/animations";
+import { fadeInUp, viewportOptions } from "@/lib/animations";
 
 export default function MissionVision() {
   return (
     <SectionContainer
       id="mission-vision"
-      className="bg-background py-16 md:py-24"
+      className="bg-[#f7f8f4]"
     >
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-        {/* Mission */}
+      <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
         <motion.div
+          className="lg:col-span-4"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOptions}
         >
-          <Card className="p-8 md:p-10 h-full border-primary/20 bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-              <Target className="w-8 h-8 text-primary" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-              Our Mission
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed font-light">
-              To provide safe, transparent, and trusted project management services
-              that enable diaspora members to build back home without fear. We
-              eliminate fraud risk through verified partners, legal protection, and
-              complete transparency.
-            </p>
-          </Card>
+          <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+            What Guides Us
+          </p>
+          <h2 className="mt-5 max-w-md">
+            The platform is being shaped around a few clear operating principles.
+          </h2>
         </motion.div>
 
-        {/* Vision */}
         <motion.div
+          className="lg:col-span-8"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOptions}
         >
-          <Card className="p-8 md:p-10 h-full border-primary/20 bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-              <Eye className="w-8 h-8 text-primary" />
+          <div className="grid gap-px overflow-hidden rounded-[1.75rem] border border-border/60 bg-border/60 md:grid-cols-3">
+            <div className="bg-white p-8">
+              <h3 className="text-2xl">Trust must be designed</h3>
+              <p className="mt-4 text-base leading-7 text-muted-foreground">
+                Serious projects need more than good intentions. They need
+                verification, controls, and clearer accountability.
+              </p>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-              Our Vision
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed font-light">
-              To become the most trusted platform connecting diaspora communities
-              with Africa, transforming how projects are managed and ensuring every
-              investment contributes to sustainable development and community growth.
-            </p>
-          </Card>
+            <div className="bg-[#f8f8f4] p-8">
+              <h3 className="text-2xl">Visibility must be ongoing</h3>
+              <p className="mt-4 text-base leading-7 text-muted-foreground">
+                Reporting should not appear only when things go wrong. It should
+                be part of how execution is managed from the beginning.
+              </p>
+            </div>
+            <div className="bg-white p-8">
+              <h3 className="text-2xl">Coordination must be accountable</h3>
+              <p className="mt-4 text-base leading-7 text-muted-foreground">
+                Local execution should feel disciplined enough for families,
+                founders, partners, and future institutional relationships.
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </SectionContainer>

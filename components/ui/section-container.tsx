@@ -23,10 +23,10 @@ export default function SectionContainer({
   return (
     <section
       id={id}
-      className={`py-24 md:py-32 ${className}`}
+      className={`py-20 md:py-24 ${className}`}
       aria-labelledby={ariaLabelledby}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">{children}</div>
     </section>
   );
 }

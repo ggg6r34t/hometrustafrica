@@ -37,7 +37,15 @@ export default function Navbar() {
       return;
     }
 
-    const sections = ["problem", "solution", "how-it-works", "faq", "cta"];
+    const sections = [
+      "problem",
+      "solution",
+      "how-it-works",
+      "trust",
+      "project-types",
+      "faq",
+      "contact-cta",
+    ];
     const observerOptions = {
       root: null,
       rootMargin: "-20% 0px -70% 0px",
@@ -124,8 +132,8 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: "#problem", label: "Problem", id: "problem" },
-    { href: "#solution", label: "Solution", id: "solution" },
+    { href: "#problem", label: "Why We Exist", id: "problem" },
+    { href: "#solution", label: "Services", id: "solution" },
     {
       href: "#how-it-works",
       label: "How It Works",
@@ -150,14 +158,14 @@ export default function Navbar() {
       </Link>
       <nav
         ref={navRef}
-        className={`sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 transition-all duration-300 ${
-          scrolled ? "shadow-sm bg-background/95" : ""
+        className={`sticky top-0 z-50 border-b border-border/40 bg-background/82 backdrop-blur-md transition-all duration-300 ${
+          scrolled ? "bg-background/96" : ""
         }`}
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="flex h-[4.5rem] items-center justify-between">
             {/* Logo with Trust Indicator */}
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -166,12 +174,12 @@ export default function Navbar() {
             >
               <Link
                 href="/"
-                className="font-bold text-xl text-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                className="flex items-center gap-2 text-[1.15rem] font-bold text-foreground transition-colors duration-200 hover:text-primary"
                 aria-label="HomeTrust Africa Home"
               >
                 <div className="flex items-center gap-2">
-                  <Shield className="w-7 h-7 md:w-8 md:h-8 text-primary" />
-                  <span className="relative">
+                  <Shield className="h-6 w-6 text-primary md:h-7 md:w-7" />
+                  <span className="relative font-heading">
                     HomeTrust
                     <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary/30 scale-x-0 hover:scale-x-100 transition-transform duration-300 origin-left" />
                   </span>
@@ -200,10 +208,10 @@ export default function Navbar() {
                     >
                       <Link
                         href={link.href}
-                        className={`relative px-4 py-2 rounded-md transition-smooth text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 group ${
+                        className={`group relative rounded-md px-3 py-2 text-sm transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                           isActive
-                            ? "text-muted-foreground bg-muted/30"
-                            : "text-foreground hover:text-muted-foreground hover:bg-muted/50"
+                            ? "bg-[#eef2eb] text-foreground"
+                            : "text-foreground/78 hover:bg-[#f3f4ef] hover:text-foreground"
                         }`}
                         aria-current={isActive ? "page" : undefined}
                         aria-label={`${link.label} - go to ${link.href}`}
@@ -211,7 +219,7 @@ export default function Navbar() {
                       >
                         <span className="relative z-10">{link.label}</span>
                         <span
-                          className={`absolute bottom-0 left-0 right-0 h-0.5 bg-primary transition-transform duration-300 origin-left rounded-full ${
+                          className={`absolute bottom-0 left-3 right-3 h-px bg-primary/70 transition-transform duration-300 origin-left ${
                             isActive
                               ? "scale-x-100"
                               : "scale-x-0 group-hover:scale-x-100"
@@ -228,21 +236,21 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: idx * 0.05 }}
                   >
-                    <Link
-                      href={link.href}
-                      onClick={(e) => scrollToSection(e, link.href.slice(1))}
-                      className={`relative px-4 py-2 rounded-md transition-smooth text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 group ${
-                        isActive
-                          ? "text-muted-foreground bg-muted/30"
-                          : "text-foreground hover:text-muted-foreground hover:bg-muted/50"
-                      }`}
+                      <Link
+                        href={link.href}
+                        onClick={(e) => scrollToSection(e, link.href.slice(1))}
+                        className={`group relative rounded-md px-3 py-2 text-sm transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          isActive
+                            ? "bg-[#eef2eb] text-foreground"
+                            : "text-foreground/78 hover:bg-[#f3f4ef] hover:text-foreground"
+                        }`}
                       aria-current={isActive ? "page" : undefined}
                       role="link"
                       aria-label={`${link.label} - go to ${link.href}`}
                     >
                       <span className="relative z-10">{link.label}</span>
                       <span
-                        className={`absolute bottom-0 left-0 right-0 h-0.5 bg-primary transition-transform duration-300 origin-left rounded-full ${
+                        className={`absolute bottom-0 left-3 right-3 h-px bg-primary/70 transition-transform duration-300 origin-left ${
                           isActive
                             ? "scale-x-100"
                             : "scale-x-0 group-hover:scale-x-100"
@@ -266,7 +274,7 @@ export default function Navbar() {
                 href="/contact"
                 aria-label="Start a project - go to contact page"
               >
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200 font-medium">
+                <Button className="px-5 text-sm font-medium shadow-none">
                   Start a Project
                 </Button>
               </Link>
@@ -275,7 +283,7 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-foreground transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg relative w-6 h-6"
+                className="relative h-6 w-6 rounded-lg p-2 text-foreground transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
@@ -333,7 +341,7 @@ export default function Navbar() {
                 style={{
                   overflow: "hidden",
                 }}
-                className="md:hidden absolute left-0 right-0 top-full bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg z-50"
+                className="absolute left-0 right-0 top-full z-50 border-b border-border/40 bg-background/96 backdrop-blur-md md:hidden"
                 role="navigation"
                 aria-label="Mobile menu"
               >
@@ -345,7 +353,7 @@ export default function Navbar() {
                     delay: 0.2,
                     duration: 0.2,
                   }}
-                  className="pb-4 space-y-2 px-4 sm:px-6 lg:px-8"
+                  className="space-y-2 px-6 pb-5"
                 >
                   {navLinks.map((item, index) => {
                     const isActive = item.isLink
@@ -366,8 +374,8 @@ export default function Navbar() {
                             href={item.href}
                             className={`block px-2 py-2 rounded transition-colors ${
                               isActive
-                                ? "text-foreground bg-muted font-medium"
-                                : "text-foreground hover:bg-muted"
+                                ? "bg-[#eef2eb] font-medium text-foreground"
+                                : "text-foreground/80 hover:bg-[#f3f4ef] hover:text-foreground"
                             }`}
                             onClick={() => setIsOpen(false)}
                             aria-current={isActive ? "page" : undefined}
@@ -391,9 +399,9 @@ export default function Navbar() {
                           href={item.href}
                           onClick={(e) => scrollToSection(e, item.id)}
                           className={`block px-2 py-2 rounded transition-colors ${
-                            isActive
-                              ? "text-foreground bg-muted font-medium"
-                              : "text-foreground hover:bg-muted"
+                              isActive
+                                ? "bg-[#eef2eb] font-medium text-foreground"
+                                : "text-foreground/80 hover:bg-[#f3f4ef] hover:text-foreground"
                           }`}
                           aria-current={isActive ? "page" : undefined}
                           role="link"
@@ -417,7 +425,7 @@ export default function Navbar() {
                       onClick={() => setIsOpen(false)}
                       aria-label="Start a project - go to contact page"
                     >
-                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Button className="w-full shadow-none">
                         Start a Project
                       </Button>
                     </Link>

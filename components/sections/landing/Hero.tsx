@@ -1,111 +1,86 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-
-import HeroCTAButtons from "@/components/ui/hero-cta-buttons";
-import HeroVisual from "@/components/ui/hero-visual";
-import { staggerContainerSlow, fadeInUp } from "@/lib/animations";
-import TrustBadge from "@/components/ui/trust-badge";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-/**
- * Hero Section Component
- *
- * Enhanced centered hero section with improved visual hierarchy,
- * social proof, and polished animations
- */
+import { Button } from "@/components/ui/button";
+import HeroVisual from "@/components/ui/hero-visual";
+import { fadeInUp, staggerContainerSlow } from "@/lib/animations";
+
 export default function Hero() {
   const router = useRouter();
+
   const handleSecondaryClick = () => {
     const element = document.getElementById("how-it-works");
     if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
   return (
     <section
-      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-24 pb-32"
+      className="relative overflow-hidden bg-[#081018] pt-0 text-white"
       aria-label="Hero section"
     >
-      {/* Enhanced background with layered gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/3 -z-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(35,178,69,0.03),transparent_50%)] -z-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(35,178,69,0.02),transparent_70%)] -z-10" />
-
-      <motion.div
-        id="main-content"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        variants={staggerContainerSlow}
-        initial="hidden"
-        animate="visible"
-      >
-        <TrustBadge text="Your Trust, Our Priority" />
-
-        {/* Main heading - Smooth entry animation with fade-up and slight scale */}
-        <motion.h1
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-foreground leading-[1.1] tracking-tight"
-          variants={fadeInUp}
-        >
-          <motion.span
-            className="block mb-2"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{
-              delay: 0.3,
-              duration: 0.8,
-              ease: [0.6, -0.05, 0.01, 0.99],
-            }}
+      <div id="main-content" className="relative">
+        <HeroVisual>
+          <motion.div
+            className="mx-auto flex min-h-[78vh] w-full max-w-7xl items-end px-6 pb-12 pt-20 lg:px-8 lg:pb-16 lg:pt-28"
+            variants={staggerContainerSlow}
+            initial="hidden"
+            animate="visible"
           >
-            Building Back Home,
-          </motion.span>
-          <motion.span
-            className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{
-              delay: 0.5,
-              duration: 0.8,
-              ease: [0.6, -0.05, 0.01, 0.99],
-            }}
-          >
-            Without the Fear.
-          </motion.span>
-        </motion.h1>
+            <div className="max-w-4xl">
+              <motion.h1
+                variants={fadeInUp}
+                className="max-w-4xl text-[3.35rem] leading-[0.98] tracking-[-0.05em] text-white md:text-[4.8rem] lg:text-[5.4rem]"
+              >
+                Building Back Home, Without the Fear.
+              </motion.h1>
 
-        {/* Subheading - Better readability with emphasis */}
-        <motion.p
-          className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-5xl mx-auto leading-relaxed font-light"
-          variants={fadeInUp}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-        >
-          We help Africans in the diaspora build and manage their homes,
-          projects, and businesses back home with{" "}
-          <strong className="text-foreground font-medium">
-            full transparency
-          </strong>{" "}
-          and{" "}
-          <strong className="text-foreground font-medium">
-            zero tolerance for fraud
-          </strong>
-          .
-        </motion.p>
+              <motion.p
+                variants={fadeInUp}
+                className="mt-6 max-w-2xl text-lg leading-8 text-white/78 md:text-xl"
+              >
+                We help Africans in the diaspora manage projects, investments,
+                and operations back home with clear oversight, verified local
+                execution, and transparent reporting.
+              </motion.p>
 
-        <HeroCTAButtons
-          onPrimaryClick={() => {
-            router.push("/contact");
-          }}
-          onSecondaryClick={handleSecondaryClick}
-        />
+              <motion.div
+                variants={fadeInUp}
+                className="mt-8 flex flex-col gap-4 sm:flex-row"
+              >
+                <Button
+                  size="lg"
+                  className="group px-8"
+                  onClick={() => router.push("/contact")}
+                >
+                  Start a Project
+                  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/18 bg-white/6 px-8 text-white hover:bg-white/12 hover:text-white"
+                  onClick={handleSecondaryClick}
+                >
+                  See How It Works
+                </Button>
+              </motion.div>
 
-        <HeroVisual />
-      </motion.div>
+              <motion.div
+                variants={fadeInUp}
+                className="mt-8 inline-flex items-center gap-2 text-sm text-white/68"
+              >
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                Verified operators. Structured milestones. Reporting you can review from anywhere.
+              </motion.div>
+            </div>
+          </motion.div>
+        </HeroVisual>
+      </div>
     </section>
   );
 }

@@ -4,25 +4,25 @@ import { Shield, CheckCircle2, Award, Globe } from "lucide-react";
 
 export default function TrustBar() {
   const trustItems = [
-    { icon: Shield, text: "100% Fraud Protection" },
-    { icon: CheckCircle2, text: "Verified Partners" },
-    { icon: Award, text: "Legal Compliance" },
-    { icon: Globe, text: "7+ Countries" },
+    { icon: Shield, text: "Structured fraud prevention" },
+    { icon: CheckCircle2, text: "Verified partners" },
+    { icon: Award, text: "Transparent reporting" },
+    { icon: Globe, text: "Diaspora-first operations" },
   ];
 
   return (
-    <section className="py-4 md:py-6 bg-primary/5 border-b border-border/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
+    <section className="border-b border-border/50 bg-[#f7f8f4] py-3">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-center gap-5 md:gap-10">
           {trustItems.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
                 key={index}
-                className="flex items-center gap-2 text-sm md:text-base"
+                className="flex items-center gap-2 text-sm"
               >
-                <Icon className="w-5 h-5 text-primary shrink-0" />
-                <span className="font-medium text-foreground">{item.text}</span>
+                <Icon className="h-4 w-4 shrink-0 text-primary" />
+                <span className="text-foreground/78">{item.text}</span>
               </div>
             );
           })}

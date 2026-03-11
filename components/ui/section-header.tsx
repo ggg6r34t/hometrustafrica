@@ -8,6 +8,8 @@ interface SectionHeaderProps {
   description: string
   titleId?: string
   className?: string
+  eyebrow?: string
+  align?: "left" | "center"
 }
 
 /**
@@ -20,22 +22,29 @@ export default function SectionHeader({
   description,
   titleId,
   className = "",
+  eyebrow,
+  align = "center",
 }: SectionHeaderProps) {
   return (
     <motion.div
-      className={`text-center mb-16 md:mb-20 ${className}`}
+      className={`${align === "center" ? "text-center" : "text-left"} mb-16 md:mb-20 ${className}`}
       variants={fadeInUp}
       initial="hidden"
       whileInView="visible"
       viewport={viewportOptions}
     >
+      {eyebrow ? <div className="eyebrow mb-5">{eyebrow}</div> : null}
       <h2
         id={titleId}
-        className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground"
+        className="mb-6 text-4xl font-semibold text-foreground md:text-5xl"
       >
         {title}
       </h2>
-      <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+      <p
+        className={`text-lg leading-relaxed text-muted-foreground md:text-xl ${
+          align === "center" ? "mx-auto max-w-3xl" : "max-w-3xl"
+        }`}
+      >
         {description}
       </p>
     </motion.div>

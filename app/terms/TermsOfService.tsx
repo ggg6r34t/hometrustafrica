@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  FileText,
-  Scale,
-  AlertCircle,
-  CheckCircle2,
-  XCircle,
-  Calendar,
-  Shield,
-} from "lucide-react";
 import { motion } from "framer-motion";
 
 import { Card } from "@/components/ui/card";
@@ -18,33 +9,26 @@ export default function TermsOfService() {
   const lastUpdated = "November 2025";
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 -z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(35,178,69,0.08),transparent_50%)] -z-10" />
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="pt-24 pb-10 md:pt-32 md:pb-12">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
             viewport={viewportOptions}
-            className="text-center"
+            className="max-w-4xl"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
-              <Scale className="w-8 h-8 text-primary" />
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl text-foreground">
               Terms of Service
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
               Please read these terms carefully before using our services. By
               using HomeTrust Africa, you agree to these terms.
             </p>
-            <div className="flex items-center justify-center gap-2 mt-6 text-sm text-muted-foreground">
-              <Calendar className="w-4 h-4" />
-              <span>Last updated: {lastUpdated}</span>
+            <div className="mt-6 text-sm text-muted-foreground">
+              Last updated: {lastUpdated}
             </div>
           </motion.div>
         </div>
@@ -52,8 +36,8 @@ export default function TermsOfService() {
 
       {/* Content Section */}
       <section className="py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-none">
             {/* Introduction */}
             <motion.div
               variants={fadeInUp}
@@ -62,7 +46,7 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <Card className="p-8 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-8 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   Welcome to HomeTrust Africa. These Terms of Service ("Terms")
                   govern your access to and use of our website, services, and
@@ -85,13 +69,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <CheckCircle2 className="w-6 h-6 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Acceptance of Terms
-                </h2>
-              </div>
-              <Card className="p-6 border border-border/50 bg-card">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
+                Acceptance of Terms
+              </h2>
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   By creating an account, submitting a project inquiry, or using
                   any of our Services, you acknowledge that you have read,
@@ -110,13 +91,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <FileText className="w-6 h-6 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Description of Services
-                </h2>
-              </div>
-              <Card className="p-6 border border-border/50 bg-card">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
+                Description of Services
+              </h2>
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   HomeTrust Africa provides project management services for
                   Africans in the diaspora who wish to build, invest, or manage
@@ -148,10 +126,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 User Responsibilities
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   You agree to:
                 </p>
@@ -197,10 +175,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Project Management and Fees
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">Service Fees:</strong> Our
                   service fees are disclosed during the project consultation
@@ -232,13 +210,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <AlertCircle className="w-6 h-6 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Limitation of Liability
-                </h2>
-              </div>
-              <Card className="p-6 border border-border/50 bg-card">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
+                Limitation of Liability
+              </h2>
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   To the maximum extent permitted by law:
                 </p>
@@ -278,10 +253,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Disclaimers
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">
                     Service Availability:
@@ -315,10 +290,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Intellectual Property
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   All content, features, and functionality of the Services,
                   including but not limited to text, graphics, logos, icons,
@@ -342,13 +317,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <XCircle className="w-6 h-6 text-primary" />
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Termination
-                </h2>
-              </div>
-              <Card className="p-6 border border-border/50 bg-card">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
+                Termination
+              </h2>
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We may terminate or suspend your access to the Services
                   immediately, without prior notice, for any reason, including
@@ -372,10 +344,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Dispute Resolution
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">
                     Informal Resolution:
@@ -414,10 +386,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Changes to Terms
               </h2>
-              <Card className="p-6 border border-border/50 bg-card">
+              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   We reserve the right to modify these Terms at any time. We
                   will notify you of any material changes by posting the new
@@ -437,10 +409,10 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Contact Information
               </h2>
-              <Card className="p-6 border border-primary/20 bg-primary/5">
+              <Card className="rounded-[1.5rem] border-0 bg-[#f8f8f4] p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   If you have any questions about these Terms of Service, please
                   contact us:
@@ -471,17 +443,9 @@ export default function TermsOfService() {
             </motion.div>
 
             {/* Acknowledgment */}
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOptions}
-              className="mb-12"
-            >
-              <Card className="p-6 border border-primary/20 bg-primary/5">
-                <div className="flex items-start gap-4">
-                  <Shield className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <div>
+            <div className="mb-12">
+              <Card className="rounded-[1.5rem] border-0 bg-[#f8f8f4] p-6 shadow-none">
+                <div>
                     <p className="text-foreground font-semibold mb-2">
                       By using HomeTrust Africa Services
                     </p>
@@ -490,10 +454,9 @@ export default function TermsOfService() {
                       to be bound by these Terms of Service and our Privacy
                       Policy. Thank you for choosing HomeTrust Africa.
                     </p>
-                  </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

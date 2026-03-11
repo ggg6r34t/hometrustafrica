@@ -69,7 +69,7 @@ export default function NewsletterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mb-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mb-2">
         <FormField
           control={form.control}
           name="email"
@@ -85,7 +85,7 @@ export default function NewsletterForm() {
                     type="email"
                     placeholder="your@email.com"
                     disabled={isSubmitting || isSuccess}
-                    className="h-10 bg-background/10 border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary"
+                    className="h-10 border-white/14 bg-transparent text-white placeholder:text-white/36 focus:border-primary"
                     {...field}
                   />
                 </FormControl>
@@ -93,7 +93,7 @@ export default function NewsletterForm() {
                   type="submit"
                   size="sm"
                   disabled={isSubmitting || isSuccess}
-                  className="h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="h-9 px-4 shadow-none"
                   aria-label="Subscribe to newsletter"
                 >
                   {isSuccess ? (
@@ -121,7 +121,7 @@ export default function NewsletterForm() {
           <motion.p
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs text-destructive mt-2 flex items-center gap-1"
+            className="mt-2 flex items-center gap-1 text-xs text-[#ffb4a8]"
             role="alert"
           >
             <AlertCircle className="w-3 h-3" />
@@ -134,7 +134,7 @@ export default function NewsletterForm() {
           <motion.p
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs text-primary mt-2 flex items-center gap-1"
+            className="mt-2 flex items-center gap-1 text-xs text-primary"
           >
             <CheckCircle2 size={12} />
             Subscribed successfully!

@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -34,7 +33,6 @@ import {
   ArrowRight,
   CheckCircle2,
   AlertCircle,
-  Shield,
   Building2,
   Home,
   Briefcase,
@@ -167,23 +165,54 @@ export default function ContactForm() {
   return (
     <SectionContainer
       id="contact"
-      className="bg-background py-16 md:py-24"
+      className="bg-white pt-2 md:pt-4"
       ariaLabelledby="contact-heading"
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Contact Form */}
+      <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+        <motion.div
+          className="lg:col-span-4"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          <div className="border-t border-border/60 pt-6">
+            <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+              Before you submit
+            </p>
+            <h2 id="contact-heading" className="mt-5 max-w-sm">
+              A clear brief helps.
+            </h2>
+            <div className="mt-6 space-y-6">
+              <div>
+                <h3 className="text-xl">Include</h3>
+                <p className="mt-3 max-w-sm text-base text-muted-foreground">
+                  Project type, location, current stage, and the support you
+                  need on the ground.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl">Next</h3>
+                <p className="mt-3 max-w-sm text-base text-muted-foreground">
+                  We review the enquiry and reply with the next step.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOptions}
-          className="lg:col-span-3"
+          className="lg:col-span-8"
         >
-          <Card className="rounded-2xl border border-primary/20 bg-card/50 backdrop-blur-md p-8 md:p-12 shadow-xl hover:shadow-2xl transition-all duration-500 group">
+          <div className="pt-6 md:pt-8">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
+                className="space-y-5"
               >
                 {/* Name Fields */}
                 <motion.div
@@ -202,7 +231,7 @@ export default function ContactForm() {
                           <Input
                             placeholder="John"
                             disabled={isPending}
-                            className="h-11 transition-all duration-200"
+                            className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
@@ -222,7 +251,7 @@ export default function ContactForm() {
                           <Input
                             placeholder="Doe"
                             disabled={isPending}
-                            className="h-11 transition-all duration-200"
+                            className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
@@ -240,15 +269,14 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Email Address{" "}
-                          <span className="text-destructive">*</span>
+                          Email <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
                             type="email"
                             placeholder="john.doe@example.com"
                             disabled={isPending}
-                            className="h-11 transition-all duration-200"
+                            className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
@@ -269,8 +297,7 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Your Country{" "}
-                          <span className="text-destructive">*</span>
+                          Country <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -278,7 +305,7 @@ export default function ContactForm() {
                           disabled={isPending}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full h-11">
+                            <SelectTrigger className="h-12 w-full rounded-xl border-border/70 bg-white shadow-none">
                               <SelectValue placeholder="Select your country" />
                             </SelectTrigger>
                           </FormControl>
@@ -335,7 +362,7 @@ export default function ContactForm() {
                           disabled={isPending}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full h-11">
+                            <SelectTrigger className="h-12 w-full rounded-xl border-border/70 bg-white shadow-none">
                               <SelectValue placeholder="Select project type" />
                             </SelectTrigger>
                           </FormControl>
@@ -374,9 +401,9 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Phone Number{" "}
+                          Phone{" "}
                           <span className="text-muted-foreground font-normal text-xs">
-                            (Optional)
+                            Optional
                           </span>
                         </FormLabel>
                         <FormControl>
@@ -384,7 +411,7 @@ export default function ContactForm() {
                             type="tel"
                             placeholder="+1 (234) 567-8900"
                             disabled={isPending}
-                            className="h-11 transition-all duration-200"
+                            className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
@@ -402,15 +429,15 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Tell Us About Your Project{" "}
+                          Project Brief{" "}
                           <span className="text-destructive">*</span>
                         </FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Share details about your project, timeline, budget, or any questions you have..."
+                            placeholder="Share the key details of your project."
                             rows={6}
                             disabled={isPending}
-                            className="resize-none transition-all duration-200"
+                            className="min-h-40 rounded-2xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
@@ -423,10 +450,9 @@ export default function ContactForm() {
                 {/* Privacy Notice */}
                 <motion.div
                   variants={staggerItem}
-                  className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg border border-border/50"
+                  className="pt-5"
                 >
-                  <Shield className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                  <p className="text-sm text-muted-foreground">
+                  <p className="max-w-2xl text-sm text-muted-foreground">
                     By submitting this form, you agree to our{" "}
                     <Link
                       href="/privacy"
@@ -434,8 +460,7 @@ export default function ContactForm() {
                     >
                       Privacy Policy
                     </Link>
-                    . Your information is secure and will only be used to
-                    respond to your inquiry.
+                    .
                   </p>
                 </motion.div>
 
@@ -446,7 +471,7 @@ export default function ContactForm() {
                     animate={{ opacity: 1, y: 0 }}
                     variants={staggerItem}
                     role="alert"
-                    className="rounded-lg p-4 flex items-start gap-3 border bg-destructive/10 text-destructive border-destructive/20"
+                    className="flex items-start gap-3 rounded-2xl border border-destructive/20 bg-destructive/10 p-4 text-destructive"
                   >
                     <AlertCircle
                       className="w-5 h-5 shrink-0 mt-0.5"
@@ -467,25 +492,24 @@ export default function ContactForm() {
                     animate={{ opacity: 1, y: 0 }}
                     variants={staggerItem}
                     role="status"
-                    className="rounded-lg p-4 flex items-start gap-3 border bg-primary/10 text-primary border-primary/20"
+                    className="flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-4 text-primary"
                   >
                     <CheckCircle2
                       className="w-5 h-5 shrink-0 mt-0.5"
                       aria-hidden="true"
                     />
                     <p className="text-sm font-medium leading-relaxed">
-                      Thank you! We've received your message and will contact
-                      you within 24 hours.
+                      Thank you. Your brief has been received.
                     </p>
                   </motion.div>
                 )}
 
                 {/* Submit Button */}
-                <motion.div variants={staggerItem} className="pt-2">
+                <motion.div variants={staggerItem} className="pt-1">
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group"
+                    className="group w-full rounded-full px-8 py-6 text-base font-semibold shadow-none disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
                     disabled={isPending}
                   >
                     {isPending ? (
@@ -503,7 +527,7 @@ export default function ContactForm() {
                       </span>
                     ) : (
                       <>
-                        Start Your Project Journey
+                        Submit Brief
                         <ArrowRight
                           className="ml-2 group-hover:translate-x-1 transition-transform duration-300 inline-block"
                           size={18}
@@ -515,7 +539,7 @@ export default function ContactForm() {
                 </motion.div>
               </form>
             </Form>
-          </Card>
+          </div>
         </motion.div>
       </div>
     </SectionContainer>

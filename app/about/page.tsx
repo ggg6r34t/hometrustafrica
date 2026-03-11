@@ -23,7 +23,7 @@ export const metadata: Metadata = {
  */
 export default function AboutPage() {
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-white">
       <AboutHero />
       <MissionVision />
       <OurStory />

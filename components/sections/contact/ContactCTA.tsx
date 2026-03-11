@@ -1,70 +1,53 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { fadeInUp, viewportOptions } from "@/lib/animations";
 import { motion } from "framer-motion";
-import SectionContainer from "../../ui/section-container";
+import { ArrowRight } from "lucide-react";
 
-/**
- * CTA Section Component
- *
- * Full-width call-to-action section with gradient button
- * TODO: Add newsletter signup option (optional)
- */
+import { Button } from "@/components/ui/button";
+import SectionContainer from "../../ui/section-container";
+import { fadeInUp, viewportOptions } from "@/lib/animations";
+
 export default function ContactCTA() {
   return (
     <SectionContainer
       id="contact-cta"
-      className="py-24 md:py-32 bg-gradient-to-br from-primary/5 via-background to-primary/3 relative overflow-hidden"
+      className="bg-[#dfeee7]"
       aria-labelledby="contact-cta-heading"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--primary)_0%,_transparent_70%)] opacity-[0.03] -z-10" />
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOptions}
-          className="text-center"
-        >
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewportOptions}
+        className="border-t border-[#c8ddd1] pt-10 md:pt-14"
+      >
+        <div className="max-w-4xl">
+          <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+            Start the conversation
+          </p>
           <h2
             id="contact-cta-heading"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-foreground leading-tight"
+            className="mt-5 max-w-3xl text-foreground"
           >
-            Ready to Build Back Home?
+            Start your project with trusted oversight.
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-            Stop worrying about fraud. Start building with confidence. Let's
-            turn your vision into reality.
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            Tell us what you are building, where it is happening, and the
+            support you need on the ground.
           </p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewportOptions}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          <Button
+            asChild
+            size="lg"
+            className="group mt-8 rounded-full px-6 shadow-none"
           >
-            <Button
-              asChild
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 group px-10 py-7 text-base md:text-lg font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 rounded-xl"
-            >
-              <Link href="/contact">
-                Get Started
-                <ArrowRight
-                  className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
-                  size={20}
-                  aria-hidden="true"
-                />
-              </Link>
-            </Button>
-          </motion.div>
-        </motion.div>
-      </div>
+            <Link href="/contact">
+              Start Your Project
+              <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
+      </motion.div>
     </SectionContainer>
   );
 }

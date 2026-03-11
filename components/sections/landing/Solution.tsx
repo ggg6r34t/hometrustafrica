@@ -1,77 +1,105 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { CheckCircle2, Users, FileCheck, Shield } from "lucide-react"
-import SectionContainer from "@/components/ui/section-container"
-import SectionHeader from "@/components/ui/section-header"
-import FeatureCard from "@/components/ui/feature-card"
-import { staggerContainer, viewportOptions } from "@/lib/animations"
+import { motion } from "framer-motion";
+import {
+  Building2,
+  Factory,
+  Sprout,
+  Store,
+  UserRoundSearch,
+} from "lucide-react";
 
-/**
- * Solution Section Component
- * 
- * Displays HomeTrust Africa's solution offerings
- * Features: Verified contractors, Project management & tracking, 
- * Transparent spending reports, Legal and community support
- */
+import SectionContainer from "@/components/ui/section-container";
+import { fadeInUp, viewportOptions } from "@/lib/animations";
+
+const pillars = [
+  {
+    icon: Building2,
+    title: "Construction and infrastructure",
+    description:
+      "Coordinate builds, renovations, and site delivery with clearer local execution support.",
+  },
+  {
+    icon: UserRoundSearch,
+    title: "Vendor verification",
+    description:
+      "Screen operators, contractors, and suppliers before key decisions are made.",
+  },
+  {
+    icon: Factory,
+    title: "Business setup and operations",
+    description:
+      "Support launches, local coordination, and early operating structure for ventures back home.",
+  },
+  {
+    icon: Sprout,
+    title: "Agriculture and productive assets",
+    description:
+      "Oversee farms, equipment, and income-generating projects with more visibility on the ground.",
+  },
+];
+
 export default function Solution() {
-  const solutions = [
-    {
-      icon: CheckCircle2,
-      title: "Verified Contractors",
-      description:
-        "Our network of vetted, trusted local partners undergo strict background checks and legal verification in each country. Every contractor is verified before joining our platform.",
-    },
-    {
-      icon: Users,
-      title: "Project Management & Tracking",
-      description:
-        "Local project managers provide real-time updates, photos, and transparent communication every step of the way. Track progress from anywhere in the world.",
-    },
-    {
-      icon: FileCheck,
-      title: "Transparent Spending Reports",
-      description: 
-        "Every project is protected by proper contracts, insurance, and compliance with local regulations. Get detailed spending reports and financial transparency.",
-    },
-    {
-      icon: Shield,
-      title: "Legal & Community Support",
-      description:
-        "Our multi-level verification system and escrow services protect your funds until project milestones are completed. Legal support and community oversight ensure accountability.",
-    },
-  ]
-
   return (
     <SectionContainer
       id="solution"
-      className="bg-background"
+      className="bg-white"
       ariaLabelledby="solution-heading"
     >
-      <SectionHeader
-        title="Our Solution"
-        description="We've built a comprehensive platform that eliminates fraud, ensures transparency, and makes managing projects back home simple and secure."
-        titleId="solution-heading"
-      />
+      <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
+        <motion.div
+          className="lg:col-span-4"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+            Our Solution
+          </p>
+          <h2 id="solution-heading" className="mt-5 max-w-lg">
+            Structured support, built for execution.
+          </h2>
+          <p className="mt-6 max-w-md text-lg text-muted-foreground">
+            HomeTrust Africa helps diaspora clients move from intention to local
+            execution across the project types that matter most.
+          </p>
+        </motion.div>
 
-      <motion.div
-        className="grid md:grid-cols-2 gap-8"
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOptions}
-      >
-        {solutions.map((solution, index) => (
-          <FeatureCard
-            key={index}
-            icon={solution.icon}
-            title={solution.title}
-            description={solution.description}
-            hoverElevation
-            iconHover
-          />
-        ))}
-      </motion.div>
+        <motion.div
+          className="lg:col-span-8"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          <div className="grid gap-px overflow-hidden rounded-[1.75rem] border border-border/60 bg-border/60 md:grid-cols-2">
+            {pillars.map((pillar, index) => {
+              const Icon = pillar.icon;
+              const tones = ["bg-[#eef6ef]", "bg-[#f8f8f4]", "bg-[#f1f4f7]", "bg-[#f6f3ea]"];
+              return (
+                <motion.div
+                  key={pillar.title}
+                  variants={fadeInUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewportOptions}
+                  transition={{ delay: index * 0.05 }}
+                  className={`${tones[index]} p-8`}
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border/50 bg-white/70">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="mt-6 text-2xl">{pillar.title}</h3>
+                  <p className="mt-3 max-w-sm text-sm text-muted-foreground">
+                    {pillar.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </div>
     </SectionContainer>
-  )
+  );
 }

@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import SectionContainer from "@/components/ui/section-container";
 import { fadeInUp, viewportOptions } from "@/lib/animations";
 
@@ -10,33 +12,30 @@ export default function AboutCTA() {
   return (
     <SectionContainer
       id="about-cta"
-      className="bg-background py-16 md:py-24"
+      className="bg-[#dfeee7]"
     >
       <motion.div
         variants={fadeInUp}
         initial="hidden"
         whileInView="visible"
         viewport={viewportOptions}
-        className="text-center"
+        className="border-t border-[#c8ddd1] pt-10 md:pt-14"
       >
-        <Card className="p-8 md:p-12 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
-            Be Part of Our Journey
-          </h3>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light mb-6">
-            We're just getting started, and we'd love to have you join us. As one of
-            our early partners, you'll help shape the future of diaspora project
-            management while building your dream project back home.
+        <div className="max-w-4xl">
+          <h2 className="max-w-3xl text-foreground">
+            If this is the kind of oversight you need, let&apos;s talk.
+          </h2>
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            Tell us what you are trying to build, where it is happening, and
+            where you need support on the ground.
           </p>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link
-              href="/contact"
-              className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-            >
+          <Button asChild size="lg" className="group mt-8 rounded-full px-6 shadow-none">
+            <Link href="/contact">
               Start Your Project
+              <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-          </motion.div>
-        </Card>
+          </Button>
+        </div>
       </motion.div>
     </SectionContainer>
   );

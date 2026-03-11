@@ -1,77 +1,73 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Lightbulb, ClipboardList, CheckCircle } from "lucide-react"
-import SectionContainer from "@/components/ui/section-container"
-import SectionHeader from "@/components/ui/section-header"
-import StepCard from "@/components/ui/step-card"
-import { staggerContainer, viewportOptions } from "@/lib/animations"
+import { motion } from "framer-motion";
+import SectionContainer from "@/components/ui/section-container";
+import { fadeInUp, viewportOptions } from "@/lib/animations";
 
-/**
- * How It Works Section Component
- * 
- * 3-step process explanation:
- * 1. Share your goal
- * 2. We manage your project
- * 3. You track progress from anywhere
- */
+const steps = [
+  {
+    number: "01",
+    title: "Tell us your goal",
+    description:
+      "We begin with the project, location, constraints, and what success should look like.",
+  },
+  {
+    number: "02",
+    title: "We verify and structure execution",
+    description:
+      "We define the operating model, local coordination, and reporting cadence before work begins.",
+  },
+  {
+    number: "03",
+    title: "Track progress from anywhere",
+    description:
+      "You stay informed through clearer updates designed for visibility and decision-making.",
+  },
+];
+
 export default function HowItWorks() {
-  const steps = [
-    {
-      number: 1,
-      icon: Lightbulb,
-      title: "Share Your Goal",
-      description:
-        "Tell us about your project—whether it's building a home, starting a business, or expanding existing investments. We listen and understand your goals.",
-    },
-    {
-      number: 2,
-      icon: ClipboardList,
-      title: "We Manage Your Project",
-      description:
-        "We match you with our vetted local experts in your region. They create a detailed plan, timeline, and budget backed by legal documentation. Our team manages everything.",
-    },
-    {
-      number: 3,
-      icon: CheckCircle,
-      title: "Track Progress from Anywhere",
-      description:
-        "Your dedicated project manager oversees everything—from payments to milestones. Real-time updates, photos, and transparency at every step. Monitor from anywhere in the world.",
-    },
-  ]
-
   return (
     <SectionContainer
       id="how-it-works"
-      className="bg-background"
+      className="bg-[#f7f8f4]"
       ariaLabelledby="how-it-works-heading"
     >
-      <SectionHeader
-        title="How It Works"
-        description="A simple, transparent 3-step process to turn your vision into reality."
-        titleId="how-it-works-heading"
-        className="mb-16"
-      />
-
       <motion.div
-        className="grid md:grid-cols-3 gap-8"
-        variants={staggerContainer}
+        variants={fadeInUp}
         initial="hidden"
         whileInView="visible"
         viewport={viewportOptions}
+        className="max-w-3xl"
       >
-        {steps.map((step, index) => (
-          <StepCard
-            key={index}
-            number={step.number}
-            icon={step.icon}
-            title={step.title}
-            description={step.description}
-            index={index}
-            isLast={index === steps.length - 1}
-          />
-        ))}
+        <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+          How It Works
+        </p>
+        <h2 id="how-it-works-heading" className="mt-5">
+          Straightforward for clients. Rigorous underneath.
+        </h2>
       </motion.div>
+
+      <div className="mt-16 grid gap-px overflow-hidden rounded-[1.75rem] border border-border/60 bg-border/60 lg:grid-cols-3">
+        {steps.map((step, index) => (
+          <motion.article
+            key={step.number}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOptions}
+            transition={{ delay: index * 0.05 }}
+            className="bg-white p-8"
+          >
+            <div className="text-6xl font-heading font-semibold tracking-[-0.05em] text-[#d7ded6]">
+              {step.number}
+            </div>
+            <h3 className="mt-8 text-2xl">{step.title}</h3>
+            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+              {step.description}
+            </p>
+          </motion.article>
+        ))}
+      </div>
     </SectionContainer>
-  )
+  );
 }
