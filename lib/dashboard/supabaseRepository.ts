@@ -3,6 +3,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { DashboardRepository } from "@/lib/dashboard/repository";
 import type {
+  ApprovalItem,
   ConversationDetail,
   ConversationSummary,
   DashboardActionItem,
@@ -16,15 +17,20 @@ import type {
   ProjectBudget,
   ProjectDetail,
   ProjectSummary,
+  ReportDetail,
   TeamMember,
+  SupportThreadDetail,
+  SupportThreadSummary,
   TimelineEvent,
 } from "@/lib/dashboard/types";
 import type {
+  ApprovalDecisionInput,
   NotificationSettingsInput,
   PreferenceSettingsInput,
   ProfileSettingsInput,
   SecuritySettingsInput,
   SendMessageInput,
+  SupportReplyInput,
   SupportRequestInput,
 } from "@/lib/validators/dashboard";
 import { getSupabaseEnv, hasSupabaseAdminEnv, hasSupabaseBrowserEnv } from "@/lib/supabase/env";
@@ -78,11 +84,20 @@ type ReportRow = {
   client_visible: boolean;
 };
 
+type ReportSectionRow = {
+  id: string;
+  report_id: string;
+  section_title: string;
+  body: string;
+  sort_order: number;
+};
+
 type FileRow = {
   id: string;
   project_id: string;
   category_code: string;
   name: string;
+  description: string | null;
   uploaded_at: string;
   uploaded_by: string;
   size_bytes: number | null;
@@ -116,6 +131,14 @@ function formatBytes(sizeBytes?: number | null) {
   }
 
   return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function isPreviewableMimeType(mimeType?: string | null) {
+  return Boolean(
+    mimeType?.startsWith("image/") ||
+      mimeType?.startsWith("video/") ||
+      mimeType === "application/pdf",
+  );
 }
 
 function rolePriority(role: string) {
@@ -224,6 +247,11 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     if (filters?.type) {
       query = query.eq("project_type_code", filters.type);
     }
+    if (filters?.sort === "created") {
+      query = query.order("created_at", { ascending: false });
+    } else if (filters?.sort === "status") {
+      query = query.order("status", { ascending: true }).order("updated_at", { ascending: false });
+    }
 
     const { data, error } = await query;
     if (error) {
@@ -318,6 +346,41 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const admin = createSupabaseAdminClient();
     const { data } = await admin.from("profiles").select("id, full_name, email").in("id", uniqueIds);
     return new Map((data || []).map((profile: { id: string; full_name: string; email: string }) => [profile.id, profile]));
+  }
+
+  private async createSignedFileLinks(file: Pick<FileRow, "storage_bucket" | "storage_path" | "mime_type">) {
+    const admin = createSupabaseAdminClient();
+    try {
+      const { data: signed } = await admin.storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 60 * 30);
+      return {
+        downloadUrl: signed?.signedUrl || null,
+        previewUrl: isPreviewableMimeType(file.mime_type) ? signed?.signedUrl || null : null,
+      };
+    } catch {
+      return { downloadUrl: null, previewUrl: null };
+    }
+  }
+
+  private async buildFileItems(rows: FileRow[]) {
+    const uploaderMap = await this.getProfileMap(rows.map((file) => file.uploaded_by));
+    return Promise.all(
+      rows.map(async (file) => {
+        const links = await this.createSignedFileLinks(file);
+        return {
+          id: file.id,
+          projectId: file.project_id,
+          name: file.name,
+          category: file.category_code as FileItem["category"],
+          description: file.description,
+          uploadedAt: file.uploaded_at,
+          uploadedBy: uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa",
+          sizeLabel: formatBytes(file.size_bytes),
+          mimeType: file.mime_type,
+          downloadUrl: links.downloadUrl,
+          previewUrl: links.previewUrl,
+        };
+      }),
+    );
   }
 
   private async buildProjectSummaries(session: DashboardSession, projects: ProjectRow[]): Promise<ProjectSummary[]> {
@@ -502,20 +565,35 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     return this.getRecentActivity(session, [projectId], 50);
   }
 
-  private async getRecentReports(session: DashboardSession, projectIds: string[], limit = 10) {
+  private async getRecentReports(
+    session: DashboardSession,
+    projectIds: string[],
+    limit = 10,
+    filters?: Record<string, string | undefined>,
+  ) {
     if (!projectIds.length) {
       return [];
     }
 
     const { queryClient } = await this.getClients(session);
-    const [{ data: reports }, { data: reportAttachments }] = await Promise.all([
-      queryClient
-        .from("reports")
-        .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
-        .in("project_id", projectIds)
-        .order("uploaded_at", { ascending: false })
-        .limit(limit),
+    let reportsQuery = queryClient
+      .from("reports")
+      .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
+      .in("project_id", projectIds)
+      .order("uploaded_at", { ascending: false })
+      .limit(limit);
+
+    if (filters?.type) {
+      reportsQuery = reportsQuery.eq("report_type", filters.type);
+    }
+    if (filters?.q) {
+      reportsQuery = reportsQuery.or(`title.ilike.%${filters.q}%,summary.ilike.%${filters.q}%`);
+    }
+
+    const [{ data: reports }, { data: reportAttachments }, { data: mediaAssets }] = await Promise.all([
+      reportsQuery,
       queryClient.from("report_attachments").select("report_id, file_id"),
+      queryClient.from("media_assets").select("project_id, file_id"),
     ]);
 
     const uploaderMap = await this.getProfileMap((reports || []).map((report: any) => report.uploaded_by));
@@ -530,48 +608,96 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       uploadedAt: report.uploaded_at,
       uploadedBy: uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
       attachmentsCount: (reportAttachments || []).filter((attachment: any) => attachment.report_id === report.id).length,
-      mediaCount: 0,
+      mediaCount: (mediaAssets || []).filter((asset: any) => asset.project_id === report.project_id).length,
     }));
   }
 
-  async getProjectReports(session: DashboardSession, projectId: string) {
-    return this.getRecentReports(session, [projectId], 50);
+  async getProjectReports(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+    return this.getRecentReports(session, [projectId], 50, filters);
   }
 
-  async getProjectFiles(session: DashboardSession, projectId: string): Promise<FileItem[]> {
-    const { queryClient, admin } = await this.getClients(session);
-    const { data } = await queryClient
+  async getProjectReportById(session: DashboardSession, projectId: string, reportId: string): Promise<ReportDetail | null> {
+    const { queryClient } = await this.getClients(session);
+    const [{ data: report }, { data: sections }, { data: reportAttachments }] = await Promise.all([
+      queryClient
+        .from("reports")
+        .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
+        .eq("id", reportId)
+        .eq("project_id", projectId)
+        .maybeSingle(),
+      queryClient
+        .from("report_sections")
+        .select("id, report_id, section_title, body, sort_order")
+        .order("sort_order", { ascending: true }),
+      queryClient.from("report_attachments").select("report_id, file_id").eq("report_id", reportId),
+    ]);
+
+    if (!report) {
+      return null;
+    }
+
+    const uploaderMap = await this.getProfileMap([report.uploaded_by]);
+    const attachmentIds = (reportAttachments || []).map((attachment: any) => attachment.file_id);
+    const attachmentRows = attachmentIds.length
+      ? (
+          await queryClient
+            .from("files")
+            .select("id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible")
+            .in("id", attachmentIds)
+            .order("uploaded_at", { ascending: false })
+        ).data || []
+      : [];
+
+    return {
+      id: report.id,
+      projectId: report.project_id,
+      title: report.title,
+      type: report.report_type,
+      reportingPeriodLabel: report.reporting_period_label,
+      summary: report.summary,
+      uploadedAt: report.uploaded_at,
+      uploadedBy: uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
+      attachmentsCount: attachmentIds.length,
+      mediaCount: 0,
+      sections: ((sections || []) as ReportSectionRow[])
+        .filter((section) => section.report_id === report.id)
+        .map((section) => ({
+          id: section.id,
+          title: section.section_title,
+          body: section.body,
+        })),
+      attachments: await this.buildFileItems((attachmentRows || []) as FileRow[]),
+    };
+  }
+
+  async getProjectFiles(
+    session: DashboardSession,
+    projectId: string,
+    filters?: Record<string, string | undefined>,
+  ): Promise<FileItem[]> {
+    const { queryClient } = await this.getClients(session);
+    let query = queryClient
       .from("files")
-      .select("id, project_id, category_code, name, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible")
+      .select("id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible")
       .eq("project_id", projectId)
       .order("uploaded_at", { ascending: false });
 
-    const uploaderMap = await this.getProfileMap((data || []).map((file: any) => file.uploaded_by));
+    if (filters?.category) {
+      query = query.eq("category_code", filters.category);
+    }
 
-    return Promise.all(
-      ((data || []) as FileRow[]).map(async (file) => {
-        let downloadUrl: string | null = null;
-        try {
-          const { data: signed } = await admin.storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 60 * 30);
-          downloadUrl = signed?.signedUrl || null;
-        } catch {
-          downloadUrl = null;
-        }
+    const { data } = await query;
+    let rows = (data || []) as FileRow[];
+    if (filters?.uploadedBy) {
+      const uploaderMap = await this.getProfileMap(rows.map((file) => file.uploaded_by));
+      rows = rows.filter((file) =>
+        (uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa")
+          .toLowerCase()
+          .includes(filters.uploadedBy!.toLowerCase()),
+      );
+    }
 
-        return {
-          id: file.id,
-          projectId: file.project_id,
-          name: file.name,
-          category: file.category_code as FileItem["category"],
-          uploadedAt: file.uploaded_at,
-          uploadedBy: uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa",
-          sizeLabel: formatBytes(file.size_bytes),
-          mimeType: file.mime_type,
-          downloadUrl,
-          previewUrl: file.mime_type?.startsWith("image/") || file.mime_type?.startsWith("video/") ? downloadUrl : null,
-        };
-      }),
-    );
+    return this.buildFileItems(rows);
   }
 
   async getProjectBudget(session: DashboardSession, projectId: string): Promise<ProjectBudget | null> {
@@ -627,6 +753,39 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
+  async getProjectApprovals(session: DashboardSession, projectId: string): Promise<ApprovalItem[]> {
+    const { queryClient } = await this.getClients(session);
+    const [{ data: approvals }, { data: approvalRequests }] = await Promise.all([
+      queryClient
+        .from("approvals")
+        .select("id, project_id, title, description, status, requested_by, requested_from_user_id, due_at")
+        .eq("project_id", projectId)
+        .order("due_at", { ascending: true }),
+      queryClient
+        .from("approval_requests")
+        .select("approval_id, amount, currency_code")
+        .eq("project_id", projectId),
+    ]);
+
+    const requestByApproval = new Map(
+      (approvalRequests || []).map((row: any) => [row.approval_id, row]),
+    );
+    const profileMap = await this.getProfileMap((approvals || []).map((approval: any) => approval.requested_by));
+
+    return (approvals || []).map((approval: any) => ({
+      id: approval.id,
+      projectId: approval.project_id,
+      title: approval.title,
+      description: approval.description,
+      status: approval.status,
+      dueAt: approval.due_at,
+      requestedBy: profileMap.get(approval.requested_by)?.full_name || "HomeTrust Africa",
+      requestedFromUserId: approval.requested_from_user_id,
+      amount: requestByApproval.get(approval.id)?.amount ? Number(requestByApproval.get(approval.id)?.amount) : null,
+      currency: requestByApproval.get(approval.id)?.currency_code || null,
+    }));
+  }
+
   async getProjectTeam(session: DashboardSession, projectId: string): Promise<TeamMember[]> {
     const { queryClient } = await this.getClients(session);
     const { data } = await queryClient
@@ -646,7 +805,7 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }));
   }
 
-  async listConversations(session: DashboardSession): Promise<ConversationSummary[]> {
+  async listConversations(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<ConversationSummary[]> {
     const { queryClient } = await this.getClients(session);
     const [{ data: conversations }, { data: participants }, { data: messages }, { data: projects }] = await Promise.all([
       queryClient
@@ -658,7 +817,7 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       queryClient.from("projects").select("id, name"),
     ]);
 
-    return (conversations || []).map((conversation: any) => {
+    let rows = (conversations || []).map((conversation: any) => {
       const lastMessage = (messages || []).find((message: any) => message.conversation_id === conversation.id);
       const participant = (participants || []).find(
         (item: any) => item.conversation_id === conversation.id && item.user_id === session.userId,
@@ -672,6 +831,7 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       return {
         id: conversation.id,
         subject: conversation.subject,
+        kind: conversation.kind,
         projectId: conversation.project_id,
         projectName: (projects || []).find((project: any) => project.id === conversation.project_id)?.name || null,
         unreadCount,
@@ -679,6 +839,18 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         lastMessageAt: formatDateLabel(lastMessage?.sent_at || conversation.updated_at) || null,
       };
     });
+
+    if (filters?.q) {
+      const query = filters.q.toLowerCase();
+      rows = rows.filter(
+        (thread) =>
+          thread.subject.toLowerCase().includes(query) ||
+          (thread.projectName || "").toLowerCase().includes(query) ||
+          (thread.lastMessagePreview || "").toLowerCase().includes(query),
+      );
+    }
+
+    return rows;
   }
 
   async getConversation(session: DashboardSession, threadId: string): Promise<ConversationDetail | null> {
@@ -699,6 +871,11 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     if (!conversation) {
       return null;
     }
+
+    await queryClient.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).match({
+      conversation_id: threadId,
+      user_id: session.userId,
+    });
 
     const profileMap = await this.getProfileMap([
       ...(participants || []).map((participant: any) => participant.user_id),
@@ -746,7 +923,7 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
-  async listNotifications(session: DashboardSession): Promise<NotificationItem[]> {
+  async listNotifications(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<NotificationItem[]> {
     const { queryClient } = await this.getClients(session);
     const [{ data: notifications }, { data: reads }, { data: projects }] = await Promise.all([
       queryClient
@@ -758,7 +935,7 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       queryClient.from("projects").select("id, name"),
     ]);
 
-    return (notifications || []).map((notification: any) => ({
+    let rows = (notifications || []).map((notification: any) => ({
       id: notification.id,
       type: notification.type,
       title: notification.title,
@@ -768,6 +945,95 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       href: notification.href,
       projectName: (projects || []).find((project: any) => project.id === notification.project_id)?.name || null,
     }));
+
+    if (filters?.type) {
+      rows = rows.filter((notification) => notification.type === filters.type);
+    }
+
+    return rows;
+  }
+
+  async listSupportThreads(session: DashboardSession): Promise<SupportThreadSummary[]> {
+    const { queryClient } = await this.getClients(session);
+    const [{ data: threads }, { data: messages }, { data: projects }] = await Promise.all([
+      queryClient
+        .from("support_threads")
+        .select("id, project_id, subject, priority, status, updated_at")
+        .order("updated_at", { ascending: false }),
+      queryClient.from("support_messages").select("support_thread_id, body, created_at").order("created_at", { ascending: false }),
+      queryClient.from("projects").select("id, name"),
+    ]);
+
+    return (threads || []).map((thread: any) => {
+      const latestMessage = (messages || []).find((message: any) => message.support_thread_id === thread.id);
+      return {
+        id: thread.id,
+        subject: thread.subject,
+        priority: thread.priority,
+        status: thread.status,
+        projectId: thread.project_id,
+        projectName: (projects || []).find((project: any) => project.id === thread.project_id)?.name || null,
+        updatedAt: thread.updated_at,
+        lastMessagePreview: latestMessage?.body?.slice(0, 140) || null,
+      };
+    });
+  }
+
+  async getSupportThread(session: DashboardSession, threadId: string): Promise<SupportThreadDetail | null> {
+    const { queryClient } = await this.getClients(session);
+    const [{ data: thread }, { data: messages }] = await Promise.all([
+      queryClient
+        .from("support_threads")
+        .select("id, project_id, subject, priority, status, updated_at")
+        .eq("id", threadId)
+        .maybeSingle(),
+      queryClient
+        .from("support_messages")
+        .select("id, support_thread_id, sender_user_id, body, created_at")
+        .eq("support_thread_id", threadId)
+        .order("created_at", { ascending: true }),
+    ]);
+
+    if (!thread) {
+      return null;
+    }
+
+    const [threads, projects, profileMap, roleRows] = await Promise.all([
+      this.listSupportThreads(session),
+      queryClient.from("projects").select("id, name").eq("id", thread.project_id).maybeSingle(),
+      this.getProfileMap((messages || []).map((message: any) => message.sender_user_id)),
+      createSupabaseAdminClient()
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", [...new Set((messages || []).map((message: any) => message.sender_user_id))]),
+    ]);
+
+    const rolesByUser = new Map<string, string[]>();
+    (roleRows.data || []).forEach((row: any) => {
+      rolesByUser.set(row.user_id, [...(rolesByUser.get(row.user_id) || []), row.role]);
+    });
+
+    const summary = threads.find((item) => item.id === threadId);
+
+    return {
+      id: thread.id,
+      subject: thread.subject,
+      priority: thread.priority,
+      status: thread.status,
+      projectId: thread.project_id,
+      projectName: summary?.projectName || projects.data?.name || null,
+      updatedAt: thread.updated_at,
+      lastMessagePreview: summary?.lastMessagePreview || null,
+      messages: (messages || []).map((message: any) => ({
+        id: message.id,
+        threadId: message.support_thread_id,
+        senderName: profileMap.get(message.sender_user_id)?.full_name || "HomeTrust Africa",
+        senderRoleLabel: pickPrimaryRole(rolesByUser.get(message.sender_user_id) || ["CLIENT"]).replaceAll("_", " "),
+        body: message.body,
+        sentAt: message.created_at,
+        isOwnMessage: message.sender_user_id === session.userId,
+      })),
+    };
   }
 
   async getSettings(session: DashboardSession): Promise<DashboardSettings | null> {
@@ -963,6 +1229,52 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
+  async resolveApproval(session: DashboardSession, input: ApprovalDecisionInput): Promise<void> {
+    const { queryClient, admin } = await this.getClients(session);
+    const { data: approval } = await queryClient
+      .from("approvals")
+      .select("id, project_id, title, requested_from_user_id, status")
+      .eq("id", input.approvalId)
+      .maybeSingle();
+
+    if (!approval) {
+      throw new Error("Approval could not be found.");
+    }
+    if (approval.requested_from_user_id && approval.requested_from_user_id !== session.userId && !["ADMIN", "OPERATIONS_MANAGER"].includes(session.role)) {
+      throw new Error("You are not authorized to resolve this approval.");
+    }
+
+    const timestamp = new Date().toISOString();
+    const { error } = await (admin.from("approvals" as never) as any)
+      .update({
+        status: input.decision,
+        approved_at: input.decision === "approved" ? timestamp : null,
+        resolved_by: session.userId,
+        resolution_note: input.note || null,
+        updated_at: timestamp,
+      })
+      .eq("id", input.approvalId);
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    await (admin.from("approval_requests" as never) as any)
+      .update({ status: input.decision, updated_at: timestamp })
+      .eq("approval_id", input.approvalId);
+
+    await (admin.from("timeline_events" as never) as any).insert({
+      project_id: approval.project_id,
+      event_type: "approval",
+      title: `${approval.title} ${input.decision === "approved" ? "approved" : "rejected"}`,
+      summary: input.note || `Approval was ${input.decision} by ${session.name}.`,
+      actor_user_id: session.userId,
+      client_visible: true,
+      related_table: "approvals",
+      related_record_id: approval.id,
+      occurred_at: timestamp,
+    });
+  }
+
   async markNotificationsRead(session: DashboardSession, notificationIds: string[]): Promise<void> {
     const { queryClient } = await this.getClients(session);
     const { error } = await queryClient.from("notification_reads").upsert(
@@ -1020,6 +1332,46 @@ export class SupabaseDashboardRepository implements DashboardRepository {
           href: "/dashboard/support",
         })),
       );
+    }
+  }
+
+  async replySupportThread(session: DashboardSession, input: SupportReplyInput): Promise<void> {
+    const { queryClient, admin } = await this.getClients(session);
+    const { data: thread } = await queryClient
+      .from("support_threads")
+      .select("id, project_id, subject")
+      .eq("id", input.threadId)
+      .maybeSingle();
+
+    if (!thread) {
+      throw new Error("Support thread could not be found.");
+    }
+
+    const { error } = await queryClient.from("support_messages").insert({
+      support_thread_id: input.threadId,
+      sender_user_id: session.userId,
+      body: input.body,
+    });
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    await queryClient.from("support_threads").update({ updated_at: new Date().toISOString() }).eq("id", input.threadId);
+
+    if (session.role === "CLIENT") {
+      const { data: adminUsers } = await admin.from("user_roles").select("user_id").in("role", ["ADMIN", "OPERATIONS_MANAGER"]);
+      if (adminUsers?.length) {
+        await (admin.from("notifications" as never) as any).insert(
+          adminUsers.map((row: any) => ({
+            user_id: row.user_id,
+            project_id: thread.project_id || null,
+            type: "new_message",
+            title: `Support reply in ${thread.subject}`,
+            body: input.body.slice(0, 140),
+            href: `/dashboard/support/${input.threadId}`,
+          })),
+        );
+      }
     }
   }
 }

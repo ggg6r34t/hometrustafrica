@@ -2,6 +2,13 @@
 -- Test password for all seeded users: HomeTrust123!
 -- Recommended dev impersonation user: client.adebayo@hometrust.local
 
+do $$
+begin
+  if exists (select 1 from auth.users where id = '99999999-9999-9999-9999-999999999999') then
+    delete from auth.users where id = '99999999-9999-9999-9999-999999999999';
+  end if;
+end $$;
+
 insert into auth.users (
   instance_id,
   id,
@@ -31,6 +38,38 @@ set email = excluded.email,
     raw_user_meta_data = excluded.raw_user_meta_data,
     updated_at = now();
 
+insert into auth.users (
+  instance_id,
+  id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  confirmed_at,
+  last_sign_in_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  created_at,
+  updated_at
+)
+values (
+  '00000000-0000-0000-0000-000000000000',
+  '99999999-9999-9999-9999-999999999999',
+  'authenticated',
+  'authenticated',
+  'client.invited@hometrust.local',
+  crypt(gen_random_uuid()::text, gen_salt('bf')),
+  now(),
+  now(),
+  null,
+  '{"provider":"email","providers":["email"]}',
+  '{"full_name":"Pending Invite Client","role":"CLIENT"}',
+  now() - interval '1 day',
+  now()
+)
+on conflict (id) do update set updated_at = now();
+
 insert into auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
 values
   ('aaaaaaaa-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', jsonb_build_object('sub', '11111111-1111-1111-1111-111111111111', 'email', 'client.adebayo@hometrust.local'), 'email', 'client.adebayo@hometrust.local', now() - interval '2 hours', now(), now()),
@@ -41,6 +80,19 @@ values
   ('aaaaaaaa-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666', jsonb_build_object('sub', '66666666-6666-6666-6666-666666666666', 'email', 'team.onyeka@hometrust.local'), 'email', 'team.onyeka@hometrust.local', now() - interval '3 hours', now(), now()),
   ('aaaaaaaa-7777-7777-7777-777777777777', '77777777-7777-7777-7777-777777777777', jsonb_build_object('sub', '77777777-7777-7777-7777-777777777777', 'email', 'ops.adeyemi@hometrust.local'), 'email', 'ops.adeyemi@hometrust.local', now() - interval '45 minutes', now(), now()),
   ('aaaaaaaa-8888-8888-8888-888888888888', '88888888-8888-8888-8888-888888888888', jsonb_build_object('sub', '88888888-8888-8888-8888-888888888888', 'email', 'admin@hometrust.local'), 'email', 'admin@hometrust.local', now() - interval '20 minutes', now(), now())
+on conflict (id) do update set updated_at = now();
+
+insert into auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
+values (
+  'aaaaaaaa-9999-9999-9999-999999999999',
+  '99999999-9999-9999-9999-999999999999',
+  jsonb_build_object('sub', '99999999-9999-9999-9999-999999999999', 'email', 'client.invited@hometrust.local'),
+  'email',
+  'client.invited@hometrust.local',
+  null,
+  now(),
+  now()
+)
 on conflict (id) do update set updated_at = now();
 
 update public.profiles
@@ -92,7 +144,8 @@ values
   ('55555555-5555-5555-5555-555555555555', 'TEAM_MEMBER'),
   ('66666666-6666-6666-6666-666666666666', 'TEAM_MEMBER'),
   ('77777777-7777-7777-7777-777777777777', 'OPERATIONS_MANAGER'),
-  ('88888888-8888-8888-8888-888888888888', 'ADMIN')
+  ('88888888-8888-8888-8888-888888888888', 'ADMIN'),
+  ('99999999-9999-9999-9999-999999999999', 'CLIENT')
 on conflict (user_id, role) do nothing;
 
 insert into public.team_memberships (id, user_id, department, title, region, active)
@@ -114,7 +167,8 @@ values
   ('a2000000-0000-0000-0000-000000000001', 'a1000000-0000-0000-0000-000000000001', '11111111-1111-1111-1111-111111111111', true),
   ('a2000000-0000-0000-0000-000000000002', 'a1000000-0000-0000-0000-000000000002', '22222222-2222-2222-2222-222222222222', true),
   ('a2000000-0000-0000-0000-000000000003', 'a1000000-0000-0000-0000-000000000003', '33333333-3333-3333-3333-333333333333', true),
-  ('a2000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000003', '44444444-4444-4444-4444-444444444444', false)
+  ('a2000000-0000-0000-0000-000000000004', 'a1000000-0000-0000-0000-000000000003', '44444444-4444-4444-4444-444444444444', false),
+  ('a2000000-0000-0000-0000-000000000005', 'a1000000-0000-0000-0000-000000000002', '99999999-9999-9999-9999-999999999999', false)
 on conflict (client_account_id, user_id) do update set is_primary = excluded.is_primary;
 
 insert into public.projects (
@@ -336,3 +390,35 @@ values
   ('i1000000-0000-0000-0000-000000000001', '55555555-5555-5555-5555-555555555555', 'TEAM_MEMBER', 'report.publish', 'report', 'c3000000-0000-0000-0000-000000000001', '{"projectId":"b1000000-0000-0000-0000-000000000001"}', now() - interval '8 hours'),
   ('i1000000-0000-0000-0000-000000000002', '77777777-7777-7777-7777-777777777777', 'OPERATIONS_MANAGER', 'support.request.respond', 'support_thread', 'h1000000-0000-0000-0000-000000000001', '{"priority":"priority"}', now() - interval '1 day')
 on conflict (id) do update set metadata = excluded.metadata, created_at = excluded.created_at;
+
+insert into public.portal_invites (
+  id,
+  invited_email,
+  invited_name,
+  invited_role,
+  auth_user_id,
+  invited_by_user_id,
+  client_account_id,
+  project_id,
+  token_hash,
+  invited_at,
+  expires_at,
+  last_sent_at,
+  delivery_metadata
+)
+values (
+  'j1000000-0000-0000-0000-000000000001',
+  'client.invited@hometrust.local',
+  'Pending Invite Client',
+  'CLIENT',
+  '99999999-9999-9999-9999-999999999999',
+  '77777777-7777-7777-7777-777777777777',
+  'a1000000-0000-0000-0000-000000000002',
+  'b1000000-0000-0000-0000-000000000003',
+  encode(digest('hometrust-local-invite-token', 'sha256'), 'hex'),
+  now() - interval '6 hours',
+  now() + interval '6 days',
+  now() - interval '6 hours',
+  '{"delivery":"manual-local-link"}'::jsonb
+)
+on conflict (id) do update set expires_at = excluded.expires_at, delivery_metadata = excluded.delivery_metadata;

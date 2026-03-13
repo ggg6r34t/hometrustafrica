@@ -6,6 +6,7 @@ import {
   Bell,
   FolderKanban,
   LifeBuoy,
+  LogOut,
   MessageSquareText,
   PanelsTopLeft,
   Settings,
@@ -96,6 +97,10 @@ export function DashboardSidebarNav({
           <p className="text-sm font-medium text-foreground">{session.name}</p>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{session.role.replaceAll("_", " ")}</p>
           <p className="mt-1 text-xs text-muted-foreground">{session.email}</p>
+          <Link href="/logout" className="mt-3 inline-flex items-center gap-2 text-xs font-medium text-primary">
+            <LogOut className="size-3.5" />
+            Sign out
+          </Link>
         </div>
       </SidebarFooter>
     </>

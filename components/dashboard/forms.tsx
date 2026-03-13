@@ -2,6 +2,8 @@
 
 import { useActionState } from "react";
 import {
+  replySupportThreadAction,
+  resolveApprovalAction,
   requestSupportAction,
   sendMessageAction,
   updateNotificationsAction,
@@ -15,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { DashboardSettings } from "@/lib/dashboard/types";
+import type { ApprovalItem, DashboardSettings } from "@/lib/dashboard/types";
 
 const initialState: DashboardActionState = { status: "idle" };
 
@@ -390,6 +392,59 @@ export function SupportRequestForm() {
           <div className="flex justify-end">
             <Button type="submit" disabled={pending}>
               Submit request
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
+  const [state, action, pending] = useActionState(resolveApprovalAction, initialState);
+
+  return (
+    <form action={action} className="space-y-3 rounded-2xl border border-border/70 p-4">
+      <input type="hidden" name="approvalId" value={approval.id} />
+      <div className="space-y-1">
+        <p className="font-medium text-foreground">{approval.title}</p>
+        <p className="text-sm text-muted-foreground">{approval.description}</p>
+      </div>
+      <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+        <Textarea name="note" rows={2} placeholder="Optional note for the operations team" />
+        <Button type="submit" name="decision" value="approved" disabled={pending}>
+          Approve
+        </Button>
+        <Button type="submit" name="decision" value="rejected" variant="outline" disabled={pending}>
+          Reject
+        </Button>
+      </div>
+      <ActionFeedback state={state} />
+    </form>
+  );
+}
+
+export function SupportReplyForm({ threadId }: { threadId: string }) {
+  const [state, action, pending] = useActionState(replySupportThreadAction, initialState);
+
+  return (
+    <Card className="border-border/70 bg-card/95 shadow-sm">
+      <CardContent className="p-4">
+        <form action={action} className="space-y-3">
+          <input type="hidden" name="threadId" value={threadId} />
+          <div className="space-y-2">
+            <Label htmlFor="support-body">Reply securely</Label>
+            <Textarea
+              id="support-body"
+              name="body"
+              rows={4}
+              placeholder="Confirm next steps, request a callback, or share any supporting details."
+            />
+          </div>
+          <ActionFeedback state={state} />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={pending}>
+              Send reply
             </Button>
           </div>
         </form>

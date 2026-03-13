@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { NotificationItem as NotificationItemType } from "@/lib/dashboard/types";
-import { StatusBadge } from "@/components/dashboard/status-badge";
 
 export function NotificationItem({ notification }: { notification: NotificationItemType }) {
   return (
@@ -11,7 +11,10 @@ export function NotificationItem({ notification }: { notification: NotificationI
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-medium text-foreground">{notification.title}</p>
-            <StatusBadge label={notification.type.replaceAll("_", " ")} tone={notification.readAt ? "neutral" : "success"} />
+            <StatusBadge
+              label={notification.type.replaceAll("_", " ")}
+              tone={notification.readAt ? "neutral" : "success"}
+            />
           </div>
           <p className="text-sm text-muted-foreground">{notification.body}</p>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">

@@ -2,6 +2,7 @@ import { AlertTriangle, FileText, FolderOpenDot, MessageSquareText } from "lucid
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
+import { ApprovalDecisionForm } from "@/components/dashboard/forms";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { ReportCard } from "@/components/dashboard/report-card";
 import { TeamMemberCard } from "@/components/dashboard/team-member-card";
@@ -12,12 +13,13 @@ import { dashboardService } from "@/lib/dashboard/service";
 export default async function ProjectOverviewPage({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const { session, project } = await requireAuthorizedProject(projectId);
-  const [timeline, reports, files, budget, team] = await Promise.all([
+  const [timeline, reports, files, budget, team, approvals] = await Promise.all([
     dashboardService.getProjectTimeline(session, projectId),
     dashboardService.getProjectReports(session, projectId),
     dashboardService.getProjectFiles(session, projectId),
     dashboardService.getProjectBudget(session, projectId),
     dashboardService.getProjectTeam(session, projectId),
+    dashboardService.getProjectApprovals(session, projectId),
   ]);
 
   return (
@@ -60,6 +62,30 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
+        <Card className="border-border/70 bg-card/95 shadow-sm">
+          <CardHeader><CardTitle className="text-base font-semibold">Client approvals</CardTitle></CardHeader>
+          <CardContent className="space-y-3">
+            {approvals.length ? (
+              approvals.map((approval) =>
+                approval.status === "pending" && approval.requestedFromUserId === session.userId ? (
+                  <ApprovalDecisionForm key={approval.id} approval={approval} />
+                ) : (
+                  <div key={approval.id} className="rounded-xl border border-border/70 p-4">
+                    <p className="font-medium text-foreground">{approval.title}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{approval.description}</p>
+                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">{approval.status}</p>
+                  </div>
+                ),
+              )
+            ) : (
+              <DashboardEmptyState
+                icon={<AlertTriangle className="size-5" />}
+                title="No approvals are currently pending"
+                description="Budget, legal, and execution approvals will appear here when client action is required."
+              />
+            )}
+          </CardContent>
+        </Card>
         <Card className="border-border/70 bg-card/95 shadow-sm">
           <CardHeader><CardTitle className="text-base font-semibold">Recent files and media</CardTitle></CardHeader>
           <CardContent className="space-y-3">

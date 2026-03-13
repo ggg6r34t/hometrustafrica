@@ -1,4 +1,5 @@
 import type {
+  ApprovalItem,
   ConversationDetail,
   ConversationSummary,
   DashboardOverview,
@@ -11,7 +12,10 @@ import type {
   ProjectBudget,
   ProjectDetail,
   ProjectSummary,
+  ReportDetail,
   ReportItem,
+  SupportThreadDetail,
+  SupportThreadSummary,
   TeamMember,
   TimelineEvent,
 } from "@/lib/dashboard/types";
@@ -19,8 +23,8 @@ import type {
   NotificationSettingsInput,
   PreferenceSettingsInput,
   ProfileSettingsInput,
-  SecuritySettingsInput,
   SendMessageInput,
+  SecuritySettingsInput,
   SupportRequestInput,
 } from "@/lib/validators/dashboard";
 import { createSupabaseDashboardRepository } from "@/lib/dashboard/supabaseRepository";
@@ -33,21 +37,27 @@ export interface DashboardRepository {
   listProjects(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<ProjectSummary[]>;
   getProjectById(session: DashboardSession, projectId: string): Promise<ProjectDetail | null>;
   getProjectTimeline(session: DashboardSession, projectId: string): Promise<TimelineEvent[]>;
-  getProjectReports(session: DashboardSession, projectId: string): Promise<ReportItem[]>;
-  getProjectFiles(session: DashboardSession, projectId: string): Promise<FileItem[]>;
+  getProjectReports(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>): Promise<ReportItem[]>;
+  getProjectReportById(session: DashboardSession, projectId: string, reportId: string): Promise<ReportDetail | null>;
+  getProjectFiles(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>): Promise<FileItem[]>;
   getProjectBudget(session: DashboardSession, projectId: string): Promise<ProjectBudget | null>;
+  getProjectApprovals(session: DashboardSession, projectId: string): Promise<ApprovalItem[]>;
   getProjectTeam(session: DashboardSession, projectId: string): Promise<TeamMember[]>;
-  listConversations(session: DashboardSession): Promise<ConversationSummary[]>;
+  listConversations(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<ConversationSummary[]>;
   getConversation(session: DashboardSession, threadId: string): Promise<ConversationDetail | null>;
-  listNotifications(session: DashboardSession): Promise<NotificationItem[]>;
+  listNotifications(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<NotificationItem[]>;
+  listSupportThreads(session: DashboardSession): Promise<SupportThreadSummary[]>;
+  getSupportThread(session: DashboardSession, threadId: string): Promise<SupportThreadDetail | null>;
   getSettings(session: DashboardSession): Promise<DashboardSettings | null>;
   updateProfile(session: DashboardSession, input: ProfileSettingsInput): Promise<void>;
   updateSecurity(session: DashboardSession, input: SecuritySettingsInput): Promise<void>;
   updateNotifications(session: DashboardSession, input: NotificationSettingsInput): Promise<void>;
   updatePreferences(session: DashboardSession, input: PreferenceSettingsInput): Promise<void>;
   sendMessage(session: DashboardSession, input: SendMessageInput): Promise<void>;
+  resolveApproval(session: DashboardSession, input: { approvalId: string; decision: "approved" | "rejected"; note?: string }): Promise<void>;
   markNotificationsRead(session: DashboardSession, notificationIds: string[]): Promise<void>;
   requestSupport(session: DashboardSession, input: SupportRequestInput): Promise<void>;
+  replySupportThread(session: DashboardSession, input: { threadId: string; body: string }): Promise<void>;
 }
 
 class UnconfiguredDashboardRepository implements DashboardRepository {
@@ -88,12 +98,20 @@ class UnconfiguredDashboardRepository implements DashboardRepository {
     return [];
   }
 
+  async getProjectReportById() {
+    return null;
+  }
+
   async getProjectFiles() {
     return [];
   }
 
   async getProjectBudget() {
     return null;
+  }
+
+  async getProjectApprovals() {
+    return [];
   }
 
   async getProjectTeam() {
@@ -110,6 +128,14 @@ class UnconfiguredDashboardRepository implements DashboardRepository {
 
   async listNotifications() {
     return [];
+  }
+
+  async listSupportThreads() {
+    return [];
+  }
+
+  async getSupportThread() {
+    return null;
   }
 
   async getSettings() {
@@ -136,11 +162,19 @@ class UnconfiguredDashboardRepository implements DashboardRepository {
     throw new Error("Dashboard data provider is not configured.");
   }
 
+  async resolveApproval() {
+    throw new Error("Dashboard data provider is not configured.");
+  }
+
   async markNotificationsRead() {
     throw new Error("Dashboard data provider is not configured.");
   }
 
   async requestSupport() {
+    throw new Error("Dashboard data provider is not configured.");
+  }
+
+  async replySupportThread() {
     throw new Error("Dashboard data provider is not configured.");
   }
 }

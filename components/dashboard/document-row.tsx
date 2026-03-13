@@ -1,9 +1,10 @@
 import { format } from "date-fns";
-import { Download, Eye } from "lucide-react";
+import { Download } from "lucide-react";
+import { FilePreviewDialog } from "@/components/dashboard/file-preview-dialog";
+import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type { FileItem } from "@/lib/dashboard/types";
-import { StatusBadge } from "@/components/dashboard/status-badge";
 
 export function DocumentRow({ file }: { file: FileItem }) {
   return (
@@ -14,20 +15,16 @@ export function DocumentRow({ file }: { file: FileItem }) {
             <p className="font-medium text-foreground">{file.name}</p>
             <StatusBadge label={file.category} tone="neutral" />
           </div>
+          {file.description ? <p className="text-sm text-muted-foreground">{file.description}</p> : null}
           <p className="text-sm text-muted-foreground">
             Uploaded by {file.uploadedBy} on {format(new Date(file.uploadedAt), "MMM d, yyyy")}
             {file.sizeLabel ? ` · ${file.sizeLabel}` : ""}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" asChild disabled={!file.previewUrl}>
-            <a href={file.previewUrl || "#"}>
-              <Eye className="size-4" />
-              Preview
-            </a>
-          </Button>
+          <FilePreviewDialog file={file} />
           <Button size="sm" asChild disabled={!file.downloadUrl}>
-            <a href={file.downloadUrl || "#"}>
+            <a href={file.downloadUrl || "#"} target="_blank" rel="noreferrer">
               <Download className="size-4" />
               Secure download
             </a>

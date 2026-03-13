@@ -2,9 +2,15 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { usePathname } from "next/navigation";
-import { Bell, ChevronRight, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bell, ChevronRight, LogOut, Search, UserCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -31,6 +37,7 @@ export function DashboardTopbar({
   unreadCount: number;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const crumbs = useMemo(
     () =>
       pathname
@@ -67,16 +74,57 @@ export function DashboardTopbar({
                 Alerts {unreadCount ? `(${unreadCount})` : ""}
               </Link>
             </Button>
-            <div className="hidden rounded-full border border-border bg-white/85 px-3 py-2 text-sm text-muted-foreground md:block">
-              {session.name}
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="hidden md:inline-flex">
+                  <UserCircle2 className="size-4" />
+                  {session.name}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/settings/profile">Profile settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href="/logout">
+                    <LogOut className="mr-2 size-4" />
+                    Sign out
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="relative w-full max-w-md">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input className="pl-9" placeholder="Search projects, reports, and files" aria-label="Search dashboard" />
-          </div>
+          <form action="/dashboard/projects" className="flex w-full max-w-2xl flex-col gap-3 md:flex-row">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className="pl-9"
+                placeholder="Search projects, reports, and files"
+                aria-label="Search dashboard"
+                name="q"
+              />
+            </div>
+            <select
+              aria-label="Switch project"
+              className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm md:w-72"
+              defaultValue=""
+              onChange={(event) => {
+                if (event.target.value) {
+                  router.push(`/dashboard/projects/${event.target.value}`);
+                }
+              }}
+            >
+              <option value="">Switch project</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
+            <Button type="submit">Search</Button>
+          </form>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span>Projects in scope: {projects.length}</span>
             <Separator orientation="vertical" className="hidden h-5 md:block" />

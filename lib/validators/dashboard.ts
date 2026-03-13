@@ -41,6 +41,12 @@ export const sendMessageSchema = z.object({
   body: z.string().trim().min(1).max(5000),
 });
 
+export const approvalDecisionSchema = z.object({
+  approvalId: z.string().trim().min(1).max(120),
+  decision: z.enum(["approved", "rejected"]),
+  note: z.string().trim().max(500).optional(),
+});
+
 export const notificationBulkActionSchema = z.object({
   notificationIds: z.array(z.string().trim().min(1)).min(1).max(100),
 });
@@ -51,10 +57,17 @@ export const supportRequestSchema = z.object({
   urgency: z.enum(["standard", "priority", "urgent"]),
 });
 
+export const supportReplySchema = z.object({
+  threadId: z.string().trim().min(1).max(120),
+  body: z.string().trim().min(1).max(5000),
+});
+
 export type ProfileSettingsInput = z.infer<typeof profileSettingsSchema>;
 export type SecuritySettingsInput = z.infer<typeof securitySettingsSchema>;
 export type NotificationSettingsInput = z.infer<typeof notificationSettingsSchema>;
 export type PreferenceSettingsInput = z.infer<typeof preferenceSettingsSchema>;
 export type SendMessageInput = z.infer<typeof sendMessageSchema>;
+export type ApprovalDecisionInput = z.infer<typeof approvalDecisionSchema>;
 export type NotificationBulkActionInput = z.infer<typeof notificationBulkActionSchema>;
 export type SupportRequestInput = z.infer<typeof supportRequestSchema>;
+export type SupportReplyInput = z.infer<typeof supportReplySchema>;

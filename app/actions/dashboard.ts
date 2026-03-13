@@ -5,12 +5,14 @@ import { requireDashboardSession } from "@/lib/auth/session";
 import { recordAuditEvent } from "@/lib/dashboard/audit";
 import { dashboardService } from "@/lib/dashboard/service";
 import {
+  approvalDecisionSchema,
   notificationBulkActionSchema,
   notificationSettingsSchema,
   preferenceSettingsSchema,
   profileSettingsSchema,
   securitySettingsSchema,
   sendMessageSchema,
+  supportReplySchema,
   supportRequestSchema,
 } from "@/lib/validators/dashboard";
 
@@ -158,6 +160,38 @@ export async function sendMessageAction(
   }
 }
 
+export async function resolveApprovalAction(
+  _previousState: DashboardActionState = idleState,
+  formData: FormData,
+): Promise<DashboardActionState> {
+  const session = await requireDashboardSession();
+  const parsed = approvalDecisionSchema.safeParse({
+    approvalId: formData.get("approvalId"),
+    decision: formData.get("decision"),
+    note: formData.get("note"),
+  });
+
+  if (!parsed.success) {
+    return { status: "error", message: parsed.error.issues[0]?.message || "Approval decision is invalid." };
+  }
+
+  try {
+    await dashboardService.resolveApproval(session, parsed.data);
+    await recordAuditEvent(session, {
+      action: "approval.resolve",
+      targetType: "approval",
+      targetId: parsed.data.approvalId,
+      metadata: { decision: parsed.data.decision },
+    });
+    revalidatePath("/dashboard");
+    revalidatePath("/dashboard/projects");
+    revalidatePath("/dashboard/notifications");
+    return { status: "success", message: `Approval ${parsed.data.decision}.` };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Unable to update approval." };
+  }
+}
+
 export async function markNotificationsReadAction(formData: FormData) {
   const session = await requireDashboardSession();
   const values = formData.getAll("notificationIds").map(String);
@@ -201,5 +235,34 @@ export async function requestSupportAction(
     return { status: "success", message: "Support request submitted." };
   } catch (error) {
     return { status: "error", message: error instanceof Error ? error.message : "Unable to submit support request." };
+  }
+}
+
+export async function replySupportThreadAction(
+  _previousState: DashboardActionState = idleState,
+  formData: FormData,
+): Promise<DashboardActionState> {
+  const session = await requireDashboardSession();
+  const parsed = supportReplySchema.safeParse({
+    threadId: formData.get("threadId"),
+    body: formData.get("body"),
+  });
+
+  if (!parsed.success) {
+    return { status: "error", message: parsed.error.issues[0]?.message || "Support reply is invalid." };
+  }
+
+  try {
+    await dashboardService.replySupportThread(session, parsed.data);
+    await recordAuditEvent(session, {
+      action: "support.thread.reply",
+      targetType: "support_thread",
+      targetId: parsed.data.threadId,
+    });
+    revalidatePath("/dashboard/support");
+    revalidatePath(`/dashboard/support/${parsed.data.threadId}`);
+    return { status: "success", message: "Reply sent securely." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Unable to send support reply." };
   }
 }

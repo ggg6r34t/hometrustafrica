@@ -22,26 +22,38 @@ export const dashboardService = {
   getProjectTimeline(session: DashboardSession, projectId: string) {
     return repository.getProjectTimeline(session, projectId);
   },
-  getProjectReports(session: DashboardSession, projectId: string) {
-    return repository.getProjectReports(session, projectId);
+  getProjectReports(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+    return repository.getProjectReports(session, projectId, filters);
   },
-  getProjectFiles(session: DashboardSession, projectId: string) {
-    return repository.getProjectFiles(session, projectId);
+  getProjectReportById(session: DashboardSession, projectId: string, reportId: string) {
+    return repository.getProjectReportById(session, projectId, reportId);
+  },
+  getProjectFiles(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+    return repository.getProjectFiles(session, projectId, filters);
   },
   getProjectBudget(session: DashboardSession, projectId: string) {
     return repository.getProjectBudget(session, projectId);
   },
+  getProjectApprovals(session: DashboardSession, projectId: string) {
+    return repository.getProjectApprovals(session, projectId);
+  },
   getProjectTeam(session: DashboardSession, projectId: string) {
     return repository.getProjectTeam(session, projectId);
   },
-  listConversations(session: DashboardSession) {
-    return repository.listConversations(session);
+  listConversations(session: DashboardSession, filters?: Record<string, string | undefined>) {
+    return repository.listConversations(session, filters);
   },
   getConversation(session: DashboardSession, threadId: string) {
     return repository.getConversation(session, threadId);
   },
-  listNotifications(session: DashboardSession) {
-    return repository.listNotifications(session);
+  listNotifications(session: DashboardSession, filters?: Record<string, string | undefined>) {
+    return repository.listNotifications(session, filters);
+  },
+  listSupportThreads(session: DashboardSession) {
+    return repository.listSupportThreads(session);
+  },
+  getSupportThread(session: DashboardSession, threadId: string) {
+    return repository.getSupportThread(session, threadId);
   },
   getSettings(session: DashboardSession) {
     return repository.getSettings(session);
@@ -51,6 +63,8 @@ export const dashboardService = {
   updateNotifications: repository.updateNotifications.bind(repository),
   updatePreferences: repository.updatePreferences.bind(repository),
   sendMessage: repository.sendMessage.bind(repository),
+  resolveApproval: repository.resolveApproval.bind(repository),
   markNotificationsRead: repository.markNotificationsRead.bind(repository),
   requestSupport: repository.requestSupport.bind(repository),
+  replySupportThread: repository.replySupportThread.bind(repository),
 };

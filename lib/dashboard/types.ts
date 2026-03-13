@@ -54,7 +54,7 @@ export interface DashboardSession {
   email: string;
   name: string;
   expiresAt: string;
-  authSource?: "supabase" | "development_override" | "legacy_cookie";
+  authSource?: "supabase" | "development_override";
 }
 
 export interface DashboardUser {
@@ -132,17 +132,29 @@ export interface ReportItem {
   mediaCount: number;
 }
 
+export interface ReportSectionItem {
+  id: string;
+  title: string;
+  body: string;
+}
+
 export interface FileItem {
   id: string;
   projectId: string;
   name: string;
   category: FileCategory;
+  description?: string | null;
   uploadedAt: string;
   uploadedBy: string;
   sizeLabel?: string | null;
   mimeType?: string | null;
   downloadUrl?: string | null;
   previewUrl?: string | null;
+}
+
+export interface ReportDetail extends ReportItem {
+  sections: ReportSectionItem[];
+  attachments: FileItem[];
 }
 
 export interface BudgetCategory {
@@ -173,6 +185,19 @@ export interface ProjectBudget {
   transactions: TransactionItem[];
 }
 
+export interface ApprovalItem {
+  id: string;
+  projectId: string;
+  title: string;
+  description?: string | null;
+  status: "pending" | "approved" | "rejected" | "cancelled";
+  dueAt?: string | null;
+  requestedBy: string;
+  requestedFromUserId?: string | null;
+  amount?: number | null;
+  currency?: string | null;
+}
+
 export interface TeamMember {
   id: string;
   fullName: string;
@@ -186,6 +211,7 @@ export interface TeamMember {
 export interface ConversationSummary {
   id: string;
   subject: string;
+  kind?: "project" | "support" | "general";
   projectId?: string | null;
   projectName?: string | null;
   unreadCount: number;
@@ -217,6 +243,31 @@ export interface NotificationItem {
   readAt?: string | null;
   href?: string | null;
   projectName?: string | null;
+}
+
+export interface SupportMessageItem {
+  id: string;
+  threadId: string;
+  senderName: string;
+  senderRoleLabel: string;
+  body: string;
+  sentAt: string;
+  isOwnMessage: boolean;
+}
+
+export interface SupportThreadSummary {
+  id: string;
+  subject: string;
+  priority: "standard" | "priority" | "urgent";
+  status: "open" | "in_progress" | "closed";
+  projectId?: string | null;
+  projectName?: string | null;
+  updatedAt: string;
+  lastMessagePreview?: string | null;
+}
+
+export interface SupportThreadDetail extends SupportThreadSummary {
+  messages: SupportMessageItem[];
 }
 
 export interface DashboardActionItem {

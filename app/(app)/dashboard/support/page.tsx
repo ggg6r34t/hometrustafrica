@@ -3,8 +3,13 @@ import { LifeBuoy, PhoneCall, ShieldAlert } from "lucide-react";
 import { SupportRequestForm } from "@/components/dashboard/forms";
 import { DashboardPageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { requireDashboardSession } from "@/lib/auth/session";
+import { dashboardService } from "@/lib/dashboard/service";
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const session = await requireDashboardSession();
+  const threads = await dashboardService.listSupportThreads(session);
+
   return (
     <div className="space-y-6">
       <DashboardPageHeader
@@ -30,6 +35,30 @@ export default function SupportPage() {
               <p>
                 For routine follow-up, continue through the <Link href="/dashboard/inbox" className="font-medium text-primary">secure inbox</Link> to preserve the project audit trail.
               </p>
+            </CardContent>
+          </Card>
+          <Card className="border-border/70 bg-card/95 shadow-sm">
+            <CardHeader><CardTitle className="text-base font-semibold">Open support threads</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              {threads.length ? (
+                threads.map((thread) => (
+                  <Link
+                    key={thread.id}
+                    href={`/dashboard/support/${thread.id}`}
+                    className="block rounded-xl border border-border/70 p-4 transition hover:border-primary/30 hover:bg-primary/5"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-medium text-foreground">{thread.subject}</p>
+                      <span className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{thread.priority}</span>
+                    </div>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {thread.projectName || "General support"} · {thread.lastMessagePreview || "No replies yet."}
+                    </p>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">Support requests you open will appear here for follow-up and audit history.</p>
+              )}
             </CardContent>
           </Card>
         </div>

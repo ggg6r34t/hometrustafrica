@@ -2,6 +2,7 @@ import { FolderOpen } from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { DocumentRow } from "@/components/dashboard/document-row";
 import { FilterBar } from "@/components/dashboard/filter-bar";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requireAuthorizedProject } from "@/lib/auth/guards";
 import { dashboardService } from "@/lib/dashboard/service";
@@ -17,8 +18,11 @@ export default async function ProjectFilesPage({
 }) {
   const { projectId } = await params;
   const { session } = await requireAuthorizedProject(projectId);
-  const files = await dashboardService.getProjectFiles(session, projectId);
   const filters = await searchParams;
+  const normalizedFilters = Object.fromEntries(
+    Object.entries(filters).map(([key, value]) => [key, Array.isArray(value) ? value[0] : value]),
+  );
+  const files = await dashboardService.getProjectFiles(session, projectId, normalizedFilters);
 
   return (
     <div className="space-y-6">
@@ -26,6 +30,7 @@ export default async function ProjectFilesPage({
         <form className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
           <Input name="category" defaultValue={typeof filters.category === "string" ? filters.category : ""} placeholder="Category: documents, photos, videos..." className="md:w-72" />
           <Input name="uploadedBy" defaultValue={typeof filters.uploadedBy === "string" ? filters.uploadedBy : ""} placeholder="Uploader" className="md:w-48" />
+          <Button type="submit">Apply filters</Button>
         </form>
       </FilterBar>
       {files.length ? (
