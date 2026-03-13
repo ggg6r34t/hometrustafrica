@@ -23,6 +23,8 @@ import type {
   SendMessageInput,
   SupportRequestInput,
 } from "@/lib/validators/dashboard";
+import { createSupabaseDashboardRepository } from "@/lib/dashboard/supabaseRepository";
+import { hasSupabaseAdminEnv, hasSupabaseBrowserEnv } from "@/lib/supabase/env";
 
 export interface DashboardRepository {
   getState(): Promise<DashboardRepositoryState>;
@@ -144,5 +146,9 @@ class UnconfiguredDashboardRepository implements DashboardRepository {
 }
 
 export function createDashboardRepository(): DashboardRepository {
+  if (hasSupabaseBrowserEnv() && hasSupabaseAdminEnv()) {
+    return createSupabaseDashboardRepository();
+  }
+
   return new UnconfiguredDashboardRepository();
 }

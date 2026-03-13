@@ -54,6 +54,7 @@ export interface DashboardSession {
   email: string;
   name: string;
   expiresAt: string;
+  authSource?: "supabase" | "development_override" | "legacy_cookie";
 }
 
 export interface DashboardUser {
