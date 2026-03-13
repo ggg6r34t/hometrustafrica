@@ -1,10 +1,10 @@
-import Hero from "@/components/sections/landing/Hero";
-import Problem from "@/components/sections/landing/Problem";
-import Solution from "@/components/sections/landing/Solution";
-import HowItWorks from "@/components/sections/landing/HowItWorks";
-import ProjectTypes from "@/components/sections/landing/ProjectTypes";
-import FAQ from "@/components/sections/landing/FAQ";
-import CTASimple from "@/components/sections/contact/ContactCTA";
+import Hero from "@/components/marketing/landing/Hero";
+import Problem from "@/components/marketing/landing/Problem";
+import Solution from "@/components/marketing/landing/Solution";
+import HowItWorks from "@/components/marketing/landing/HowItWorks";
+import ProjectTypes from "@/components/marketing/landing/ProjectTypes";
+import FAQ from "@/components/marketing/landing/FAQ";
+import CTASimple from "@/components/marketing/contact/ContactCTA";
 
 /**
  * Home Page Component

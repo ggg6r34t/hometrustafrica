@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
-import AboutHero from "@/components/sections/about/Hero";
-import MissionVision from "@/components/sections/about/MissionVision";
-import OurStory from "@/components/sections/about/OurStory";
-import AboutCTA from "@/components/sections/about/CTA";
+import AboutHero from "@/components/marketing/about/Hero";
+import MissionVision from "@/components/marketing/about/MissionVision";
+import OurStory from "@/components/marketing/about/OurStory";
+import AboutCTA from "@/components/marketing/about/CTA";
 
 export const metadata: Metadata = {
   title: "About Us | HomeTrust Africa",

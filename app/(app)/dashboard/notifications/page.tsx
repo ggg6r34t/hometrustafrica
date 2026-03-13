@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import { markNotificationsReadAction } from "@/actions/dashboard";
+import { markNotificationsReadAction } from "@/app/actions/dashboard";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { DashboardPageHeader } from "@/components/dashboard/page-header";
 import { NotificationItem } from "@/components/dashboard/notification-item";
@@ -20,17 +20,31 @@ export default async function NotificationsPage() {
         actions={
           notifications.length ? (
             <form action={markNotificationsReadAction}>
-              {notifications.filter((item) => !item.readAt).map((item) => (
-                <input key={item.id} type="hidden" name="notificationIds" value={item.id} />
-              ))}
-              <Button type="submit" variant="outline">Mark unread as read</Button>
+              {notifications
+                .filter((item) => !item.readAt)
+                .map((item) => (
+                  <input
+                    key={item.id}
+                    type="hidden"
+                    name="notificationIds"
+                    value={item.id}
+                  />
+                ))}
+              <Button type="submit" variant="outline">
+                Mark unread as read
+              </Button>
             </form>
           ) : null
         }
       />
       {notifications.length ? (
         <div className="grid gap-3">
-          {notifications.map((notification) => <NotificationItem key={notification.id} notification={notification} />)}
+          {notifications.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              notification={notification}
+            />
+          ))}
         </div>
       ) : (
         <DashboardEmptyState

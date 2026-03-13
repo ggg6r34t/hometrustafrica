@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import ContactForm from "@/components/forms/ContactForm";
-import ContactHero from "@/components/sections/contact/Hero";
+import ContactHero from "@/components/marketing/contact/Hero";
 
 export const metadata: Metadata = {
   title: "Contact Us | HomeTrust Africa",
