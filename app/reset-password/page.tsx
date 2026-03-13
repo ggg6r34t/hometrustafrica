@@ -15,8 +15,8 @@ export default async function ResetPasswordPage({
   return (
     <AuthShell
       eyebrow="Password recovery"
-      title={isRecoveryMode ? "Choose a new password" : "Request a secure reset link"}
-      description="Password recovery is handled through your verified portal email and secure Supabase-authenticated sessions."
+      title={isRecoveryMode ? "Set a new password" : "Request a password reset"}
+      description="Recovery links are only issued to verified portal email addresses linked to your HomeTrust Africa account."
     >
       {isRecoveryMode ? (
         <PasswordResetCompleteForm code={code} tokenHash={tokenHash} type={type} />

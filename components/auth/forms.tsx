@@ -28,10 +28,31 @@ function Feedback({ state }: { state: AuthActionState }) {
   const Icon = success ? CheckCircle2 : AlertTriangle;
 
   return (
-    <p className={success ? "flex items-center gap-2 text-sm text-emerald-700" : "flex items-center gap-2 text-sm text-rose-700"}>
-      <Icon className="size-4" />
-      {state.message}
-    </p>
+    <div
+      className={
+        success
+          ? "flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-4 text-primary"
+          : "flex items-start gap-3 rounded-2xl border border-destructive/20 bg-destructive/10 p-4 text-destructive"
+      }
+    >
+      <Icon className="mt-0.5 size-4 shrink-0" />
+      <p className="text-sm font-medium leading-relaxed">{state.message}</p>
+    </div>
+  );
+}
+
+function AuthInput(props: React.ComponentProps<typeof Input>) {
+  return (
+    <Input
+      {...props}
+      className={[
+        "h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200",
+        "focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/15",
+        props.className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    />
   );
 }
 
@@ -39,29 +60,37 @@ export function LoginForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(loginAction, initialState);
 
   return (
-    <Card className="border-border/70 bg-transparent shadow-none">
+    <Card className="border-0 bg-transparent shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-xl font-semibold">Sign in to your portal</CardTitle>
+        <div className="mb-4 h-px w-10 bg-primary/55" />
+        <CardTitle className="text-[1.6rem] font-semibold tracking-tight text-[#0f1720]">Sign in</CardTitle>
       </CardHeader>
-      <CardContent className="px-0">
+      <CardContent className="space-y-5 px-0">
+        <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+          Use the email address issued to your account.
+        </p>
         <form action={action} className="space-y-4">
           <input type="hidden" name="next" value={next || ""} />
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" autoComplete="email" required />
+            <Label htmlFor="email" className="text-sm font-medium text-foreground/84">
+              Email
+            </Label>
+            <AuthInput id="email" name="email" type="email" autoComplete="email" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" type="password" autoComplete="current-password" required />
+            <Label htmlFor="password" className="text-sm font-medium text-foreground/84">
+              Password
+            </Label>
+            <AuthInput id="password" name="password" type="password" autoComplete="current-password" required />
           </div>
           <Feedback state={state} />
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <a href="/reset-password" className="text-sm font-medium text-primary">
-              Need to reset your password?
-            </a>
-            <Button type="submit" disabled={pending}>
-              {pending ? "Signing in..." : "Sign in securely"}
+          <div className="flex flex-col gap-4 pt-2">
+            <Button type="submit" size="lg" className="w-full rounded-full px-8 shadow-none" disabled={pending}>
+              {pending ? "Signing in..." : "Sign in"}
             </Button>
+            <a href="/reset-password" className="text-center text-sm text-foreground/58 underline-offset-4 hover:text-foreground hover:underline">
+              Reset password
+            </a>
           </div>
         </form>
       </CardContent>
@@ -81,37 +110,35 @@ export function AcceptInviteForm({
   const [state, action, pending] = useActionState(acceptInviteAction, initialState);
 
   return (
-    <Card className="border-border/70 bg-transparent shadow-none">
+    <Card className="border-0 bg-transparent shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-xl font-semibold">Accept portal invitation</CardTitle>
+        <div className="mb-4 h-px w-10 bg-primary/55" />
+        <CardTitle className="text-[1.6rem] font-semibold tracking-tight text-[#0f1720]">Accept invitation</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5 px-0">
-        <div className="rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-border/70 bg-white p-4 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">{email}</p>
-          <p className="mt-1">Set your password to activate secure access to your HomeTrust Africa workspace.</p>
         </div>
         <form action={action} className="space-y-4">
           <input type="hidden" name="token" value={token} />
           <div className="space-y-2">
             <Label htmlFor="fullName">Full name</Label>
-            <Input id="fullName" name="fullName" defaultValue={fullName} required />
+            <AuthInput id="fullName" name="fullName" defaultValue={fullName} required />
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" autoComplete="new-password" required />
+              <AuthInput id="password" name="password" type="password" autoComplete="new-password" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm password</Label>
-              <Input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
+              <AuthInput id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
             </div>
           </div>
           <Feedback state={state} />
-          <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
-              {pending ? "Activating..." : "Activate portal access"}
-            </Button>
-          </div>
+          <Button type="submit" size="lg" className="w-full rounded-full px-8 shadow-none" disabled={pending}>
+            {pending ? "Activating..." : "Activate access"}
+          </Button>
         </form>
       </CardContent>
     </Card>
@@ -120,25 +147,44 @@ export function AcceptInviteForm({
 
 export function PasswordResetRequestForm() {
   const [state, action, pending] = useActionState(requestPasswordResetAction, initialState);
+  const isSuccess = state.status === "success";
 
   return (
-    <Card className="border-border/70 bg-transparent shadow-none">
+    <Card className="border-0 bg-transparent shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-xl font-semibold">Reset your password</CardTitle>
+        <div className="mb-4 h-px w-10 bg-primary/55" />
+        <CardTitle className="text-[1.6rem] font-semibold tracking-tight text-[#0f1720]">Reset password</CardTitle>
       </CardHeader>
-      <CardContent className="px-0">
-        <form action={action} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Portal email</Label>
-            <Input id="email" name="email" type="email" autoComplete="email" required />
+      <CardContent className="space-y-5 px-0">
+        {isSuccess ? (
+          <div className="space-y-5">
+            <Feedback state={state} />
+            <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+              Check your inbox and open the secure link to continue.
+            </p>
+            <a href="/login" className="block text-sm text-foreground/58 underline-offset-4 hover:text-foreground hover:underline">
+              Return to sign in
+            </a>
           </div>
-          <Feedback state={state} />
-          <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
-              {pending ? "Sending..." : "Send reset link"}
-            </Button>
-          </div>
-        </form>
+        ) : (
+          <>
+            <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+              Enter your invited portal email and we will send a secure recovery link.
+            </p>
+            <form action={action} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-foreground/84">
+                  Email
+                </Label>
+                <AuthInput id="email" name="email" type="email" autoComplete="email" required />
+              </div>
+              <Feedback state={state} />
+              <Button type="submit" size="lg" className="w-full rounded-full px-8 shadow-none" disabled={pending}>
+                {pending ? "Sending..." : "Send reset link"}
+              </Button>
+            </form>
+          </>
+        )}
       </CardContent>
     </Card>
   );
@@ -232,13 +278,17 @@ export function PasswordResetCompleteForm({
   }
 
   return (
-    <Card className="border-border/70 bg-transparent shadow-none">
+    <Card className="border-0 bg-transparent shadow-none">
       <CardHeader className="px-0 pt-0">
-        <CardTitle className="text-xl font-semibold">Create a new password</CardTitle>
+        <div className="mb-4 h-px w-10 bg-primary/55" />
+        <CardTitle className="text-[1.6rem] font-semibold tracking-tight text-[#0f1720]">Create a new password</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5 px-0">
+        <p className="max-w-sm text-sm leading-7 text-muted-foreground">
+          Choose a strong password for your HomeTrust Africa portal account.
+        </p>
         {status === "verifying" ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-white p-4 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
             {message}
           </div>
@@ -251,18 +301,16 @@ export function PasswordResetCompleteForm({
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="password">New password</Label>
-                <Input id="password" name="password" type="password" autoComplete="new-password" required />
+                <AuthInput id="password" name="password" type="password" autoComplete="new-password" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm password</Label>
-                <Input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
+                <AuthInput id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
               </div>
             </div>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={status === "saving"}>
-                {status === "saving" ? "Updating..." : "Update password"}
-              </Button>
-            </div>
+            <Button type="submit" size="lg" className="w-full rounded-full px-8 shadow-none" disabled={status === "saving"}>
+              {status === "saving" ? "Updating..." : "Update password"}
+            </Button>
           </form>
         ) : null}
       </CardContent>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 export function AuthShell({
   eyebrow,
@@ -12,32 +13,34 @@ export function AuthShell({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(46,125,80,0.12),_transparent_32%),linear-gradient(180deg,#f6f5ef_0%,#f1f1eb_100%)] px-4 py-10">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-        <div className="space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary/80">{eyebrow}</p>
-          <div className="space-y-4">
-            <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-foreground md:text-5xl">{title}</h1>
-            <p className="max-w-xl text-base leading-7 text-muted-foreground">{description}</p>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(46,125,80,0.12),_transparent_32%),linear-gradient(180deg,#f6f5ef_0%,#f1f1eb_100%)] text-foreground">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-6 md:px-8 md:py-8">
+        <header className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          >
+            <span className="font-heading text-lg font-semibold tracking-tight">
+              HomeTrust <span className="text-primary">Africa</span>
+            </span>
+          </Link>
+        </header>
+
+        <main className="flex flex-1 items-center justify-center py-10">
+          <div className="grid w-full max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.92fr)_440px] lg:items-center">
+            <section className="max-w-xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-foreground/42">{eyebrow}</p>
+              <h1 className="mt-6 max-w-lg text-[clamp(3rem,5vw,4.75rem)] font-semibold leading-[0.94] tracking-[-0.05em] text-[#0f1720]">
+                {title}
+              </h1>
+              <p className="mt-5 max-w-sm text-[1rem] leading-8 text-foreground/62">{description}</p>
+            </section>
+
+            <section className="w-full rounded-[24px] border border-border/70 bg-white p-8 md:p-9">
+              {children}
+            </section>
           </div>
-          <div className="grid gap-4 text-sm text-muted-foreground sm:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-white/80 p-4">
-              <p className="font-medium text-foreground">Invite-only access</p>
-              <p className="mt-1">Accounts are provisioned by HomeTrust Africa operations.</p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-white/80 p-4">
-              <p className="font-medium text-foreground">Project-scoped security</p>
-              <p className="mt-1">Every report, file, and message is authorized server side.</p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-white/80 p-4">
-              <p className="font-medium text-foreground">Traceable operations</p>
-              <p className="mt-1">Milestones, approvals, and client communications stay auditable.</p>
-            </div>
-          </div>
-        </div>
-        <div className="rounded-[28px] border border-border/70 bg-white/92 p-6 shadow-[0_24px_80px_rgba(18,33,23,0.08)] md:p-8">
-          {children}
-        </div>
+        </main>
       </div>
     </div>
   );

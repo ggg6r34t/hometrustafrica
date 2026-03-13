@@ -19,8 +19,8 @@ export default async function LoginPage({
   return (
     <AuthShell
       eyebrow="Secure access"
-      title="Sign in to your HomeTrust Africa portal"
-      description="Use the credentials issued to you by HomeTrust Africa operations. This portal is invite-only and designed for secure project oversight."
+      title="Access your HomeTrust Africa dashboard"
+      description="Sign in to review project progress, reports, budgets, documents, and secure client communications."
     >
       <LoginForm next={next} />
     </AuthShell>
