@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com",
   ),
   alternates: {
     canonical: "/",

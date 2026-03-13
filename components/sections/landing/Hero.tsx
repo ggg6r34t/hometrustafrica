@@ -75,7 +75,8 @@ export default function Hero() {
                 className="mt-8 inline-flex items-center gap-2 text-sm text-white/68"
               >
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                Verified operators. Structured milestones. Reporting you can review from anywhere.
+                Verified operators. Structured milestones. Reporting you can
+                review from anywhere.
               </motion.div>
             </div>
           </motion.div>

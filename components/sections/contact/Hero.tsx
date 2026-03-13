@@ -9,7 +9,7 @@ export default function ContactHero() {
   return (
     <SectionContainer
       id="contact"
-      className="bg-white pb-10 pt-24 md:pb-12 md:pt-30"
+      className="bg-white pb-10 pt-24 md:pb-12 md:pt-32"
       ariaLabelledby="contact-hero-heading"
     >
       <motion.div

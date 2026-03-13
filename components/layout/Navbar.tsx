@@ -13,10 +13,12 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("");
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
+  const isHomepage = pathname === "/";
+  const isHomeHeroMode = isHomepage && !scrolled && !isOpen;
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      setScrolled(window.scrollY > 24);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -41,7 +43,6 @@ export default function Navbar() {
       "problem",
       "solution",
       "how-it-works",
-      "trust",
       "project-types",
       "faq",
       "contact-cta",
@@ -62,7 +63,7 @@ export default function Navbar() {
 
     const observer = new IntersectionObserver(
       observerCallback,
-      observerOptions
+      observerOptions,
     );
 
     sections.forEach((sectionId) => {
@@ -121,14 +122,23 @@ export default function Navbar() {
 
   const scrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    sectionId: string
+    sectionId: string,
   ) => {
+    if (pathname !== "/") {
+      setIsOpen(false);
+      return;
+    }
+
     e.preventDefault();
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
       setIsOpen(false);
     }
+  };
+
+  const getSectionHref = (hash: string) => {
+    return pathname === "/" ? hash : `/${hash}`;
   };
 
   const navLinks = [
@@ -158,14 +168,26 @@ export default function Navbar() {
       </Link>
       <nav
         ref={navRef}
-        className={`sticky top-0 z-50 border-b border-border/40 bg-background/82 backdrop-blur-md transition-all duration-300 ${
-          scrolled ? "bg-background/96" : ""
+        className={`top-0 z-50 transition-[background-color,border-color,backdrop-filter,box-shadow,color] duration-500 ease-out ${
+          isHomepage
+            ? "fixed left-0 right-0"
+            : "sticky border-b border-border/40 bg-background/82 backdrop-blur-md"
+        } ${
+          isHomepage
+            ? isHomeHeroMode
+              ? "bg-transparent"
+              : "border-b border-border/40 bg-background/88 shadow-[0_10px_30px_rgba(8,16,24,0.04)] backdrop-blur-md"
+            : ""
+        } ${
+          !isHomeHeroMode && scrolled
+            ? "bg-background/96 shadow-[0_10px_30px_rgba(8,16,24,0.05)]"
+            : ""
         }`}
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex h-[4.5rem] items-center justify-between">
+          <div className="flex h-18 items-center justify-between">
             {/* Logo with Trust Indicator */}
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -174,7 +196,9 @@ export default function Navbar() {
             >
               <Link
                 href="/"
-                className="flex items-center gap-2 text-[1.15rem] font-bold text-foreground transition-colors duration-200 hover:text-primary"
+                className={`flex items-center gap-2 text-[1.15rem] font-bold transition-colors duration-300 ease-out ${
+                  isHomeHeroMode ? "text-white" : "text-foreground"
+                }`}
                 aria-label="HomeTrust Africa Home"
               >
                 <div className="flex items-center gap-2">
@@ -198,6 +222,12 @@ export default function Navbar() {
                 const isActive = link.isLink
                   ? pathname === link.href
                   : activeSection === link.id;
+                const activeClass = isHomeHeroMode
+                  ? "text-white"
+                  : "bg-[#eef2eb] text-foreground";
+                const inactiveClass = isHomeHeroMode
+                  ? "text-white/82 hover:bg-white/8 hover:text-white"
+                  : "text-foreground/78 hover:bg-[#f3f4ef] hover:text-foreground";
                 if (link.isLink) {
                   return (
                     <motion.div
@@ -208,10 +238,8 @@ export default function Navbar() {
                     >
                       <Link
                         href={link.href}
-                        className={`group relative rounded-md px-3 py-2 text-sm transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                          isActive
-                            ? "bg-[#eef2eb] text-foreground"
-                            : "text-foreground/78 hover:bg-[#f3f4ef] hover:text-foreground"
+                        className={`group relative rounded-md px-3 py-2 text-sm transition-[color,background-color] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                          isActive ? activeClass : inactiveClass
                         }`}
                         aria-current={isActive ? "page" : undefined}
                         aria-label={`${link.label} - go to ${link.href}`}
@@ -219,11 +247,11 @@ export default function Navbar() {
                       >
                         <span className="relative z-10">{link.label}</span>
                         <span
-                          className={`absolute bottom-0 left-3 right-3 h-px bg-primary/70 transition-transform duration-300 origin-left ${
+                          className={`absolute bottom-0 left-3 right-3 h-px transition-transform duration-300 origin-left ${
                             isActive
                               ? "scale-x-100"
                               : "scale-x-0 group-hover:scale-x-100"
-                          }`}
+                          } ${isHomeHeroMode ? "bg-white/85" : "bg-primary/70"}`}
                         />
                       </Link>
                     </motion.div>
@@ -236,25 +264,23 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: idx * 0.05 }}
                   >
-                      <Link
-                        href={link.href}
-                        onClick={(e) => scrollToSection(e, link.href.slice(1))}
-                        className={`group relative rounded-md px-3 py-2 text-sm transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                          isActive
-                            ? "bg-[#eef2eb] text-foreground"
-                            : "text-foreground/78 hover:bg-[#f3f4ef] hover:text-foreground"
-                        }`}
+                    <Link
+                      href={getSectionHref(link.href)}
+                      onClick={(e) => scrollToSection(e, link.href.slice(1))}
+                      className={`group relative rounded-md px-3 py-2 text-sm transition-[color,background-color] duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                        isActive ? activeClass : inactiveClass
+                      }`}
                       aria-current={isActive ? "page" : undefined}
                       role="link"
                       aria-label={`${link.label} - go to ${link.href}`}
                     >
                       <span className="relative z-10">{link.label}</span>
                       <span
-                        className={`absolute bottom-0 left-3 right-3 h-px bg-primary/70 transition-transform duration-300 origin-left ${
+                        className={`absolute bottom-0 left-3 right-3 h-px transition-transform duration-300 origin-left ${
                           isActive
                             ? "scale-x-100"
                             : "scale-x-0 group-hover:scale-x-100"
-                        }`}
+                        } ${isHomeHeroMode ? "bg-white/85" : "bg-primary/70"}`}
                       />
                     </Link>
                   </motion.div>
@@ -274,7 +300,13 @@ export default function Navbar() {
                 href="/contact"
                 aria-label="Start a project - go to contact page"
               >
-                <Button className="px-5 text-sm font-medium shadow-none">
+                <Button
+                  className={`px-5 text-sm font-medium shadow-none ${
+                    isHomeHeroMode
+                      ? "bg-white text-[#081018] hover:bg-white/92"
+                      : ""
+                  }`}
+                >
                   Start a Project
                 </Button>
               </Link>
@@ -283,7 +315,9 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
-                className="relative h-6 w-6 rounded-lg p-2 text-foreground transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden"
+              className={`relative h-6 w-6 rounded-lg p-2 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:hidden ${
+                isHomeHeroMode ? "text-white" : "text-foreground"
+              }`}
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
@@ -396,12 +430,12 @@ export default function Navbar() {
                         }}
                       >
                         <Link
-                          href={item.href}
+                          href={getSectionHref(item.href)}
                           onClick={(e) => scrollToSection(e, item.id)}
                           className={`block px-2 py-2 rounded transition-colors ${
-                              isActive
-                                ? "bg-[#eef2eb] font-medium text-foreground"
-                                : "text-foreground/80 hover:bg-[#f3f4ef] hover:text-foreground"
+                            isActive
+                              ? "bg-[#eef2eb] font-medium text-foreground"
+                              : "text-foreground/80 hover:bg-[#f3f4ef] hover:text-foreground"
                           }`}
                           aria-current={isActive ? "page" : undefined}
                           role="link"

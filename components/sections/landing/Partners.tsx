@@ -51,8 +51,9 @@ export default function Partners() {
             Trust depends on the controls behind the work.
           </h2>
           <p className="mt-6 max-w-sm text-lg text-white/68">
-            This is where HomeTrust Africa signals discipline: who is verified,
-            how reporting works, and how accountability is maintained.
+            This is where HomeTrust Africa demonstrates discipline: the
+            safeguards, records, and accountability structures that make remote
+            oversight credible.
           </p>
         </motion.div>
 

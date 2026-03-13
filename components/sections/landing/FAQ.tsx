@@ -50,7 +50,7 @@ export default function FAQ() {
       <FAQSchema faqs={faqs} />
       <SectionContainer
         id="faq"
-        className="bg-[#f7f8f4]"
+        className="bg-white"
         ariaLabelledby="faq-heading"
       >
         <div className="grid gap-14 lg:grid-cols-12">

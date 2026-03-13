@@ -29,7 +29,7 @@ export default function HowItWorks() {
   return (
     <SectionContainer
       id="how-it-works"
-      className="bg-[#f7f8f4]"
+      className="bg-[#081018] text-white"
       ariaLabelledby="how-it-works-heading"
     >
       <motion.div
@@ -39,15 +39,15 @@ export default function HowItWorks() {
         viewport={viewportOptions}
         className="max-w-3xl"
       >
-        <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+        <p className="text-sm font-medium tracking-[0.04em] text-white/56">
           How It Works
         </p>
-        <h2 id="how-it-works-heading" className="mt-5">
+        <h2 id="how-it-works-heading" className="mt-5 text-white">
           Straightforward for clients. Rigorous underneath.
         </h2>
       </motion.div>
 
-      <div className="mt-16 grid gap-px overflow-hidden rounded-[1.75rem] border border-border/60 bg-border/60 lg:grid-cols-3">
+      <div className="mt-16 grid gap-px overflow-hidden rounded-[1.75rem] bg-white/10 lg:grid-cols-3">
         {steps.map((step, index) => (
           <motion.article
             key={step.number}
@@ -56,13 +56,13 @@ export default function HowItWorks() {
             whileInView="visible"
             viewport={viewportOptions}
             transition={{ delay: index * 0.05 }}
-            className="bg-white p-8"
+            className="bg-[#0d151a] p-8"
           >
-            <div className="text-6xl font-heading font-semibold tracking-[-0.05em] text-[#d7ded6]">
+            <div className="text-6xl font-heading font-semibold tracking-[-0.05em] text-white/18">
               {step.number}
             </div>
-            <h3 className="mt-8 text-2xl">{step.title}</h3>
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+            <h3 className="mt-8 text-2xl text-white">{step.title}</h3>
+            <p className="mt-4 max-w-sm text-sm text-white/62">
               {step.description}
             </p>
           </motion.article>

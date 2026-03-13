@@ -38,7 +38,7 @@ export default function ProjectTypes() {
   return (
     <SectionContainer
       id="project-types"
-      className="bg-white"
+      className="bg-[#f7f8f4]"
       ariaLabelledby="project-types-heading"
     >
       <div className="grid gap-14 lg:grid-cols-12 lg:items-start">

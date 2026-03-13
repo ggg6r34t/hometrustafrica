@@ -1,20 +1,26 @@
-"use client"
+"use client";
 
-import { motion, useScroll, useSpring } from "framer-motion"
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
 export default function ScrollProgress() {
-  const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 120,
+    damping: 28,
     restDelta: 0.001,
-  })
+  });
+  const opacity = useTransform(scrollYProgress, [0, 0.01], [0, 1]);
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-50"
-      style={{ scaleX }}
-    />
-  )
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-1"
+    >
+      <motion.div
+        className="h-full origin-left bg-primary"
+        style={{ scaleX, opacity }}
+      />
+    </div>
+  );
 }
 

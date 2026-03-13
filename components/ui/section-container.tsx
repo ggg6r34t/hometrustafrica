@@ -23,7 +23,7 @@ export default function SectionContainer({
   return (
     <section
       id={id}
-      className={`py-20 md:py-24 ${className}`}
+      className={`scroll-mt-24 py-20 md:scroll-mt-28 md:py-24 ${className}`}
       aria-labelledby={ariaLabelledby}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">{children}</div>
