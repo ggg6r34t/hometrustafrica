@@ -13,12 +13,6 @@ import {
 } from "@/components/seo/StructuredData";
 import { QueryProvider } from "@/providers/QueryProvider";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import TrustBar from "@/components/layout/TrustBar";
-import ScrollProgress from "@/components/sections/ScrollProgress";
-import ScrollToTop from "@/components/sections/ScrollToTop";
-import Footer from "@/components/layout/Footer";
-import FloatingCTA from "@/components/sections/contact/FloatingCTA";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const poppins = Poppins({
@@ -121,13 +115,7 @@ export default function RootLayout({
         <WebsiteSchema />
         <QueryProvider>
           <ErrorBoundary>
-            <ScrollProgress />
-            <Navbar />
-            <TrustBar />
             <main>{children}</main>
-            <Footer />
-            <ScrollToTop />
-            <FloatingCTA />
           </ErrorBoundary>
           <Toaster
             position="top-center"
