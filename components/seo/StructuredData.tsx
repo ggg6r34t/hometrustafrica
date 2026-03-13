@@ -9,6 +9,14 @@
  * Organization Schema
  */
 export function OrganizationSchema() {
+  const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER;
+  const socialLinks = [
+    process.env.NEXT_PUBLIC_FACEBOOK_URL,
+    process.env.NEXT_PUBLIC_TWITTER_URL,
+    process.env.NEXT_PUBLIC_LINKEDIN_URL,
+    process.env.NEXT_PUBLIC_INSTAGRAM_URL,
+  ].filter(Boolean);
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -21,18 +29,13 @@ export function OrganizationSchema() {
       "Building Back Home, Without the Fear. We help Africans in the diaspora build and manage their homes, projects, and businesses back home with full transparency and fraud protection.",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+1-XXX-XXX-XXXX", // TODO: Add actual phone number
       contactType: "Customer Service",
       email: "hello@hometrustafrica.com",
       areaServed: ["NG", "GH", "KE", "ZA", "TZ", "UG"], // Country codes
       availableLanguage: ["en"],
+      ...(phoneNumber ? { telephone: phoneNumber } : {}),
     },
-    sameAs: [
-      // TODO: Add actual social media URLs
-      // "https://www.facebook.com/hometrustafrica",
-      // "https://twitter.com/hometrustafrica",
-      // "https://www.linkedin.com/company/hometrustafrica",
-    ],
+    ...(socialLinks.length > 0 ? { sameAs: socialLinks } : {}),
     address: {
       "@type": "PostalAddress",
       addressCountry: "Multiple", // Serving multiple countries
@@ -92,16 +95,6 @@ export function WebsiteSchema() {
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com",
     description:
       "Building Back Home, Without the Fear. Safe project management for the diaspora.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${
-          process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com"
-        }/search?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
   };
 
   return (

@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
-import { MapPin } from "lucide-react"
-import { staggerContainer, staggerItem, fadeInUp, viewportOptions } from "@/lib/animations"
+import { motion } from "framer-motion";
+import { MapPin } from "lucide-react";
+
+import { Card } from "@/components/ui/card";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  viewportOptions,
+} from "@/lib/animations";
 
 export default function Countries() {
   const countries = [
@@ -43,53 +49,61 @@ export default function Countries() {
       description: "Kampala and surrounding regions",
       projects: "10+ projects",
     },
-  ]
-
+  ];
 
   return (
-    <section id="countries" className="py-24 md:py-32 bg-muted/10" aria-labelledby="countries-heading">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="countries"
+      className="bg-muted/10 py-24 md:py-32"
+      aria-labelledby="countries-heading"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-16"
+          className="mb-16 text-center"
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOptions}
         >
-          <h2 id="countries-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
+          <h2
+            id="countries-heading"
+            className="mb-4 text-3xl font-bold text-foreground md:text-4xl lg:text-5xl"
+          >
             Where We Operate
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We're building a trusted network across Africa. Currently serving diaspora members in these countries, with more locations coming soon.
+          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+            We&apos;re building a trusted network across Africa. Currently serving
+            diaspora members in these countries, with more locations coming soon.
           </p>
         </motion.div>
 
         <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOptions}
         >
-          {countries.map((country, index) => (
-            <motion.div
-              key={index}
-              variants={staggerItem}
-            >
-              <Card className="p-6 md:p-8 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg h-full bg-card group">
+          {countries.map((country) => (
+            <motion.div key={country.name} variants={staggerItem}>
+              <Card className="group h-full border border-border/50 bg-card p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-lg md:p-8">
                 <div className="flex items-start gap-4">
-                  <div className="text-5xl md:text-6xl flex-shrink-0">
+                  <div className="shrink-0 text-5xl md:text-6xl">
                     {country.flag}
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="mb-3 flex items-center gap-2">
                       <MapPin className="text-primary" size={20} />
-                      <h3 className="text-xl md:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
+                      <h3 className="text-xl font-semibold text-foreground transition-colors duration-200 group-hover:text-primary md:text-2xl">
                         {country.name}
                       </h3>
                     </div>
-                    <p className="text-muted-foreground text-sm mb-3 leading-relaxed">{country.description}</p>
-                    <p className="text-primary text-sm font-semibold">{country.projects}</p>
+                    <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+                      {country.description}
+                    </p>
+                    <p className="text-sm font-semibold text-primary">
+                      {country.projects}
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -98,24 +112,24 @@ export default function Countries() {
         </motion.div>
 
         <motion.div
-          className="text-center mt-12"
+          className="mt-12 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
           <p className="text-muted-foreground">
-            Don't see your country?{" "}
+            Don&apos;t see your country?{" "}
             <a
               href="#contact-cta"
               onClick={(e) => {
-                e.preventDefault()
-                const element = document.getElementById("contact-cta")
+                e.preventDefault();
+                const element = document.getElementById("contact-cta");
                 if (element) {
-                  element.scrollIntoView({ behavior: "smooth", block: "start" })
+                  element.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
               }}
-              className="text-primary hover:underline font-medium"
+              className="font-medium text-primary hover:underline"
             >
               Contact us
             </a>{" "}
@@ -124,6 +138,5 @@ export default function Countries() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
-

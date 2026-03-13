@@ -1,8 +1,5 @@
 # HomeTrust Africa - Comprehensive Codebase Review
 
-Latest version: `docs/reviews/CODEBASE_REVIEW_v2_2026-03-13.md`  
-Archived previous review: `docs/reviews/CODEBASE_REVIEW_v1_2026-01.md`
-
 **Review Date:** March 13, 2026  
 **Reviewer:** Codex  
 **Project Status:** Pre-launch marketing site
@@ -85,7 +82,7 @@ The previous placeholder values have been removed. The current implementation no
 
 ### Repo Hygiene
 
-- Unused legacy landing sections have been reduced, with `Countries` and `Statistics` preserved under `components/sections/archive/landing`
+- Unused legacy landing sections have been reduced, with `Countries`, `Statistics`, and `Testimonials` preserved under `components/sections/archive/landing`
 - A committed `.env.example` now documents the required runtime configuration
 
 ---

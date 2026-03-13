@@ -25,9 +25,9 @@ interface SocialLink {
 
 const QUICK_LINKS: FooterLink[] = [
   { href: "/about", label: "About" },
-  { href: "#problem", label: "Why we exist" },
-  { href: "#solution", label: "Services" },
-  { href: "#how-it-works", label: "How It Works" },
+  { href: "/#problem", label: "Why we exist" },
+  { href: "/#solution", label: "Services" },
+  { href: "/#how-it-works", label: "How It Works" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -37,11 +37,27 @@ const LEGAL_LINKS: FooterLink[] = [
 ];
 
 const SOCIAL_LINKS: SocialLink[] = [
-  { icon: <IoLogoFacebook size={20} />, href: "#", label: "Facebook" },
-  { icon: <IoLogoTwitter size={20} />, href: "#", label: "Twitter" },
-  { icon: <IoLogoLinkedin size={20} />, href: "#", label: "LinkedIn" },
-  { icon: <IoLogoInstagram size={20} />, href: "#", label: "Instagram" },
-];
+  {
+    icon: <IoLogoFacebook size={20} />,
+    href: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",
+    label: "Facebook",
+  },
+  {
+    icon: <IoLogoTwitter size={20} />,
+    href: process.env.NEXT_PUBLIC_TWITTER_URL || "",
+    label: "Twitter",
+  },
+  {
+    icon: <IoLogoLinkedin size={20} />,
+    href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "",
+    label: "LinkedIn",
+  },
+  {
+    icon: <IoLogoInstagram size={20} />,
+    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "",
+    label: "Instagram",
+  },
+].filter((social) => social.href);
 
 function LinkList({ title, links }: { title: string; links: FooterLink[] }) {
   return (
@@ -64,6 +80,10 @@ function LinkList({ title, links }: { title: string; links: FooterLink[] }) {
 }
 
 function SocialLinks() {
+  if (SOCIAL_LINKS.length === 0) {
+    return null;
+  }
+
   return (
     <div className="mb-4 flex gap-4">
       {SOCIAL_LINKS.map((social) => (
@@ -120,9 +140,11 @@ export default function Footer() {
             </p>
             <NewsletterForm />
             <div className="mt-6">
-              <h4 className="mb-4 text-base font-semibold text-white">
-                Connect
-              </h4>
+              {SOCIAL_LINKS.length > 0 ? (
+                <h4 className="mb-4 text-base font-semibold text-white">
+                  Connect
+                </h4>
+              ) : null}
               <SocialLinks />
               <Link
                 href="mailto:hello@hometrustafrica.com"

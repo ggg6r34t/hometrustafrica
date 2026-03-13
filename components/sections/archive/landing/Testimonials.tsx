@@ -50,7 +50,7 @@ export default function Testimonials() {
           </h2>
         </motion.div>
 
-        <div className="grid gap-8 lg:col-span-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3 lg:col-span-8">
           {stories.map((story, index) => (
             <motion.article
               key={story.title}
@@ -65,7 +65,9 @@ export default function Testimonials() {
                 {story.location}
               </p>
               <h3 className="mt-4 text-2xl">{story.title}</h3>
-              <p className="mt-4 text-sm text-muted-foreground">{story.summary}</p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                {story.summary}
+              </p>
               <div className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary">
                 <span>View story</span>
                 <ArrowUpRight className="h-4 w-4" />
