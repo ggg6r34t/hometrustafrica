@@ -107,7 +107,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <LinkList title="Navigation" links={QUICK_LINKS} />
+          <LinkList title="Explore" links={QUICK_LINKS} />
           <LinkList title="Legal" links={LEGAL_LINKS} />
 
           <div>

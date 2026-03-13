@@ -14,7 +14,7 @@ interface HeroVisualProps {
 export default function HeroVisual({ children }: HeroVisualProps) {
   return (
     <motion.div
-      className="relative min-h-[78vh]"
+      className="relative min-h-[100svh] md:min-h-[78vh]"
       variants={scaleIn}
       initial="hidden"
       animate="visible"

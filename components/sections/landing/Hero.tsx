@@ -26,7 +26,7 @@ export default function Hero() {
       <div id="main-content" className="relative">
         <HeroVisual>
           <motion.div
-            className="mx-auto flex min-h-[78vh] w-full max-w-7xl items-end px-6 pb-12 pt-20 lg:px-8 lg:pb-16 lg:pt-28"
+            className="mx-auto flex min-h-[100svh] w-full max-w-7xl items-end px-6 pb-12 pt-20 md:min-h-[78vh] lg:px-8 lg:pb-16 lg:pt-28"
             variants={staggerContainerSlow}
             initial="hidden"
             animate="visible"

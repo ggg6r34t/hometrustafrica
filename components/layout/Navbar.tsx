@@ -301,9 +301,10 @@ export default function Navbar() {
                 aria-label="Start a project - go to contact page"
               >
                 <Button
+                  variant={isHomeHeroMode ? "outline" : "default"}
                   className={`px-5 text-sm font-medium shadow-none ${
                     isHomeHeroMode
-                      ? "bg-white text-[#081018] hover:bg-white/92"
+                      ? "bg-transparent text-white hover:bg-white border border-white/85"
                       : ""
                   }`}
                 >
