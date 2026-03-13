@@ -46,7 +46,7 @@ export default function TermsOfService() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <Card className="rounded-[1.5rem] border-0 bg-white p-8 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-8 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   Welcome to HomeTrust Africa. These Terms of Service ("Terms")
                   govern your access to and use of our website, services, and
@@ -72,7 +72,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Acceptance of Terms
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   By creating an account, submitting a project inquiry, or using
                   any of our Services, you acknowledge that you have read,
@@ -94,7 +94,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Description of Services
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   HomeTrust Africa provides project management services for
                   Africans in the diaspora who wish to build, invest, or manage
@@ -129,7 +129,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 User Responsibilities
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   You agree to:
                 </p>
@@ -178,7 +178,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Project Management and Fees
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">Service Fees:</strong> Our
                   service fees are disclosed during the project consultation
@@ -213,7 +213,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Limitation of Liability
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   To the maximum extent permitted by law:
                 </p>
@@ -256,7 +256,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Disclaimers
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">
                     Service Availability:
@@ -293,7 +293,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Intellectual Property
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   All content, features, and functionality of the Services,
                   including but not limited to text, graphics, logos, icons,
@@ -320,7 +320,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Termination
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We may terminate or suspend your access to the Services
                   immediately, without prior notice, for any reason, including
@@ -347,7 +347,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Dispute Resolution
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   <strong className="text-foreground">
                     Informal Resolution:
@@ -389,7 +389,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Changes to Terms
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   We reserve the right to modify these Terms at any time. We
                   will notify you of any material changes by posting the new
@@ -412,7 +412,7 @@ export default function TermsOfService() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Contact Information
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-[#f8f8f4] p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-[#f8f8f4] p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   If you have any questions about these Terms of Service, please
                   contact us:
@@ -444,16 +444,16 @@ export default function TermsOfService() {
 
             {/* Acknowledgment */}
             <div className="mb-12">
-              <Card className="rounded-[1.5rem] border-0 bg-[#f8f8f4] p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-[#f8f8f4] p-6 shadow-none">
                 <div>
-                    <p className="text-foreground font-semibold mb-2">
-                      By using HomeTrust Africa Services
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed font-light">
-                      You acknowledge that you have read, understood, and agree
-                      to be bound by these Terms of Service and our Privacy
-                      Policy. Thank you for choosing HomeTrust Africa.
-                    </p>
+                  <p className="text-foreground font-semibold mb-2">
+                    By using HomeTrust Africa Services
+                  </p>
+                  <p className="text-muted-foreground leading-relaxed font-light">
+                    You acknowledge that you have read, understood, and agree to
+                    be bound by these Terms of Service and our Privacy Policy.
+                    Thank you for choosing HomeTrust Africa.
+                  </p>
                 </div>
               </Card>
             </div>

@@ -46,7 +46,7 @@ export default function Privacy() {
               viewport={viewportOptions}
               className="mb-12"
             >
-              <Card className="rounded-[1.5rem] border-0 bg-white p-8 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-8 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   HomeTrust Africa ("we," "our," or "us") is committed to
                   protecting your privacy. This Privacy Policy explains how we
@@ -76,7 +76,7 @@ export default function Privacy() {
               </h2>
 
               <div className="space-y-6">
-                <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+                <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                   <h3 className="text-xl font-semibold text-foreground mb-3">
                     Personal Information
                   </h3>
@@ -101,7 +101,7 @@ export default function Privacy() {
                   </ul>
                 </Card>
 
-                <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+                <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                   <h3 className="text-xl font-semibold text-foreground mb-3">
                     Automatically Collected Information
                   </h3>
@@ -131,7 +131,7 @@ export default function Privacy() {
                 How We Use Your Information
               </h2>
 
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We use the information we collect to:
                 </p>
@@ -176,7 +176,7 @@ export default function Privacy() {
                 Information Sharing and Disclosure
               </h2>
 
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We do not sell your personal information. We may share your
                   information only in the following circumstances:
@@ -231,7 +231,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Data Security
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We implement industry-standard security measures to protect
                   your personal information, including:
@@ -265,7 +265,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Your Rights and Choices
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   You have the right to:
                 </p>
@@ -306,7 +306,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Cookies and Tracking Technologies
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   We use cookies and similar tracking technologies to:
                 </p>
@@ -335,7 +335,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 International Data Transfers
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   Your information may be transferred to and processed in
                   countries other than your country of residence. These
@@ -359,7 +359,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Children's Privacy
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   Our services are not intended for individuals under the age of
                   18. We do not knowingly collect personal information from
@@ -375,7 +375,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Changes to This Privacy Policy
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-white p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-white p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light">
                   We may update this Privacy Policy from time to time. We will
                   notify you of any changes by posting the new Privacy Policy on
@@ -391,7 +391,7 @@ export default function Privacy() {
               <h2 className="mb-6 text-3xl md:text-4xl text-foreground">
                 Contact Us
               </h2>
-              <Card className="rounded-[1.5rem] border-0 bg-[#f8f8f4] p-6 shadow-none">
+              <Card className="rounded-3xl border-0 bg-[#f8f8f4] p-6 shadow-none">
                 <p className="text-muted-foreground leading-relaxed font-light mb-4">
                   If you have any questions about this Privacy Policy or our
                   data practices, please contact us:
