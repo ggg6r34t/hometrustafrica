@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { MessageSquareMore, Search } from "lucide-react";
+import { Bell, FolderKanban, MessageSquareMore, Search } from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
-import { formatDateLabel } from "@/components/dashboard/formatters";
+  import { formatDateLabel } from "@/components/dashboard/formatters";
+import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -66,39 +67,24 @@ export default async function InboxPage({
       {threads.length ? (
         <>
           <div className="grid items-start gap-4 md:grid-cols-3">
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Conversation threads
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {threads.length}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest message activity: {latestMessageLabel}
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Unread threads
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {unreadThreads}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Threads that currently need review or a response.
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Project-linked
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {projectThreads}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Conversations attached directly to active project workstreams.
-              </p>
-            </Card>
+            <MetricCard
+              label="Conversation threads"
+              value={String(threads.length)}
+              detail={`Latest message activity: ${latestMessageLabel}`}
+              icon={<MessageSquareMore className="size-4" />}
+            />
+            <MetricCard
+              label="Unread threads"
+              value={String(unreadThreads)}
+              detail="Threads that currently need review or a response."
+              icon={<Bell className="size-4" />}
+            />
+            <MetricCard
+              label="Project-linked"
+              value={String(projectThreads)}
+              detail="Conversations attached directly to active project workstreams."
+              icon={<FolderKanban className="size-4" />}
+            />
           </div>
 
           <Card className="dashboard-panel">

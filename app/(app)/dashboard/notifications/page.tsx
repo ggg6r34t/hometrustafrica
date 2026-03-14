@@ -4,6 +4,7 @@ import { markNotificationsReadAction } from "@/app/actions/dashboard";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
 import { formatDateLabel } from "@/components/dashboard/formatters";
+import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,39 +91,24 @@ export default async function NotificationsPage({
       {notifications.length ? (
         <>
           <div className="grid items-start gap-4 md:grid-cols-3">
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Total notifications
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {notifications.length}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest system activity: {latestPublishedLabel}
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Unread alerts
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {unreadCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Items that have not yet been acknowledged in the portal.
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Linked actions
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {actionLinkedCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Notifications that point to a report, message, or action page.
-              </p>
-            </Card>
+            <MetricCard
+              label="Total notifications"
+              value={String(notifications.length)}
+              detail={`Latest system activity: ${latestPublishedLabel}`}
+              icon={<Bell className="size-4" />}
+            />
+            <MetricCard
+              label="Unread alerts"
+              value={String(unreadCount)}
+              detail="Items that have not yet been acknowledged in the portal."
+              icon={<Bell className="size-4" />}
+            />
+            <MetricCard
+              label="Linked actions"
+              value={String(actionLinkedCount)}
+              detail="Notifications that point to a report, message, or action page."
+              icon={<Bell className="size-4" />}
+            />
           </div>
 
           <Card className="dashboard-panel">

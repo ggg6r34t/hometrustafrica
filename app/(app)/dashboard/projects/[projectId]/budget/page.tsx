@@ -1,4 +1,4 @@
-import { ReceiptText, Wallet } from "lucide-react";
+import { AlertTriangle, ReceiptText, Wallet } from "lucide-react";
 import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import {
@@ -6,6 +6,7 @@ import {
   formatDateLabel,
 } from "@/components/dashboard/formatters";
 import { ApprovalDecisionForm } from "@/components/dashboard/forms";
+import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import {
   Card,
@@ -70,40 +71,24 @@ export default async function ProjectBudgetPage({
     <div className="space-y-6">
       <BudgetSummaryCard budget={budget} />
       <div className="grid items-start gap-4 md:grid-cols-3">
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Transactions logged
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-            {budget.transactions.length}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            All approved, pending, and flagged spend records in this project.
-          </p>
-        </Card>
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Pending approvals
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-            {budget.pendingApprovalsCount}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Budget controls currently awaiting an internal or client decision.
-          </p>
-        </Card>
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Flagged or pending spend
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-            {flaggedTransactions + pendingTransactions}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Records requiring extra review, confirmation, or supporting
-            evidence.
-          </p>
-        </Card>
+        <MetricCard
+          label="Transactions logged"
+          value={String(budget.transactions.length)}
+          detail="All approved, pending, and flagged spend records in this project."
+          icon={<ReceiptText className="size-4" />}
+        />
+        <MetricCard
+          label="Pending approvals"
+          value={String(budget.pendingApprovalsCount)}
+          detail="Budget controls currently awaiting an internal or client decision."
+          icon={<Wallet className="size-4" />}
+        />
+        <MetricCard
+          label="Flagged or pending spend"
+          value={String(flaggedTransactions + pendingTransactions)}
+          detail="Records requiring extra review, confirmation, or supporting evidence."
+          icon={<AlertTriangle className="size-4" />}
+        />
       </div>
 
       {actionableApprovals.length ? (

@@ -1,8 +1,9 @@
-import { Download, FolderOpen, Search } from "lucide-react";
+import { Download, FileImage, FileText, FolderOpen, ReceiptText, Search } from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
 import { FilePreviewDialog } from "@/components/dashboard/file-preview-dialog";
 import { formatDateLabel } from "@/components/dashboard/formatters";
+import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,40 +93,24 @@ export default async function ProjectFilesPage({
       {files.length ? (
         <>
           <div className="grid items-start gap-4 md:grid-cols-3">
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Shared files
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {files.length}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest upload: {latestUploadedLabel}
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Documents and receipts
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {documentCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Contracts, documents, and receipt evidence available to the
-                client.
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Media assets
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {mediaCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Photo and video evidence from the secure document room.
-              </p>
-            </Card>
+            <MetricCard
+              label="Shared files"
+              value={String(files.length)}
+              detail={`Latest upload: ${latestUploadedLabel}`}
+              icon={<FileText className="size-4" />}
+            />
+            <MetricCard
+              label="Documents and receipts"
+              value={String(documentCount)}
+              detail="Contracts, documents, and receipt evidence available to the client."
+              icon={<ReceiptText className="size-4" />}
+            />
+            <MetricCard
+              label="Media assets"
+              value={String(mediaCount)}
+              detail="Photo and video evidence from the secure document room."
+              icon={<FileImage className="size-4" />}
+            />
           </div>
 
           <Card className="dashboard-panel">

@@ -23,41 +23,6 @@ export default async function SettingsNotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="grid items-start gap-4 md:grid-cols-3">
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Email alerts enabled
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-            {emailEnabled}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Out of four available email notification categories.
-          </p>
-        </Card>
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            In-app alerts enabled
-          </p>
-          <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-            {inAppEnabled}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Portal notifications currently active for operational events.
-          </p>
-        </Card>
-        <Card className="dashboard-panel-muted p-4">
-          <p className="text-sm font-semibold text-muted-foreground">
-            Coverage
-          </p>
-          <p className="mt-2 font-semibold text-foreground">
-            Reports, milestones, budgets, messages
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Fine-tune which event categories should reach you and how.
-          </p>
-        </Card>
-      </div>
       <NotificationSettingsForm settings={settings.notifications} />
     </div>
   );

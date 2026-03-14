@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { FileText, Search } from "lucide-react";
+import { FileImage, FileText, Paperclip, Search } from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { formatDateLabel } from "@/components/dashboard/formatters";
+import { MetricCard } from "@/components/dashboard/metric-card";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -84,39 +85,24 @@ export default async function ProjectReportsPage({
       {reports.length ? (
         <>
           <div className="grid items-start gap-4 md:grid-cols-3">
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Published reports
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {reports.length}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Latest publication: {latestPublishedLabel}
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Supporting attachments
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {attachmentsCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Files linked across all published reports.
-              </p>
-            </Card>
-            <Card className="dashboard-panel-muted p-4">
-              <p className="text-sm font-semibold text-muted-foreground">
-                Media evidence
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-foreground">
-                {mediaCount}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Images and videos available in report evidence packs.
-              </p>
-            </Card>
+            <MetricCard
+              label="Published reports"
+              value={String(reports.length)}
+              detail={`Latest publication: ${latestPublishedLabel}`}
+              icon={<FileText className="size-4" />}
+            />
+            <MetricCard
+              label="Supporting attachments"
+              value={String(attachmentsCount)}
+              detail="Files linked across all published reports."
+              icon={<Paperclip className="size-4" />}
+            />
+            <MetricCard
+              label="Media evidence"
+              value={String(mediaCount)}
+              detail="Images and videos available in report evidence packs."
+              icon={<FileImage className="size-4" />}
+            />
           </div>
 
           <Card className="dashboard-panel">
