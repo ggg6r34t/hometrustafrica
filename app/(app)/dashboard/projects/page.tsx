@@ -72,7 +72,9 @@ export default async function ProjectsPage({
                     <StatusBadge
                       label={project.status.replaceAll("_", " ")}
                       tone={
-                        project.health === "healthy"
+                        project.status === "AT_RISK"
+                          ? "danger"
+                          : project.health === "healthy"
                           ? "success"
                           : project.health === "watch"
                             ? "warning"

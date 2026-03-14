@@ -13,7 +13,14 @@ export default async function ProjectLayout({
 }) {
   const { projectId } = await params;
   const { project } = await requireAuthorizedProject(projectId);
-  const healthTone = project.health === "healthy" ? "success" : project.health === "watch" ? "warning" : "danger";
+  const statusTone =
+    project.status === "AT_RISK"
+      ? "danger"
+      : project.health === "healthy"
+        ? "success"
+        : project.health === "watch"
+          ? "warning"
+          : "danger";
 
   return (
     <div className="space-y-6">
@@ -21,7 +28,12 @@ export default async function ProjectLayout({
         eyebrow={project.type}
         title={project.name}
         description={`${project.location} · ${project.stageLabel}`}
-        actions={<StatusBadge label={project.status.replaceAll("_", " ")} tone={healthTone} />}
+        actions={
+          <StatusBadge
+            label={project.status.replaceAll("_", " ")}
+            tone={statusTone}
+          />
+        }
       />
       <ProjectSubnav projectId={project.id} />
       {children}
