@@ -14,7 +14,6 @@ import {
 } from "@/app/actions/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApprovalItem, DashboardSettings } from "@/lib/dashboard/types";
 
@@ -108,7 +108,7 @@ export function ProfileSettingsForm({
               <SelectTrigger
                 id="preferredContactMethod"
                 size="dashboard"
-                className="w-full rounded-lg border-border bg-background"
+                className="w-full rounded-lg border-border bg-background md:max-w-[calc(50%-0.5rem)]"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -261,7 +261,7 @@ export function NotificationSettingsForm({
                   Applies immediately to your secure portal preferences.
                 </p>
               </div>
-              <Checkbox id={name} name={name} defaultChecked={checked} />
+              <Switch id={name} name={name} defaultChecked={checked} />
             </div>
           ))}
           <ActionFeedback state={state} />
