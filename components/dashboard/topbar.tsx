@@ -57,7 +57,7 @@ export function DashboardTopbar({ projects }: { projects: ProjectSummary[] }) {
   );
   return (
     <div className="dashboard-command-bar">
-      <div className="mx-auto flex w-full max-w-[1680px] flex-col gap-3 px-4 py-3 md:px-6 md:py-4 lg:px-8">
+      <div className="mx-auto flex w-full max-w-[1680px] flex-col gap-3 px-4 pt-4 pb-1 md:px-6 md:pt-5 md:pb-2 lg:px-8">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <div className="flex min-w-0 items-start gap-4 md:items-center">
             <SidebarTrigger className="md:hidden" />

@@ -41,14 +41,14 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
-    <tfoot
-      data-slot="table-footer"
-      className={cn(
-        "bg-muted/40 border-t border-border/70 font-medium [&>tr]:last:border-b-0",
-        className,
-      )}
-      {...props}
-    />
+      <tfoot
+        data-slot="table-footer"
+        className={cn(
+          "bg-muted/20 border-t border-border/60 font-medium [&>tr]:last:border-b-0",
+          className,
+        )}
+        {...props}
+      />
   );
 }
 
@@ -57,7 +57,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "data-[state=selected]:bg-muted/60 hover:bg-muted/30 border-b border-border/70 transition-colors",
+        "border-b border-border/60 transition-colors data-[state=selected]:bg-muted/35 hover:bg-muted/20",
         className,
       )}
       {...props}
@@ -67,26 +67,26 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
-    <th
-      data-slot="table-head"
-      className={cn(
-        "text-muted-foreground h-11 px-3 text-left align-middle text-[11px] font-bold uppercase whitespace-normal [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5",
-        className,
-      )}
-      {...props}
+      <th
+        data-slot="table-head"
+        className={cn(
+          "text-muted-foreground h-11 px-4 text-left align-middle text-[11px] font-semibold uppercase whitespace-normal tracking-[0.08em] [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5",
+          className,
+        )}
+        {...props}
     />
   );
 }
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
-    <td
-      data-slot="table-cell"
-      className={cn(
-        "px-3 py-3 align-middle [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5",
-        className,
-      )}
-      {...props}
+      <td
+        data-slot="table-cell"
+        className={cn(
+          "px-4 py-3 align-middle [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5",
+          className,
+        )}
+        {...props}
     />
   );
 }

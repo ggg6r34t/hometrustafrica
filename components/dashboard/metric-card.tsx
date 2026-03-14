@@ -19,7 +19,7 @@ export function MetricCard({
           {label}
         </CardTitle>
         {icon ? (
-          <div className="rounded-lg border border-border bg-muted/20 p-2 text-muted-foreground">
+          <div className="rounded-lg border border-border/70 bg-background p-2 text-muted-foreground">
             {icon}
           </div>
         ) : null}

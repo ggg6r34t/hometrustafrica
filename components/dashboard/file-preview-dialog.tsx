@@ -74,7 +74,7 @@ export function FilePreviewDialog({ file }: { file: FileItem }) {
             </div>
           </div>
         </DialogHeader>
-        <div className="min-h-0 overflow-auto bg-muted/20 px-6 py-6">
+        <div className="min-h-0 overflow-auto bg-background px-6 py-6">
           <div className="overflow-hidden rounded-xl border border-border bg-background">
             {file.mimeType?.startsWith("image/") ? (
               <img

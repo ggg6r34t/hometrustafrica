@@ -274,7 +274,7 @@ export function DashboardSidebarNav({
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-                <span className="min-w-0 truncate group-data-[collapsible=icon]:hidden">
+                <span className="min-w-0 truncate text-sm group-data-[collapsible=icon]:hidden">
                   {displayName}
                 </span>
               </Link>

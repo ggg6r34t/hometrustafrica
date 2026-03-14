@@ -28,9 +28,9 @@ export default async function DashboardOverviewPage() {
   return (
     <div className="space-y-6">
       {!repositoryState.configured ? (
-        <Card className="dashboard-panel border-amber-200 bg-amber-50">
-          <CardContent className="flex gap-4 p-5 text-sm text-amber-900">
-            <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+        <Card className="dashboard-panel border-amber-200/70 bg-card">
+          <CardContent className="flex gap-4 p-5 text-sm text-foreground">
+            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
             <p>
               Dashboard access controls are live, but the secure project data
               provider is not configured yet. Connect the production repository
