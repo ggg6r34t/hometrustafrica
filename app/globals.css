@@ -271,7 +271,7 @@
   }
 
   .dashboard-brand-tile {
-    @apply rounded-xl border border-sidebar-border bg-sidebar px-4 py-4;
+    @apply rounded-xl border border-sidebar-border bg-sidebar px-4 py-3;
   }
 
   .dashboard-section-nav {
@@ -279,7 +279,7 @@
   }
 
   .dashboard-section-link {
-    @apply inline-flex min-h-10 items-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:border-foreground/15 hover:bg-muted/20 hover:text-foreground;
+    @apply inline-flex h-9 min-h-9 items-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:border-foreground/15 hover:bg-muted/20 hover:text-foreground;
   }
 
   .dashboard-section-link-active {
@@ -315,7 +315,7 @@
   }
 
   .dashboard-chip {
-    @apply inline-flex items-center rounded-md border border-border bg-muted/25 px-2.5 py-1 text-[13px] font-medium text-muted-foreground;
+    @apply inline-flex items-center rounded-full border border-border bg-muted/25 px-2 py-0.5 text-[11px] leading-4 font-medium text-muted-foreground;
   }
 
   .dashboard-field {

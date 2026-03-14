@@ -64,7 +64,7 @@ export default async function NotificationsPage({
               placeholder="Filter by type, e.g. new_message"
               className="md:w-64"
             />
-            <Button type="submit" variant="outline">
+            <Button type="submit" variant="outline" size="dashboard">
               Filter
             </Button>
           </form>
@@ -80,7 +80,7 @@ export default async function NotificationsPage({
                     value={item.id}
                   />
                 ))}
-              <Button type="submit" variant="outline">
+              <Button type="submit" variant="outline" size="dashboard">
                 Mark unread as read
               </Button>
             </form>
@@ -178,19 +178,19 @@ export default async function NotificationsPage({
                             Read
                           </span>
                         ) : (
-                          <span className="dashboard-chip border-primary/20 bg-primary/10 text-primary normal-case tracking-normal">
-                            Unread
-                          </span>
+                           <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[11px] font-medium leading-4 text-primary">
+                             Unread
+                           </span>
                         )}
                       </TableCell>
                       <TableCell className="pr-6 text-right">
                         {notification.href ? (
                           notification.href.startsWith("/") ? (
-                            <Button variant="ghost" size="sm" asChild>
+                            <Button variant="ghost" size="dashboard" asChild>
                               <Link href={notification.href}>Open</Link>
                             </Button>
                           ) : (
-                            <Button variant="ghost" size="sm" asChild>
+                            <Button variant="ghost" size="dashboard" asChild>
                               <a
                                 href={notification.href}
                                 target="_blank"

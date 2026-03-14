@@ -56,7 +56,7 @@ export default async function ProjectsPage({
             placeholder="Sort by recent activity"
             className="md:w-48"
           />
-          <Button type="submit">Apply filters</Button>
+          <Button type="submit" size="dashboard">Apply filters</Button>
         </form>
       </FilterBar>
       {projects.length ? (
@@ -119,7 +119,7 @@ export default async function ProjectsPage({
                     </div>
                   </div>
                 </div>
-                <Button asChild>
+                <Button size="dashboard" asChild>
                   <Link href={`/dashboard/projects/${project.id}`}>
                     Open project
                   </Link>

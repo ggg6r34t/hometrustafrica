@@ -32,14 +32,14 @@ export function DashboardAppShell({
         collapsible="icon"
         className="dashboard-sidebar border-r border-sidebar-border"
       >
-        <DashboardSidebarNav session={session} projects={projects} />
-      </Sidebar>
-      <SidebarInset className="dashboard-workspace min-h-screen">
-        <DashboardTopbar
+        <DashboardSidebarNav
           session={session}
           projects={projects}
           unreadCount={unreadCount}
         />
+      </Sidebar>
+      <SidebarInset className="dashboard-workspace min-h-screen">
+        <DashboardTopbar projects={projects} />
         <div className="dashboard-content">{children}</div>
       </SidebarInset>
     </SidebarProvider>

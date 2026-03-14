@@ -24,7 +24,7 @@ export function StatusBadge({
     <Badge
       variant="outline"
       className={cn(
-        "rounded-md px-2.5 py-1 text-[13px] font-medium tracking-normal",
+        "rounded-full px-2 py-0.5 text-[11px] font-medium leading-4 tracking-normal",
         toneClasses[tone],
         className,
       )}

@@ -107,7 +107,8 @@ export function ProfileSettingsForm({
             >
               <SelectTrigger
                 id="preferredContactMethod"
-                className="h-10 w-full rounded-lg border-border bg-background"
+                size="dashboard"
+                className="w-full rounded-lg border-border bg-background"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -120,7 +121,7 @@ export function ProfileSettingsForm({
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Save profile
             </Button>
           </div>
@@ -208,7 +209,7 @@ export function SecuritySettingsForm({
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Update security
             </Button>
           </div>
@@ -265,7 +266,7 @@ export function NotificationSettingsForm({
           ))}
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Save notifications
             </Button>
           </div>
@@ -316,7 +317,8 @@ export function PreferenceSettingsForm({
               <Select name="density" defaultValue={settings.density}>
                 <SelectTrigger
                   id="density"
-                  className="h-10 w-full rounded-lg border-border bg-background"
+                  size="dashboard"
+                  className="w-full rounded-lg border-border bg-background"
                 >
                   <SelectValue />
                 </SelectTrigger>
@@ -329,7 +331,7 @@ export function PreferenceSettingsForm({
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Save preferences
             </Button>
           </div>
@@ -366,7 +368,7 @@ export function MessageComposer({ threadId }: { threadId: string }) {
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Send message
             </Button>
           </div>
@@ -400,7 +402,8 @@ export function SupportRequestForm() {
             <Select name="urgency" defaultValue="standard">
               <SelectTrigger
                 id="urgency"
-                className="h-10 w-full rounded-lg border-border bg-background"
+                size="dashboard"
+                className="w-full rounded-lg border-border bg-background"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -417,7 +420,7 @@ export function SupportRequestForm() {
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Submit request
             </Button>
           </div>
@@ -449,6 +452,7 @@ export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
           placeholder="Optional note for the operations team"
         />
         <Button
+          size="dashboard"
           type="submit"
           name="decision"
           value="approved"
@@ -457,6 +461,7 @@ export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
           Approve
         </Button>
         <Button
+          size="dashboard"
           type="submit"
           name="decision"
           value="rejected"
@@ -498,7 +503,7 @@ export function SupportReplyForm({ threadId }: { threadId: string }) {
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" size="dashboard" disabled={pending}>
               Send reply
             </Button>
           </div>

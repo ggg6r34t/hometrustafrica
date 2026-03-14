@@ -60,7 +60,7 @@ export default async function InboxPage({
               className="pl-9"
             />
           </div>
-          <Button type="submit">Search inbox</Button>
+          <Button type="submit" size="dashboard">Search inbox</Button>
         </form>
       </FilterBar>
       {threads.length ? (
@@ -156,7 +156,7 @@ export default async function InboxPage({
                       </TableCell>
                       <TableCell>
                         {thread.unreadCount ? (
-                          <span className="dashboard-chip border-primary/20 bg-primary/10 text-primary normal-case tracking-normal">
+                          <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[11px] font-medium leading-4 text-primary">
                             {thread.unreadCount} unread
                           </span>
                         ) : (
@@ -166,7 +166,7 @@ export default async function InboxPage({
                         )}
                       </TableCell>
                       <TableCell className="pr-6 text-right">
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="dashboard" asChild>
                           <Link href={`/dashboard/inbox/${thread.id}`}>
                             Open
                           </Link>

@@ -78,7 +78,7 @@ export default async function ProjectReportsPage({
             placeholder="Report type"
             className="md:w-52"
           />
-          <Button type="submit">Apply filters</Button>
+          <Button type="submit" size="dashboard">Apply filters</Button>
         </form>
       </FilterBar>
       {reports.length ? (
@@ -175,7 +175,7 @@ export default async function ProjectReportsPage({
                         </div>
                       </TableCell>
                       <TableCell className="pr-6 text-right">
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="dashboard" asChild>
                           <Link
                             href={`/dashboard/projects/${projectId}/reports/${report.id}`}
                           >

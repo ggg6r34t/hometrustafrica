@@ -23,6 +23,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-5 py-2.5 has-[>svg]:px-4",
+        dashboard:
+          "!h-9 !min-h-9 !max-h-9 !px-4 !py-0 has-[>svg]:!px-3.5",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-11 rounded-xl px-6 text-[0.95rem] has-[>svg]:px-5",
         icon: "size-9",

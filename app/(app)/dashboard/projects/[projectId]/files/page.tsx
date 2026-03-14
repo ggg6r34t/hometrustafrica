@@ -86,7 +86,7 @@ export default async function ProjectFilesPage({
             placeholder="Uploader"
             className="md:w-48"
           />
-          <Button type="submit">Apply filters</Button>
+          <Button type="submit" size="dashboard">Apply filters</Button>
         </form>
       </FilterBar>
       {files.length ? (
@@ -174,7 +174,7 @@ export default async function ProjectFilesPage({
                         <div className="flex justify-end gap-2">
                           <FilePreviewDialog file={file} />
                           {file.downloadUrl ? (
-                            <Button size="sm" asChild>
+                            <Button size="dashboard" asChild>
                               <a
                                 href={file.downloadUrl}
                                 target="_blank"
@@ -185,7 +185,7 @@ export default async function ProjectFilesPage({
                               </a>
                             </Button>
                           ) : (
-                            <Button size="sm" disabled>
+                            <Button size="dashboard" disabled>
                               <Download className="size-4" />
                               Download
                             </Button>

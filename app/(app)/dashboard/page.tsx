@@ -41,15 +41,6 @@ export default async function DashboardOverviewPage() {
         </Card>
       ) : null}
 
-      <div className="flex justify-end">
-        <Button asChild>
-          <Link href="/dashboard/projects">
-            Open projects
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
-      </div>
-
       <div className="grid items-start gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="Active projects"
@@ -138,7 +129,7 @@ export default async function DashboardOverviewPage() {
             <CardTitle className="text-sm font-semibold text-muted-foreground">
               Latest reports
             </CardTitle>
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" size="dashboard" asChild>
               <Link href="/dashboard/projects">Browse all</Link>
             </Button>
           </CardHeader>
@@ -174,7 +165,7 @@ export default async function DashboardOverviewPage() {
                     <p className="font-medium text-foreground">
                       {thread.subject}
                     </p>
-                    <span className="dashboard-chip border-primary/20 bg-primary/10 text-primary normal-case tracking-normal">
+                    <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[11px] font-medium leading-4 text-primary">
                       {thread.unreadCount} unread
                     </span>
                   </div>

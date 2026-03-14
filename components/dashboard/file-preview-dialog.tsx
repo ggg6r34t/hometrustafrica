@@ -17,7 +17,7 @@ import type { FileItem } from "@/lib/dashboard/types";
 export function FilePreviewDialog({ file }: { file: FileItem }) {
   if (!file.previewUrl) {
     return (
-      <Button variant="outline" size="sm" asChild disabled>
+      <Button variant="outline" size="dashboard" asChild disabled>
         <span>
           <Eye className="size-4" />
           Preview
@@ -29,7 +29,7 @@ export function FilePreviewDialog({ file }: { file: FileItem }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="dashboard">
           <Eye className="size-4" />
           Preview
         </Button>
@@ -100,7 +100,7 @@ export function FilePreviewDialog({ file }: { file: FileItem }) {
         </div>
         {file.downloadUrl ? (
           <div className="flex justify-end border-t border-border px-6 py-4">
-            <Button asChild>
+            <Button size="dashboard" asChild>
               <a href={file.downloadUrl} target="_blank" rel="noreferrer">
                 <Download className="size-4" />
                 Secure download

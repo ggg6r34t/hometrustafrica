@@ -28,7 +28,7 @@ export function DocumentRow({ file }: { file: FileItem }) {
         </div>
         <div className="flex flex-wrap gap-2">
           <FilePreviewDialog file={file} />
-          <Button size="sm" asChild disabled={!file.downloadUrl}>
+          <Button size="dashboard" asChild disabled={!file.downloadUrl}>
             <a href={file.downloadUrl || "#"} target="_blank" rel="noreferrer">
               <Download className="size-4" />
               Secure download
