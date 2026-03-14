@@ -5,9 +5,9 @@ import type { TeamMember } from "@/lib/dashboard/types";
 
 export function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
-      <CardContent className="space-y-4 p-5">
-        <div className="flex items-center gap-3">
+    <Card className="dashboard-panel">
+      <CardContent className="space-y-4 p-6">
+        <div className="flex items-center gap-4">
           <Avatar className="size-11">
             <AvatarFallback>{member.fullName.split(" ").map((part) => part[0]).slice(0, 2).join("")}</AvatarFallback>
           </Avatar>

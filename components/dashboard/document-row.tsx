@@ -8,10 +8,10 @@ import type { FileItem } from "@/lib/dashboard/types";
 
 export function DocumentRow({ file }: { file: FileItem }) {
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <p className="font-medium text-foreground">{file.name}</p>
             <StatusBadge label={file.category} tone="neutral" />
           </div>

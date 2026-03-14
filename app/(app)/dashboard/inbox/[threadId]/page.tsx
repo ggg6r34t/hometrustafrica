@@ -28,11 +28,11 @@ export default async function InboxThreadPage({ params }: { params: Promise<{ th
         title={thread.subject}
         description={`Participants: ${thread.participants.map((participant) => participant.fullName).join(", ")}`}
       />
-      <Card className="border-border/70 bg-card/95 shadow-sm">
-        <CardContent className="space-y-4 p-5">
+      <Card className="dashboard-panel">
+        <CardContent className="space-y-4 p-6">
           {thread.messages.length ? (
             thread.messages.map((message) => (
-              <div key={message.id} className={`rounded-2xl border p-4 ${message.isOwnMessage ? "ml-auto max-w-3xl border-primary/20 bg-primary/5" : "max-w-3xl border-border/70 bg-background"}`}>
+              <div key={message.id} className={`dashboard-thread-bubble ${message.isOwnMessage ? "dashboard-thread-bubble-own" : "dashboard-thread-bubble-other"}`}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-medium text-foreground">{message.senderName}</p>
                   <p className="text-xs text-muted-foreground">{message.sentAt}</p>

@@ -13,7 +13,7 @@ export function DashboardEmptyState({
   action?: ReactNode;
 }) {
   return (
-    <Empty className="border border-dashed border-border/80 bg-card">
+    <Empty className="dashboard-panel border-dashed bg-muted/10 md:p-10">
       <EmptyHeader>
         <EmptyMedia variant="icon">{icon}</EmptyMedia>
         <EmptyTitle>{title}</EmptyTitle>

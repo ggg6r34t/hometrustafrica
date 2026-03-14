@@ -23,9 +23,9 @@ export function DashboardAppShell({
         <DashboardSidebarNav session={session} projects={projects} />
         <SidebarRail />
       </Sidebar>
-      <SidebarInset className="min-h-screen bg-[linear-gradient(180deg,rgba(250,249,245,0.88),rgba(247,248,244,0.96))]">
+      <SidebarInset className="min-h-screen bg-background">
         <DashboardTopbar session={session} projects={projects} unreadCount={unreadCount} />
-        <div className="flex-1 px-4 py-6 md:px-6 lg:px-8">{children}</div>
+        <div className="flex-1 px-4 py-6 md:px-6 md:py-7 lg:px-8 lg:py-8">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

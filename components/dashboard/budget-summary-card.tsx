@@ -7,21 +7,21 @@ export function BudgetSummaryCard({ budget }: { budget: ProjectBudget }) {
   const percentSpent = budget.allocated > 0 ? Math.min(100, (budget.spent / budget.allocated) * 100) : 0;
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">Budget snapshot</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-5">
+      <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-3">
-          <div>
+          <div className="dashboard-panel-muted p-4">
             <p className="text-sm text-muted-foreground">Allocated</p>
             <p className="text-xl font-semibold text-foreground">{formatCurrency(budget.allocated, budget.currency)}</p>
           </div>
-          <div>
+          <div className="dashboard-panel-muted p-4">
             <p className="text-sm text-muted-foreground">Spent</p>
             <p className="text-xl font-semibold text-foreground">{formatCurrency(budget.spent, budget.currency)}</p>
           </div>
-          <div>
+          <div className="dashboard-panel-muted p-4">
             <p className="text-sm text-muted-foreground">Remaining</p>
             <p className="text-xl font-semibold text-foreground">{formatCurrency(budget.remaining, budget.currency)}</p>
           </div>

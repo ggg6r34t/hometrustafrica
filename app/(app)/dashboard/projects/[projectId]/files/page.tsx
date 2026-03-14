@@ -27,14 +27,14 @@ export default async function ProjectFilesPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <form className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
+        <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
           <Input name="category" defaultValue={typeof filters.category === "string" ? filters.category : ""} placeholder="Category: documents, photos, videos..." className="md:w-72" />
           <Input name="uploadedBy" defaultValue={typeof filters.uploadedBy === "string" ? filters.uploadedBy : ""} placeholder="Uploader" className="md:w-48" />
           <Button type="submit">Apply filters</Button>
         </form>
       </FilterBar>
       {files.length ? (
-        <div className="grid gap-3">{files.map((file) => <DocumentRow key={file.id} file={file} />)}</div>
+        <div className="grid gap-4">{files.map((file) => <DocumentRow key={file.id} file={file} />)}</div>
       ) : (
         <DashboardEmptyState
           icon={<FolderOpen className="size-5" />}

@@ -8,15 +8,15 @@ interface StatusBadgeProps {
 }
 
 const toneClasses: Record<NonNullable<StatusBadgeProps["tone"]>, string> = {
-  neutral: "border-border bg-background text-foreground",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  warning: "border-amber-200 bg-amber-50 text-amber-800",
-  danger: "border-rose-200 bg-rose-50 text-rose-800",
+  neutral: "border-border/80 bg-muted/30 text-foreground",
+  success: "border-emerald-200/80 bg-emerald-50/80 text-emerald-800",
+  warning: "border-amber-200/80 bg-amber-50/80 text-amber-800",
+  danger: "border-rose-200/80 bg-rose-50/80 text-rose-800",
 };
 
 export function StatusBadge({ label, tone = "neutral", className }: StatusBadgeProps) {
   return (
-    <Badge variant="outline" className={cn("rounded-full px-2.5 py-1 text-xs font-medium", toneClasses[tone], className)}>
+    <Badge variant="outline" className={cn("rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]", toneClasses[tone], className)}>
       {label}
     </Badge>
   );

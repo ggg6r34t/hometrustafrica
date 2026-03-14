@@ -45,9 +45,9 @@ export function DashboardSidebarNav({
 
   return (
     <>
-      <SidebarHeader className="gap-4 px-4 py-5">
-        <Link href="/dashboard" className="flex min-h-0 items-center gap-3 rounded-xl border border-border/70 bg-white/85 px-3 py-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary">
+      <SidebarHeader className="gap-4 px-4 py-6">
+        <Link href="/dashboard" className="dashboard-panel flex min-h-0 items-center gap-4 px-4 py-4">
+          <div className="flex size-10 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary">
             <ShieldCheck className="size-5" />
           </div>
           <div>
@@ -93,7 +93,7 @@ export function DashboardSidebarNav({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-4 py-4">
-        <div className="rounded-xl border border-border/70 bg-white/85 p-3">
+        <div className="dashboard-panel p-3">
           <p className="text-sm font-medium text-foreground">{session.name}</p>
           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{session.role.replaceAll("_", " ")}</p>
           <p className="mt-1 text-xs text-muted-foreground">{session.email}</p>

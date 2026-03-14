@@ -6,7 +6,7 @@ import type { TimelineEvent } from "@/lib/dashboard/types";
 
 export function ActivityFeed({ items, title = "Recent activity" }: { items: TimelineEvent[]; title?: string }) {
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">{title}</CardTitle>
       </CardHeader>
@@ -30,7 +30,7 @@ export function ActivityFeed({ items, title = "Recent activity" }: { items: Time
                     <Link
                       key={attachment.id}
                       href={attachment.href || "#"}
-                      className="rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground transition hover:border-primary/40 hover:text-primary"
+                    className="dashboard-chip border-border/70 bg-background text-foreground hover:border-primary/30 hover:text-primary"
                     >
                       {attachment.name}
                     </Link>

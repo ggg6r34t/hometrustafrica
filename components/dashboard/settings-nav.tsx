@@ -22,10 +22,10 @@ export function SettingsNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "rounded-full border px-4 py-2 text-sm font-medium transition",
+              "rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200",
               active
-                ? "border-primary/30 bg-primary/10 text-primary"
-                : "border-border bg-card text-muted-foreground hover:border-primary/20 hover:text-foreground",
+                ? "border-primary/25 bg-primary/10 text-primary"
+                : "border-border/70 bg-background text-muted-foreground hover:border-primary/20 hover:bg-muted/30 hover:text-foreground",
             )}
           >
             {item.label}

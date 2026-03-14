@@ -28,7 +28,7 @@ export default async function ProjectBudgetPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-6">
       <BudgetSummaryCard budget={budget} />
-      <Card className="border-border/70 bg-card/95 shadow-sm">
+      <Card className="dashboard-panel">
         <CardHeader><CardTitle className="text-base font-semibold">Approval queue</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           {approvals.length ? (
@@ -36,8 +36,8 @@ export default async function ProjectBudgetPage({ params }: { params: Promise<{ 
               approval.status === "pending" && approval.requestedFromUserId === session.userId ? (
                 <ApprovalDecisionForm key={approval.id} approval={approval} />
               ) : (
-                <div key={approval.id} className="rounded-xl border border-border/70 p-4">
-                  <div className="flex items-center justify-between gap-3">
+                <div key={approval.id} className="dashboard-list-row">
+                  <div className="flex items-center justify-between gap-4">
                     <p className="font-medium text-foreground">{approval.title}</p>
                     <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{approval.status}</p>
                   </div>
@@ -54,12 +54,12 @@ export default async function ProjectBudgetPage({ params }: { params: Promise<{ 
           )}
         </CardContent>
       </Card>
-      <Card className="border-border/70 bg-card/95 shadow-sm">
+      <Card className="dashboard-panel">
         <CardHeader><CardTitle className="text-base font-semibold">Recent transactions</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           {budget.transactions.length ? (
             budget.transactions.map((item) => (
-              <div key={item.id} className="flex flex-col gap-2 rounded-xl border border-border/70 p-4 md:flex-row md:items-center md:justify-between">
+              <div key={item.id} className="dashboard-list-row flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="font-medium text-foreground">{item.description}</p>
                   <p className="text-sm text-muted-foreground">{item.category} · {item.occurredAt} · {item.status}</p>

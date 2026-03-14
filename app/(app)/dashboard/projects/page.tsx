@@ -27,7 +27,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
         description="Search and filter across active and historical engagements, from construction and agriculture to procurement and infrastructure."
       />
       <FilterBar>
-        <form className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
+        <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
           <div className="relative min-w-[16rem] flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input name="q" defaultValue={filters.q} placeholder="Search by project name or location" className="pl-9" />
@@ -41,16 +41,16 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
       {projects.length ? (
         <div className="grid gap-4">
           {projects.map((project) => (
-            <Card key={project.id} className="border-border/70 bg-card/95 shadow-sm">
-              <CardContent className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
+            <Card key={project.id} className="dashboard-panel">
+              <CardContent className="flex flex-col gap-4 p-6 lg:flex-row lg:items-center lg:justify-between">
                 <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-4">
                     <p className="text-lg font-semibold text-foreground">{project.name}</p>
                     <StatusBadge label={project.status.replaceAll("_", " ")} tone={project.health === "healthy" ? "success" : project.health === "watch" ? "warning" : "danger"} />
                     <StatusBadge label={project.type} />
                   </div>
                   <p className="text-sm text-muted-foreground">{project.location} · {project.stageLabel}</p>
-                  <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-4">
+                  <div className="grid gap-4 text-sm text-muted-foreground md:grid-cols-4">
                     <p>Completion: <span className="font-medium text-foreground">{project.completionPercentage}%</span></p>
                     <p>Lead: <span className="font-medium text-foreground">{project.leadName || "Assigned internally"}</span></p>
                     <p>Last update: <span className="font-medium text-foreground">{project.latestUpdateAt || "Awaiting update"}</span></p>

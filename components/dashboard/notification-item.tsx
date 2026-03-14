@@ -6,8 +6,8 @@ import type { NotificationItem as NotificationItemType } from "@/lib/dashboard/t
 
 export function NotificationItem({ notification }: { notification: NotificationItemType }) {
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
-      <CardContent className="flex flex-col gap-3 p-4 md:flex-row md:items-start md:justify-between">
+    <Card className="dashboard-panel">
+      <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-medium text-foreground">{notification.title}</p>

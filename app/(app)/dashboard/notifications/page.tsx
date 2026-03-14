@@ -45,13 +45,13 @@ export default async function NotificationsPage({ searchParams }: { searchParams
         }
       />
       <FilterBar>
-        <form className="flex w-full flex-col gap-3 md:flex-row">
+        <form className="flex w-full flex-col gap-4 md:flex-row">
           <Input name="type" defaultValue={filters.type} placeholder="Filter by type, e.g. new_message" className="md:w-64" />
           <Button type="submit" variant="outline">Filter</Button>
         </form>
       </FilterBar>
       {notifications.length ? (
-        <div className="grid gap-3">
+        <div className="grid gap-4">
           {notifications.map((notification) => (
             <NotificationItem
               key={notification.id}

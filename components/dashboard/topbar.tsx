@@ -51,21 +51,24 @@ export function DashboardTopbar({
   );
 
   return (
-    <div className="sticky top-0 z-20 border-b border-border/70 bg-background/92 px-4 py-4 backdrop-blur-xl md:px-6">
+    <div className="sticky top-0 z-20 border-b border-border/80 bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/88 md:px-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <SidebarTrigger className="md:hidden" />
-            <nav aria-label="Breadcrumb" className="hidden items-center gap-2 text-sm text-muted-foreground md:flex">
-              {crumbs.map((crumb, index) => (
-                <span key={crumb.href} className="inline-flex items-center gap-2">
-                  {index > 0 ? <ChevronRight className="size-4" /> : null}
-                  <Link href={crumb.href} className={index === crumbs.length - 1 ? "font-medium text-foreground" : "hover:text-foreground"}>
-                    {crumb.label}
-                  </Link>
-                </span>
-              ))}
-            </nav>
+            <div className="hidden md:block">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Workspace</p>
+              <nav aria-label="Breadcrumb" className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                {crumbs.map((crumb, index) => (
+                  <span key={crumb.href} className="inline-flex items-center gap-2">
+                    {index > 0 ? <ChevronRight className="size-4" /> : null}
+                    <Link href={crumb.href} className={index === crumbs.length - 1 ? "font-medium text-foreground" : "hover:text-foreground"}>
+                      {crumb.label}
+                    </Link>
+                  </span>
+                ))}
+              </nav>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
@@ -95,8 +98,8 @@ export function DashboardTopbar({
             </DropdownMenu>
           </div>
         </div>
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <form action="/dashboard/projects" className="flex w-full max-w-2xl flex-col gap-3 md:flex-row">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <form action="/dashboard/projects" className="flex w-full max-w-2xl flex-col gap-4 md:flex-row">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -108,7 +111,7 @@ export function DashboardTopbar({
             </div>
             <select
               aria-label="Switch project"
-              className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm md:w-72"
+              className="dashboard-field md:w-72"
               defaultValue=""
               onChange={(event) => {
                 if (event.target.value) {
@@ -125,9 +128,9 @@ export function DashboardTopbar({
             </select>
             <Button type="submit">Search</Button>
           </form>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span>Projects in scope: {projects.length}</span>
-            <Separator orientation="vertical" className="hidden h-5 md:block" />
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span className="dashboard-chip normal-case tracking-normal">Projects in scope: {projects.length}</span>
+            <Separator orientation="vertical" className="hidden h-4 md:block" />
             <Link href="/dashboard/inbox" className="font-medium text-primary">Open inbox</Link>
           </div>
         </div>

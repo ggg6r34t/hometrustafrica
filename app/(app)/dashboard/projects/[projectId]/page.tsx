@@ -44,7 +44,7 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
 
         <div className="space-y-6">
           {budget ? <BudgetSummaryCard budget={budget} /> : null}
-          <Card className="border-border/70 bg-card/95 shadow-sm">
+          <Card className="dashboard-panel">
             <CardHeader><CardTitle className="text-base font-semibold">Latest report</CardTitle></CardHeader>
             <CardContent>
               {reports[0] ? (
@@ -62,7 +62,7 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="text-base font-semibold">Client approvals</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {approvals.length ? (
@@ -70,7 +70,7 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
                 approval.status === "pending" && approval.requestedFromUserId === session.userId ? (
                   <ApprovalDecisionForm key={approval.id} approval={approval} />
                 ) : (
-                  <div key={approval.id} className="rounded-xl border border-border/70 p-4">
+                  <div key={approval.id} className="dashboard-list-row">
                     <p className="font-medium text-foreground">{approval.title}</p>
                     <p className="mt-1 text-sm text-muted-foreground">{approval.description}</p>
                     <p className="mt-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">{approval.status}</p>
@@ -86,11 +86,11 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
             )}
           </CardContent>
         </Card>
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="text-base font-semibold">Recent files and media</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {files.slice(0, 4).map((file) => (
-              <div key={file.id} className="rounded-xl border border-border/70 p-4">
+              <div key={file.id} className="dashboard-list-row">
                 <p className="font-medium text-foreground">{file.name}</p>
                 <p className="text-sm text-muted-foreground">{file.category} · {file.uploadedAt}</p>
               </div>
@@ -104,7 +104,7 @@ export default async function ProjectOverviewPage({ params }: { params: Promise<
             ) : null}
           </CardContent>
         </Card>
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="text-base font-semibold">Assigned team</CardTitle></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             {team.length ? (

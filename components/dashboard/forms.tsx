@@ -50,7 +50,7 @@ export function ProfileSettingsForm({
   );
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">
           Profile details
@@ -97,7 +97,7 @@ export function ProfileSettingsForm({
               id="preferredContactMethod"
               name="preferredContactMethod"
               defaultValue={settings.preferredContactMethod}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+               className="dashboard-field"
             >
               <option value="email">Email</option>
               <option value="phone">Phone</option>
@@ -127,7 +127,7 @@ export function SecuritySettingsForm({
   );
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">
           Password and session controls
@@ -221,18 +221,18 @@ export function NotificationSettingsForm({
   ] as const;
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">
           Notification controls
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={action} className="space-y-5">
+        <form action={action} className="space-y-6">
           {rows.map(([name, label, checked]) => (
             <label
               key={name}
-              className="flex items-center justify-between gap-4 rounded-xl border border-border/70 p-4"
+              className="dashboard-list-row flex items-center justify-between gap-4"
             >
               <div>
                 <p className="font-medium text-foreground">{label}</p>
@@ -271,7 +271,7 @@ export function PreferenceSettingsForm({
   );
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">
           Workspace preferences
@@ -302,7 +302,7 @@ export function PreferenceSettingsForm({
                 id="density"
                 name="density"
                 defaultValue={settings.density}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                 className="dashboard-field"
               >
                 <option value="comfortable">Comfortable</option>
                 <option value="compact">Compact</option>
@@ -328,9 +328,9 @@ export function MessageComposer({ threadId }: { threadId: string }) {
   );
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardContent className="p-4">
-        <form action={action} className="space-y-3">
+        <form action={action} className="space-y-4">
           <input type="hidden" name="threadId" value={threadId} />
           <div className="space-y-2">
             <Label htmlFor="body">Secure message</Label>
@@ -360,7 +360,7 @@ export function SupportRequestForm() {
   );
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardHeader>
         <CardTitle className="text-base font-semibold">
           Request a callback or escalation
@@ -377,7 +377,7 @@ export function SupportRequestForm() {
             <select
               id="urgency"
               name="urgency"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+               className="dashboard-field"
             >
               <option value="standard">Standard</option>
               <option value="priority">Priority</option>
@@ -404,13 +404,13 @@ export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
   const [state, action, pending] = useActionState(resolveApprovalAction, initialState);
 
   return (
-    <form action={action} className="space-y-3 rounded-2xl border border-border/70 p-4">
+    <form action={action} className="dashboard-panel space-y-4 p-4">
       <input type="hidden" name="approvalId" value={approval.id} />
       <div className="space-y-1">
         <p className="font-medium text-foreground">{approval.title}</p>
         <p className="text-sm text-muted-foreground">{approval.description}</p>
       </div>
-      <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+      <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
         <Textarea name="note" rows={2} placeholder="Optional note for the operations team" />
         <Button type="submit" name="decision" value="approved" disabled={pending}>
           Approve
@@ -428,9 +428,9 @@ export function SupportReplyForm({ threadId }: { threadId: string }) {
   const [state, action, pending] = useActionState(replySupportThreadAction, initialState);
 
   return (
-    <Card className="border-border/70 bg-card/95 shadow-sm">
+    <Card className="dashboard-panel">
       <CardContent className="p-4">
-        <form action={action} className="space-y-3">
+        <form action={action} className="space-y-4">
           <input type="hidden" name="threadId" value={threadId} />
           <div className="space-y-2">
             <Label htmlFor="support-body">Reply securely</Label>

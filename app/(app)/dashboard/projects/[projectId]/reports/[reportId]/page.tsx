@@ -34,7 +34,7 @@ export default async function ReportDetailPage({
         description={`${report.type} · ${report.reportingPeriodLabel} · Uploaded by ${report.uploadedBy}`}
         actions={<Link href={`/dashboard/projects/${projectId}/reports`} className="text-sm font-medium text-primary">Back to reports</Link>}
       />
-      <Card className="border-border/70 bg-card/95 shadow-sm">
+      <Card className="dashboard-panel">
         <CardHeader><CardTitle className="text-base font-semibold">Executive summary</CardTitle></CardHeader>
         <CardContent><p className="text-sm leading-7 text-muted-foreground">{report.summary}</p></CardContent>
       </Card>
@@ -42,7 +42,7 @@ export default async function ReportDetailPage({
         <div className="space-y-4">
           {report.sections.length ? (
             report.sections.map((section) => (
-              <Card key={section.id} className="border-border/70 bg-card/95 shadow-sm">
+              <Card key={section.id} className="dashboard-panel">
                 <CardHeader><CardTitle className="text-base font-semibold">{section.title}</CardTitle></CardHeader>
                 <CardContent>
                   <p className="text-sm leading-7 text-muted-foreground">{section.body}</p>
@@ -57,7 +57,7 @@ export default async function ReportDetailPage({
             />
           )}
         </div>
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="inline-flex items-center gap-2 text-base font-semibold"><Paperclip className="size-4" /> Attachments</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {report.attachments.length ? (

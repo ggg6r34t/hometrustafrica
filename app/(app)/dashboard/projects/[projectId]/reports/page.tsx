@@ -27,7 +27,7 @@ export default async function ProjectReportsPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <form className="flex w-full flex-col gap-3 md:flex-row md:flex-wrap">
+        <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
           <Input name="q" defaultValue={typeof filters.q === "string" ? filters.q : ""} placeholder="Search title or summary" className="md:w-64" />
           <Input name="type" defaultValue={typeof filters.type === "string" ? filters.type : ""} placeholder="Report type" className="md:w-52" />
           <Button type="submit">Apply filters</Button>

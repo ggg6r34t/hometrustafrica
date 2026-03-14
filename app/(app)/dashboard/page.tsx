@@ -43,8 +43,8 @@ export default async function DashboardOverviewPage() {
       />
 
       {!repositoryState.configured ? (
-        <Card className="border-amber-200 bg-amber-50/80 shadow-sm">
-          <CardContent className="flex gap-3 p-4 text-sm text-amber-900">
+        <Card className="rounded-2xl border border-accent/40 bg-accent/10">
+          <CardContent className="flex gap-4 p-4 text-sm text-amber-900">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" />
             <p>
               Dashboard access controls are live, but the secure project data provider is not configured yet. Connect the production repository adapter to render live client records, reports, files, and messages.
@@ -81,12 +81,12 @@ export default async function DashboardOverviewPage() {
             description="Once the operations team posts a milestone, report, or budget event, it will appear here."
           />
         )}
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="text-base font-semibold">Action required</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {overview.nextActions.length ? (
               overview.nextActions.map((item) => (
-                <Link key={item.id} href={item.href} className="block rounded-xl border border-border/70 p-4 transition hover:border-primary/30 hover:bg-primary/5">
+                <Link key={item.id} href={item.href} className="dashboard-list-row block">
                   <p className="font-medium text-foreground">{item.title}</p>
                   <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
                 </Link>
@@ -103,7 +103,7 @@ export default async function DashboardOverviewPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base font-semibold">Latest reports</CardTitle>
             <Button variant="ghost" asChild><Link href="/dashboard/projects">Browse all</Link></Button>
@@ -120,15 +120,15 @@ export default async function DashboardOverviewPage() {
             )}
           </CardContent>
         </Card>
-        <Card className="border-border/70 bg-card/95 shadow-sm">
+        <Card className="dashboard-panel">
           <CardHeader><CardTitle className="text-base font-semibold">Unread conversations</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             {overview.unreadConversations.length ? (
               overview.unreadConversations.map((thread) => (
-                <Link key={thread.id} href={`/dashboard/inbox/${thread.id}`} className="block rounded-xl border border-border/70 p-4 transition hover:border-primary/30 hover:bg-primary/5">
-                  <div className="flex items-center justify-between gap-3">
+                <Link key={thread.id} href={`/dashboard/inbox/${thread.id}`} className="dashboard-list-row block">
+                  <div className="flex items-center justify-between gap-4">
                     <p className="font-medium text-foreground">{thread.subject}</p>
-                    <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">{thread.unreadCount} unread</span>
+                    <span className="dashboard-chip border-primary/20 bg-primary/10 text-primary normal-case tracking-normal">{thread.unreadCount} unread</span>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">{thread.lastMessagePreview || "No preview available."}</p>
                 </Link>
