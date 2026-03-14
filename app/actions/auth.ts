@@ -6,9 +6,16 @@ import { Resend } from "resend";
 import { PortalInviteEmail } from "@/emails/portal-invite";
 import { recordAuditEvent } from "@/lib/dashboard/audit";
 import { createInviteToken, hashInviteToken } from "@/lib/auth/invites";
-import { getDashboardHomePath, requireDashboardSession } from "@/lib/auth/session";
+import {
+  getDashboardHomePath,
+  requireDashboardSession,
+} from "@/lib/auth/session";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getSupabaseEnv, hasSupabaseAdminEnv, hasSupabaseBrowserEnv } from "@/lib/supabase/env";
+import {
+  getSupabaseEnv,
+  hasSupabaseAdminEnv,
+  hasSupabaseBrowserEnv,
+} from "@/lib/supabase/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   acceptInviteSchema,
@@ -41,7 +48,10 @@ export async function loginAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invalid sign-in details." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Invalid sign-in details.",
+    };
   }
 
   try {
@@ -54,7 +64,10 @@ export async function loginAction(
       return { status: "error", message: "Email or password is incorrect." };
     }
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to sign in." };
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Unable to sign in.",
+    };
   }
 
   redirect(normalizeNext(parsed.data.next));
@@ -64,27 +77,41 @@ export async function requestPasswordResetAction(
   _previousState: AuthActionState = idleState,
   formData: FormData,
 ): Promise<AuthActionState> {
-  const parsed = passwordResetRequestSchema.safeParse({ email: formData.get("email") });
+  const parsed = passwordResetRequestSchema.safeParse({
+    email: formData.get("email"),
+  });
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Enter a valid email address." };
+    return {
+      status: "error",
+      message:
+        parsed.error.issues[0]?.message || "Enter a valid email address.",
+    };
   }
 
   try {
     const client = await createSupabaseServerClient();
     const env = getSupabaseEnv();
-    const { error } = await client.auth.resetPasswordForEmail(parsed.data.email, {
-      redirectTo: `${env.siteUrl}/reset-password`,
-    });
+    const { error } = await client.auth.resetPasswordForEmail(
+      parsed.data.email,
+      {
+        redirectTo: `${env.siteUrl}/reset-password`,
+      },
+    );
     if (error) {
       throw error;
     }
 
     return {
       status: "success",
-      message: "If that email is active in the portal, a reset link has been sent.",
+      message:
+        "If that email is active in the portal, a reset link has been sent.",
     };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to send reset email." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Unable to send reset email.",
+    };
   }
 }
 
@@ -100,13 +127,20 @@ export async function acceptInviteAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invite details are invalid." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Invite details are invalid.",
+    };
   }
 
   try {
     const admin = createSupabaseAdminClient();
-    const { data: invite } = await (admin.from("portal_invites" as never) as any)
-      .select("id, auth_user_id, invited_email, expires_at, accepted_at, revoked_at")
+    const { data: invite } = await (
+      admin.from("portal_invites" as never) as any
+    )
+      .select(
+        "id, auth_user_id, invited_email, expires_at, accepted_at, revoked_at",
+      )
       .eq("token_hash", hashInviteToken(parsed.data.token))
       .maybeSingle();
 
@@ -123,28 +157,38 @@ export async function acceptInviteAction(
       return { status: "error", message: "This invite has expired." };
     }
     if (!invite.auth_user_id) {
-      return { status: "error", message: "This invite is not linked to a portal user yet." };
+      return {
+        status: "error",
+        message: "This invite is not linked to a portal user yet.",
+      };
     }
 
-    const { error: updateUserError } = await admin.auth.admin.updateUserById(invite.auth_user_id, {
-      password: parsed.data.password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: parsed.data.fullName,
+    const { error: updateUserError } = await admin.auth.admin.updateUserById(
+      invite.auth_user_id,
+      {
+        password: parsed.data.password,
+        email_confirm: true,
+        user_metadata: {
+          full_name: parsed.data.fullName,
+        },
       },
-    });
+    );
     if (updateUserError) {
       throw updateUserError;
     }
 
-    const { error: profileError } = await (admin.from("profiles" as never) as any)
+    const { error: profileError } = await (
+      admin.from("profiles" as never) as any
+    )
       .update({ full_name: parsed.data.fullName, email: invite.invited_email })
       .eq("id", invite.auth_user_id);
     if (profileError) {
       throw profileError;
     }
 
-    const { error: inviteError } = await (admin.from("portal_invites" as never) as any)
+    const { error: inviteError } = await (
+      admin.from("portal_invites" as never) as any
+    )
       .update({
         accepted_at: new Date().toISOString(),
       })
@@ -162,7 +206,11 @@ export async function acceptInviteAction(
       throw signInError;
     }
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to accept invite." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Unable to accept invite.",
+    };
   }
 
   redirect(getDashboardHomePath());
@@ -200,14 +248,15 @@ export async function sendPortalInviteAction(input: SendPortalInviteInput) {
   const tokenHash = hashInviteToken(rawToken);
   const env = getSupabaseEnv();
 
-  const { data: createdUser, error: createError } = await admin.auth.admin.createUser({
-    email: input.email.trim().toLowerCase(),
-    email_confirm: true,
-    user_metadata: {
-      full_name: input.fullName,
-      role: input.role,
-    },
-  });
+  const { data: createdUser, error: createError } =
+    await admin.auth.admin.createUser({
+      email: input.email.trim().toLowerCase(),
+      email_confirm: true,
+      user_metadata: {
+        full_name: input.fullName,
+        role: input.role,
+      },
+    });
 
   if (createError && !/already registered/i.test(createError.message)) {
     throw new Error(createError.message);
@@ -215,18 +264,24 @@ export async function sendPortalInviteAction(input: SendPortalInviteInput) {
 
   let authUserId = createdUser.user?.id || null;
   if (!authUserId) {
-    const { data: usersData, error: listError } = await admin.auth.admin.listUsers();
+    const { data: usersData, error: listError } =
+      await admin.auth.admin.listUsers();
     if (listError) {
       throw new Error(listError.message);
     }
     authUserId =
-      usersData.users.find((user) => user.email?.toLowerCase() === input.email.trim().toLowerCase())?.id || null;
+      usersData.users.find(
+        (user) =>
+          user.email?.toLowerCase() === input.email.trim().toLowerCase(),
+      )?.id || null;
   }
   if (!authUserId) {
     throw new Error("Unable to provision the invited user.");
   }
 
-  const { data: insertedInvite, error: inviteError } = await (admin.from("portal_invites" as never) as any)
+  const { data: insertedInvite, error: inviteError } = await (
+    admin.from("portal_invites" as never) as any
+  )
     .insert({
       invited_email: input.email.trim().toLowerCase(),
       invited_name: input.fullName,

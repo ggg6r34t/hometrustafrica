@@ -14,7 +14,11 @@ major_version = 15
 
 [db.seed]
 enabled = true
-sql_paths = ["./seed.sql"]
+sql_paths = [
+  "./seeds/00_helpers.sql",
+  "./seeds/01_auth.sql",
+  "./seeds/02_domain_data.sql",
+]
 
 [auth]
 enabled = true
