@@ -109,7 +109,7 @@ export function DashboardSidebarNav({
       ],
     },
     {
-      label: "Delivery",
+      label: "Project Delivery",
       items: [
         {
           href: `${deliveryBase}/reports`,
@@ -119,7 +119,7 @@ export function DashboardSidebarNav({
         },
         {
           href: `${deliveryBase}/files`,
-          label: "Files",
+          label: "Documents",
           icon: FolderOpenDot,
           active: matchesProjectSection(pathname, "files"),
         },
@@ -138,7 +138,7 @@ export function DashboardSidebarNav({
       ],
     },
     {
-      label: "Communications",
+      label: "Communication",
       items: [
         {
           href: "/dashboard/inbox",
@@ -148,7 +148,7 @@ export function DashboardSidebarNav({
         },
         {
           href: "/dashboard/notifications",
-          label: "Notifications",
+          label: "Alerts",
           icon: Bell,
           active: isPathWithin(pathname, "/dashboard/notifications"),
         },
@@ -161,7 +161,7 @@ export function DashboardSidebarNav({
       ],
     },
     {
-      label: "Administration",
+      label: "Account",
       items: [
         {
           href: "/dashboard/settings/profile",
@@ -178,19 +178,14 @@ export function DashboardSidebarNav({
       <SidebarHeader className="gap-4 px-4 py-4">
         <Link
           href="/dashboard"
-          className="dashboard-brand-tile flex min-h-0 items-center gap-4"
+          className="group flex min-h-0 items-center gap-3 px-1 py-1 group-data-[collapsible=icon]:justify-center"
         >
-          <div className="flex size-10 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary">
-            <ShieldCheck className="size-5" />
+          <div className="flex size-6 shrink-0 items-center justify-center rounded-full border border-foreground/80 text-foreground">
+            <ShieldCheck className="size-3.5 text-foreground" />
           </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-foreground">
-              HomeTrust Africa
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              Client operations portal
-            </p>
-          </div>
+          <span className="min-w-0 truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground group-data-[collapsible=icon]:hidden">
+            HomeTrust Africa
+          </span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -221,7 +216,7 @@ export function DashboardSidebarNav({
         <SidebarSeparator className="mx-4" />
 
         <SidebarGroup>
-          <SidebarGroupLabel>Project access</SidebarGroupLabel>
+          <SidebarGroupLabel>Client Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {projects.slice(0, 5).map((project) => (

@@ -249,7 +249,7 @@
     --input: oklch(1 0 0);
     --border: oklch(0.885 0 0);
     --sidebar: oklch(0.98 0 0);
-    --sidebar-accent: oklch(0.98 0 0);
+    --sidebar-accent: oklch(0.94 0 0);
     --sidebar-border: oklch(0.885 0 0);
     background: oklch(0.98 0 0);
     background-image: none;
