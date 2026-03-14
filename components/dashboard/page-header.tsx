@@ -15,15 +15,19 @@ export function DashboardPageHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-6 border-b border-border/70 pb-6 md:flex-row md:items-end md:justify-between", className)}>
+    <div className={cn("dashboard-page-header", className)}>
       <div className="space-y-3">
-        {eyebrow ? <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">{eyebrow}</p> : null}
+        {eyebrow ? <p className="dashboard-page-eyebrow">{eyebrow}</p> : null}
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{title}</h1>
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">{description}</p>
+          <h1 className="dashboard-page-title">{title}</h1>
+          <p className="dashboard-page-description">{description}</p>
         </div>
       </div>
-      {actions ? <div className="flex items-center gap-4">{actions}</div> : null}
+      {actions ? (
+        <div className="flex flex-wrap items-center gap-3 md:justify-end">
+          {actions}
+        </div>
+      ) : null}
     </div>
   );
 }

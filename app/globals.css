@@ -125,11 +125,25 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
     background-image:
-      radial-gradient(circle at top left, rgba(53, 161, 98, 0.1), transparent 26%),
-      radial-gradient(circle at top right, rgba(200, 166, 70, 0.05), transparent 20%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 244, 239, 0.98));
+      radial-gradient(
+        circle at top left,
+        rgba(53, 161, 98, 0.1),
+        transparent 26%
+      ),
+      radial-gradient(
+        circle at top right,
+        rgba(200, 166, 70, 0.05),
+        transparent 20%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.96),
+        rgba(245, 244, 239, 0.98)
+      );
   }
 
   /* Add smooth scroll behavior globally */
@@ -181,7 +195,8 @@
   }
 
   .transition-smooth {
-    transition-property: color, background-color, border-color, box-shadow, opacity;
+    transition-property:
+      color, background-color, border-color, box-shadow, opacity;
     transition-duration: 180ms;
     transition-timing-function: ease;
   }
@@ -194,7 +209,11 @@
 
   /* Enhanced button hover effects */
   .button-hover-effect {
-    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, opacity 180ms ease;
+    transition:
+      color 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      opacity 180ms ease;
   }
 
   /* Better focus states for accessibility */
@@ -221,35 +240,97 @@
 }
 
 @layer components {
+  .dashboard-shell {
+    background: oklch(0.973 0.003 95);
+  }
+
+  .dashboard-shell h1,
+  .dashboard-shell h2,
+  .dashboard-shell h3,
+  .dashboard-shell h4,
+  .dashboard-shell h5,
+  .dashboard-shell h6 {
+    @apply font-sans;
+    letter-spacing: -0.02em;
+  }
+
+  .dashboard-sidebar {
+    @apply bg-sidebar;
+  }
+
+  .dashboard-workspace {
+    background: oklch(0.978 0.002 95);
+  }
+
+  .dashboard-content {
+    @apply mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 py-5 md:px-6 md:py-8 lg:px-8;
+  }
+
+  .dashboard-command-bar {
+    @apply sticky top-0 z-20 border-b border-border bg-background;
+  }
+
+  .dashboard-brand-tile {
+    @apply rounded-xl border border-sidebar-border bg-sidebar px-4 py-4;
+  }
+
+  .dashboard-section-nav {
+    @apply flex flex-wrap gap-2 border-b border-border pb-4;
+  }
+
+  .dashboard-section-link {
+    @apply inline-flex min-h-10 items-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:border-foreground/15 hover:bg-muted/20 hover:text-foreground;
+  }
+
+  .dashboard-section-link-active {
+    @apply border-primary/25 bg-primary/8 text-foreground;
+  }
+
+  .dashboard-page-header {
+    @apply flex flex-col gap-4 border-b border-border pb-6 md:flex-row md:items-end md:justify-between md:gap-6;
+  }
+
+  .dashboard-page-eyebrow {
+    @apply text-sm font-semibold text-muted-foreground;
+  }
+
+  .dashboard-page-title {
+    @apply font-sans text-[2rem] font-semibold leading-tight text-foreground md:text-[2.5rem];
+  }
+
+  .dashboard-page-description {
+    @apply max-w-3xl text-sm leading-6 text-muted-foreground;
+  }
+
   .dashboard-panel {
-    @apply rounded-2xl border border-border/70 bg-card;
+    @apply rounded-xl border border-border bg-card;
   }
 
   .dashboard-panel-muted {
-    @apply rounded-2xl border border-border/70 bg-muted/20;
+    @apply rounded-lg border border-border bg-muted/20;
   }
 
   .dashboard-list-row {
-    @apply rounded-xl border border-border/70 bg-background px-4 py-4 transition-colors duration-200 hover:border-primary/20 hover:bg-muted/30;
+    @apply rounded-lg border border-border bg-background px-4 py-4 transition-colors duration-150 hover:border-foreground/15 hover:bg-muted/20;
   }
 
   .dashboard-chip {
-    @apply inline-flex items-center rounded-full border border-border/80 bg-muted/40 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground;
+    @apply inline-flex items-center rounded-md border border-border bg-muted/25 px-2.5 py-1 text-[13px] font-medium text-muted-foreground;
   }
 
   .dashboard-field {
-    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-none outline-none transition-[color,background-color,border-color] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
+    @apply flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-none outline-none transition-[color,background-color,border-color] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
   }
 
   .dashboard-thread-bubble {
-    @apply max-w-3xl rounded-2xl border px-4 py-4;
+    @apply max-w-3xl rounded-xl border px-5 py-4;
   }
 
   .dashboard-thread-bubble-own {
-    @apply ml-auto border-primary/20 bg-primary/5;
+    @apply ml-auto border-primary/25 bg-primary/5;
   }
 
   .dashboard-thread-bubble-other {
-    @apply border-border/70 bg-background;
+    @apply border-border bg-background;
   }
 }

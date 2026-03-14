@@ -9,15 +9,20 @@ import type { FileItem } from "@/lib/dashboard/types";
 export function DocumentRow({ file }: { file: FileItem }) {
   return (
     <Card className="dashboard-panel">
-      <CardContent className="flex flex-col gap-4 p-4 md:flex-row md:items-center md:justify-between">
+      <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-4">
-            <p className="font-medium text-foreground">{file.name}</p>
+            <p className="font-semibold text-foreground">{file.name}</p>
             <StatusBadge label={file.category} tone="neutral" />
           </div>
-          {file.description ? <p className="text-sm text-muted-foreground">{file.description}</p> : null}
+          {file.description ? (
+            <p className="text-sm leading-6 text-muted-foreground">
+              {file.description}
+            </p>
+          ) : null}
           <p className="text-sm text-muted-foreground">
-            Uploaded by {file.uploadedBy} on {format(new Date(file.uploadedAt), "MMM d, yyyy")}
+            Uploaded by {file.uploadedBy} on{" "}
+            {format(new Date(file.uploadedAt), "MMM d, yyyy")}
             {file.sizeLabel ? ` · ${file.sizeLabel}` : ""}
           </p>
         </div>

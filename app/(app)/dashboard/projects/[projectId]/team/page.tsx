@@ -4,14 +4,20 @@ import { TeamMemberCard } from "@/components/dashboard/team-member-card";
 import { requireAuthorizedProject } from "@/lib/auth/guards";
 import { dashboardService } from "@/lib/dashboard/service";
 
-export default async function ProjectTeamPage({ params }: { params: Promise<{ projectId: string }> }) {
+export default async function ProjectTeamPage({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) {
   const { projectId } = await params;
   const { session } = await requireAuthorizedProject(projectId);
   const team = await dashboardService.getProjectTeam(session, projectId);
 
   return team.length ? (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {team.map((member) => <TeamMemberCard key={member.id} member={member} />)}
+    <div className="grid items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {team.map((member) => (
+        <TeamMemberCard key={member.id} member={member} />
+      ))}
     </div>
   ) : (
     <DashboardEmptyState

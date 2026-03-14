@@ -14,8 +14,16 @@ import {
 } from "@/app/actions/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ApprovalItem, DashboardSettings } from "@/lib/dashboard/types";
 
@@ -30,8 +38,8 @@ function ActionFeedback({ state }: { state: DashboardActionState }) {
     <p
       className={
         state.status === "success"
-          ? "text-sm text-emerald-700"
-          : "text-sm text-rose-700"
+          ? "text-sm font-medium text-primary"
+          : "text-sm font-medium text-destructive"
       }
     >
       {state.message}
@@ -51,12 +59,12 @@ export function ProfileSettingsForm({
 
   return (
     <Card className="dashboard-panel">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
           Profile details
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
@@ -93,16 +101,22 @@ export function ProfileSettingsForm({
             <Label htmlFor="preferredContactMethod">
               Preferred contact method
             </Label>
-            <select
-              id="preferredContactMethod"
+            <Select
               name="preferredContactMethod"
               defaultValue={settings.preferredContactMethod}
-               className="dashboard-field"
             >
-              <option value="email">Email</option>
-              <option value="phone">Phone</option>
-              <option value="whatsapp">WhatsApp</option>
-            </select>
+              <SelectTrigger
+                id="preferredContactMethod"
+                className="h-10 w-full rounded-lg border-border bg-background"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="email">Email</SelectItem>
+                <SelectItem value="phone">Phone</SelectItem>
+                <SelectItem value="whatsapp">WhatsApp</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
@@ -128,32 +142,36 @@ export function SecuritySettingsForm({
 
   return (
     <Card className="dashboard-panel">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
           Password and session controls
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 pt-6">
         <div className="grid gap-4 md:grid-cols-3">
-          <div>
-            <p className="text-sm text-muted-foreground">
+          <div className="dashboard-panel-muted p-4">
+            <p className="text-sm font-semibold text-muted-foreground">
               Two-factor readiness
             </p>
-            <p className="font-medium text-foreground">
+            <p className="mt-2 font-medium text-foreground">
               {settings.hasTwoFactorEnabled
                 ? "Enabled"
                 : "Ready for activation"}
             </p>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Active sessions</p>
-            <p className="font-medium text-foreground">
+          <div className="dashboard-panel-muted p-4">
+            <p className="text-sm font-semibold text-muted-foreground">
+              Active sessions
+            </p>
+            <p className="mt-2 font-medium text-foreground">
               {settings.activeSessionsCount}
             </p>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Last sign-in</p>
-            <p className="font-medium text-foreground">
+          <div className="dashboard-panel-muted p-4">
+            <p className="text-sm font-semibold text-muted-foreground">
+              Last sign-in
+            </p>
+            <p className="mt-2 font-medium text-foreground">
               {settings.lastSignInAt || "Not available"}
             </p>
           </div>
@@ -222,31 +240,28 @@ export function NotificationSettingsForm({
 
   return (
     <Card className="dashboard-panel">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
           Notification controls
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-6">
           {rows.map(([name, label, checked]) => (
-            <label
+            <div
               key={name}
               className="dashboard-list-row flex items-center justify-between gap-4"
             >
               <div>
-                <p className="font-medium text-foreground">{label}</p>
+                <Label htmlFor={name} className="font-medium text-foreground">
+                  {label}
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Applies immediately to your secure portal preferences.
                 </p>
               </div>
-              <input
-                type="checkbox"
-                name={name}
-                defaultChecked={checked}
-                className="size-4 rounded border-border text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-              />
-            </label>
+              <Checkbox id={name} name={name} defaultChecked={checked} />
+            </div>
           ))}
           <ActionFeedback state={state} />
           <div className="flex justify-end">
@@ -272,12 +287,12 @@ export function PreferenceSettingsForm({
 
   return (
     <Card className="dashboard-panel">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
           Workspace preferences
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
@@ -298,15 +313,18 @@ export function PreferenceSettingsForm({
             </div>
             <div className="space-y-2">
               <Label htmlFor="density">Density</Label>
-              <select
-                id="density"
-                name="density"
-                defaultValue={settings.density}
-                 className="dashboard-field"
-              >
-                <option value="comfortable">Comfortable</option>
-                <option value="compact">Compact</option>
-              </select>
+              <Select name="density" defaultValue={settings.density}>
+                <SelectTrigger
+                  id="density"
+                  className="h-10 w-full rounded-lg border-border bg-background"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="comfortable">Comfortable</SelectItem>
+                  <SelectItem value="compact">Compact</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <ActionFeedback state={state} />
@@ -329,7 +347,12 @@ export function MessageComposer({ threadId }: { threadId: string }) {
 
   return (
     <Card className="dashboard-panel">
-      <CardContent className="p-4">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
+          Send secure message
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-4">
           <input type="hidden" name="threadId" value={threadId} />
           <div className="space-y-2">
@@ -361,12 +384,12 @@ export function SupportRequestForm() {
 
   return (
     <Card className="dashboard-panel">
-      <CardHeader>
-        <CardTitle className="text-base font-semibold">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
           Request a callback or escalation
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="subject">Subject</Label>
@@ -374,15 +397,19 @@ export function SupportRequestForm() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="urgency">Urgency</Label>
-            <select
-              id="urgency"
-              name="urgency"
-               className="dashboard-field"
-            >
-              <option value="standard">Standard</option>
-              <option value="priority">Priority</option>
-              <option value="urgent">Urgent</option>
-            </select>
+            <Select name="urgency" defaultValue="standard">
+              <SelectTrigger
+                id="urgency"
+                className="h-10 w-full rounded-lg border-border bg-background"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="standard">Standard</SelectItem>
+                <SelectItem value="priority">Priority</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="details">Details</Label>
@@ -401,21 +428,41 @@ export function SupportRequestForm() {
 }
 
 export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
-  const [state, action, pending] = useActionState(resolveApprovalAction, initialState);
+  const [state, action, pending] = useActionState(
+    resolveApprovalAction,
+    initialState,
+  );
 
   return (
-    <form action={action} className="dashboard-panel space-y-4 p-4">
+    <form action={action} className="dashboard-panel space-y-4 p-5">
       <input type="hidden" name="approvalId" value={approval.id} />
-      <div className="space-y-1">
-        <p className="font-medium text-foreground">{approval.title}</p>
-        <p className="text-sm text-muted-foreground">{approval.description}</p>
+      <div className="space-y-2">
+        <p className="font-semibold text-foreground">{approval.title}</p>
+        <p className="text-sm leading-6 text-muted-foreground">
+          {approval.description}
+        </p>
       </div>
       <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
-        <Textarea name="note" rows={2} placeholder="Optional note for the operations team" />
-        <Button type="submit" name="decision" value="approved" disabled={pending}>
+        <Textarea
+          name="note"
+          rows={2}
+          placeholder="Optional note for the operations team"
+        />
+        <Button
+          type="submit"
+          name="decision"
+          value="approved"
+          disabled={pending}
+        >
           Approve
         </Button>
-        <Button type="submit" name="decision" value="rejected" variant="outline" disabled={pending}>
+        <Button
+          type="submit"
+          name="decision"
+          value="rejected"
+          variant="outline"
+          disabled={pending}
+        >
           Reject
         </Button>
       </div>
@@ -425,11 +472,19 @@ export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
 }
 
 export function SupportReplyForm({ threadId }: { threadId: string }) {
-  const [state, action, pending] = useActionState(replySupportThreadAction, initialState);
+  const [state, action, pending] = useActionState(
+    replySupportThreadAction,
+    initialState,
+  );
 
   return (
     <Card className="dashboard-panel">
-      <CardContent className="p-4">
+      <CardHeader className="border-b border-border pb-4">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">
+          Reply securely
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
         <form action={action} className="space-y-4">
           <input type="hidden" name="threadId" value={threadId} />
           <div className="space-y-2">

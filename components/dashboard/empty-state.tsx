@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 export function DashboardEmptyState({
   icon,
@@ -13,7 +20,7 @@ export function DashboardEmptyState({
   action?: ReactNode;
 }) {
   return (
-    <Empty className="dashboard-panel border-dashed bg-muted/10 md:p-10">
+    <Empty className="dashboard-panel border-dashed bg-background md:p-10">
       <EmptyHeader>
         <EmptyMedia variant="icon">{icon}</EmptyMedia>
         <EmptyTitle>{title}</EmptyTitle>
