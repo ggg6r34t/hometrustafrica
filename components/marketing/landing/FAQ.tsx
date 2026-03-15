@@ -53,51 +53,53 @@ export default function FAQ() {
         className="bg-white"
         ariaLabelledby="faq-heading"
       >
-        <div className="grid gap-14 lg:grid-cols-12">
-          <motion.div
-            className="lg:col-span-4"
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOptions}
-          >
-            <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
-              Frequently Asked Questions
-            </p>
-            <h2 id="faq-heading" className="mt-5">
-              Clarity before commitment.
-            </h2>
-          </motion.div>
+        <motion.div
+          className="lg:col-span-4"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+        >
+          <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
+            Frequently Asked Questions
+          </p>
+          <h2 id="faq-heading" className="mt-5">
+            Clarity before commitment.
+          </h2>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground md:text-[1.05rem]">
+            A concise overview of verification, reporting, fees, and remote
+            oversight before work begins.
+          </p>
+        </motion.div>
 
-          <motion.div
-            className="lg:col-span-8"
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOptions}
+        <motion.div
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOptions}
+          className="mt-12 md:mt-14"
+        >
+          <Accordion
+            type="single"
+            collapsible
+            className="border-t border-border/60"
           >
-            <Accordion
-              type="single"
-              collapsible
-              className="overflow-hidden rounded-[1.75rem] border border-border/60"
-            >
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
-                  value={`item-${index}`}
-                  className="border-b border-border/60 px-6 last:border-b-0"
-                >
-                  <AccordionTrigger className="py-6 text-left text-lg font-semibold text-foreground hover:no-underline">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="max-w-3xl pb-6 text-sm leading-7 text-muted-foreground">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </motion.div>
-        </div>
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="border-b border-border/60 last:border-b-0"
+              >
+                <AccordionTrigger className="py-6 text-left text-lg font-semibold text-foreground hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="max-w-3xl pb-6 text-sm leading-7 text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
       </SectionContainer>
     </>
   );

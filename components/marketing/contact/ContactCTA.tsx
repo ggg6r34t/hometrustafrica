@@ -12,7 +12,7 @@ export default function ContactCTA() {
   return (
     <SectionContainer
       id="contact-cta"
-      className="bg-[#dfeee7]"
+      className="bg-white"
       aria-labelledby="contact-cta-heading"
     >
       <motion.div
@@ -20,33 +20,25 @@ export default function ContactCTA() {
         initial="hidden"
         whileInView="visible"
         viewport={viewportOptions}
-        className="border-t border-[#c8ddd1] pt-10 md:pt-14"
+        className="mx-auto max-w-5xl rounded-3xl bg-[#dfeee7] px-8 py-10 md:px-12 md:py-14"
       >
-        <div className="max-w-4xl">
-          <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
-            Start the conversation
-          </p>
-          <h2
-            id="contact-cta-heading"
-            className="mt-5 max-w-3xl text-foreground"
-          >
-            Start your project with trusted oversight.
-          </h2>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Tell us what you are building, where it is happening, and the
-            support you need on the ground.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="group mt-8 rounded-full px-6 shadow-none"
-          >
-            <Link href="/contact">
-              Start Your Project
-              <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </div>
+        <h2 id="contact-cta-heading" className="mt-5 max-w-3xl text-foreground">
+          Start your project with trusted oversight.
+        </h2>
+        <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+          Tell us what you are building, where it is happening, and the support
+          you need on the ground.
+        </p>
+        <Button
+          asChild
+          size="lg"
+          className="group mt-8 rounded-full px-6 shadow-none"
+        >
+          <Link href="/contact">
+            Start Your Project
+            <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </Button>
       </motion.div>
     </SectionContainer>
   );

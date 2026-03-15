@@ -87,7 +87,7 @@ export default function Solution() {
           whileInView="visible"
           viewport={viewportOptions}
         >
-          <div className="grid gap-5 md:grid-cols-2 md:gap-6">
+          <div className="grid gap-5 md:auto-rows-fr md:grid-cols-2 md:gap-6">
             {pillars.map((pillar, index) => {
               const Icon = pillar.icon;
               return (
@@ -98,7 +98,7 @@ export default function Solution() {
                   whileInView="visible"
                   viewport={viewportOptions}
                   transition={{ delay: index * 0.05 }}
-                  className="rounded-3xl border border-border/70 bg-white p-6 md:p-7"
+                  className="flex h-full flex-col rounded-3xl border border-border/70 bg-white p-6 md:p-7"
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-[#f8f8f4]">
