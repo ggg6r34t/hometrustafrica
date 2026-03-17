@@ -2,6 +2,7 @@ import Hero from "@/components/marketing/landing/Hero";
 import Problem from "@/components/marketing/landing/Problem";
 import Solution from "@/components/marketing/landing/Solution";
 import HowItWorks from "@/components/marketing/landing/HowItWorks";
+import TrustEnforcement from "@/components/marketing/landing/TrustEnforcement";
 import ProjectTypes from "@/components/marketing/landing/ProjectTypes";
 import FAQ from "@/components/marketing/landing/FAQ";
 import CTASimple from "@/components/marketing/contact/ContactCTA";
@@ -19,6 +20,7 @@ export default function Home() {
       <Problem />
       <Solution />
       <HowItWorks />
+      <TrustEnforcement />
       <ProjectTypes />
       <FAQ />
       <CTASimple />

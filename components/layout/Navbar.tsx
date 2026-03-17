@@ -143,7 +143,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "#problem", label: "Why We Exist", id: "problem" },
-    { href: "#solution", label: "Services", id: "solution" },
+    { href: "#solution", label: "What We Do", id: "solution" },
     {
       href: "#how-it-works",
       label: "How It Works",
@@ -298,7 +298,7 @@ export default function Navbar() {
             >
               <Link
                 href="/contact"
-                aria-label="Start a project - go to contact page"
+                aria-label="Request a project review - go to contact page"
               >
                 <Button
                   variant={isHomeHeroMode ? "outline" : "default"}
@@ -308,7 +308,7 @@ export default function Navbar() {
                       : ""
                   }`}
                 >
-                  Start a Project
+                  Request a Project Review
                 </Button>
               </Link>
             </motion.div>
@@ -458,10 +458,10 @@ export default function Navbar() {
                     <Link
                       href="/contact"
                       onClick={() => setIsOpen(false)}
-                      aria-label="Start a project - go to contact page"
+                      aria-label="Request a project review - go to contact page"
                     >
                       <Button className="w-full shadow-none">
-                        Start a Project
+                        Request a Project Review
                       </Button>
                     </Link>
                   </motion.div>

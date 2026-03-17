@@ -26,7 +26,7 @@ export default function Hero() {
       <div id="main-content" className="relative">
         <HeroVisual>
           <motion.div
-            className="mx-auto flex min-h-[100svh] w-full max-w-7xl items-end px-6 pb-12 pt-20 md:min-h-[78vh] lg:px-8 lg:pb-16 lg:pt-28"
+            className="mx-auto flex min-h-svh w-full max-w-7xl items-end px-6 pb-12 pt-20 md:min-h-[78vh] lg:px-8 lg:pb-16 lg:pt-28"
             variants={staggerContainerSlow}
             initial="hidden"
             animate="visible"
@@ -36,16 +36,15 @@ export default function Hero() {
                 variants={fadeInUp}
                 className="max-w-4xl text-[3.35rem] leading-[0.98] tracking-[-0.05em] text-white md:text-[4.8rem] lg:text-[5.4rem]"
               >
-                Building Back Home, Without the Fear.
+                Run Projects Back Home With Verified Local Execution.
               </motion.h1>
 
               <motion.p
                 variants={fadeInUp}
-                className="mt-6 max-w-2xl text-lg leading-8 text-white/78 md:text-xl"
+                className="mt-6 max-w-xl text-lg leading-8 text-white/78 md:text-xl"
               >
-                We help Africans in the diaspora manage projects, investments,
-                and operations back home with clear oversight, verified local
-                execution, and transparent reporting.
+                HomeTrust Africa helps diaspora clients run local projects with
+                clearer controls, stronger visibility, and accountable delivery.
               </motion.p>
 
               <motion.div
@@ -57,7 +56,7 @@ export default function Hero() {
                   className="group px-8"
                   onClick={() => router.push("/contact")}
                 >
-                  Start a Project
+                  Request a Project Review
                   <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
                 <Button
@@ -75,8 +74,8 @@ export default function Hero() {
                 className="mt-8 inline-flex items-center gap-2 text-sm text-white/68"
               >
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                Verified operators. Structured milestones. Reporting you can
-                review from anywhere.
+                48-hour review brief. Weekly reporting. Evidence before
+                approvals.
               </motion.div>
             </div>
           </motion.div>

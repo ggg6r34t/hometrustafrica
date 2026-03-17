@@ -6,10 +6,10 @@ import { Shield, CheckCircle2, Award, Globe } from "lucide-react";
 export default function TrustBar() {
   const pathname = usePathname();
   const trustItems = [
-    { icon: Shield, text: "Structured fraud prevention" },
-    { icon: CheckCircle2, text: "Verified partners" },
-    { icon: Award, text: "Transparent reporting" },
-    { icon: Globe, text: "Diaspora-first operations" },
+    { icon: Shield, text: "Verification criteria" },
+    { icon: CheckCircle2, text: "Milestone approval controls" },
+    { icon: Award, text: "Structured reporting cadence" },
+    { icon: Globe, text: "Governance checkpoints" },
   ];
 
   if (pathname === "/") {
@@ -23,10 +23,7 @@ export default function TrustBar() {
           {trustItems.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div
-                key={index}
-                className="flex items-center gap-2 text-sm"
-              >
+              <div key={index} className="flex items-center gap-2 text-sm">
                 <Icon className="h-4 w-4 shrink-0 text-primary" />
                 <span className="text-foreground/78">{item.text}</span>
               </div>

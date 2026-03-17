@@ -8,11 +8,11 @@ import AboutCTA from "@/components/marketing/about/CTA";
 export const metadata: Metadata = {
   title: "About Us | HomeTrust Africa",
   description:
-    "Learn about HomeTrust Africa's mission to help diaspora members build back home safely. Discover our story and commitment to transparency and trust.",
+    "Learn how HomeTrust Africa provides diaspora project oversight and managed local execution through verification standards, milestone controls, and structured reporting.",
   openGraph: {
     title: "About Us | HomeTrust Africa",
     description:
-      "Building back home without fear. Safe, transparent, trusted project management for the diaspora.",
+      "Diaspora project oversight and managed local execution across Africa.",
   },
 };
 

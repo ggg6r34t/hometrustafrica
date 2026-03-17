@@ -14,34 +14,34 @@ import { fadeInUp, viewportOptions } from "@/lib/animations";
 export default function FAQ() {
   const faqs = [
     {
-      question: "How does the verification process work?",
+      question: "How does your verification process work?",
       answer:
-        "Partners go through structured review covering identity, documentation, operating credibility, and suitability for the work they support.",
+        "Before any engagement, operators are screened against identity records, relevant delivery history, and project-fit criteria. Work starts only after verification checks are documented.",
     },
     {
-      question: "What countries do you currently serve?",
+      question: "What countries do you currently support?",
       answer:
-        "We currently support projects across selected African markets including Nigeria, Ghana, Kenya, South Africa, Tanzania, and Uganda, with expansion guided by demand and operational readiness.",
+        "We currently support selected markets including Nigeria, Ghana, Kenya, South Africa, Tanzania, and Uganda. Market expansion follows operating readiness and governance capacity.",
     },
     {
-      question: "How are my funds protected?",
+      question: "How are funds protected during execution?",
       answer:
-        "Projects are designed around clearer controls, milestone review, and structured approvals so financial decisions are tied to visible progress.",
+        "Funds move through milestone-based approvals. Each approval is tied to documented delivery evidence and reviewed before payment is released.",
     },
     {
-      question: "What are your fees?",
+      question: "How is pricing structured?",
       answer:
-        "Fees depend on scope, complexity, and operating needs. Pricing reflects the level of coordination, verification, and oversight required.",
+        "Fees are scoped to project complexity, risk profile, and oversight requirements. You receive a defined scope and fee structure before any commitment.",
     },
     {
-      question: "Can I track my project progress remotely?",
+      question: "Can I monitor progress remotely in real time?",
       answer:
-        "Yes. The platform is built around transparent reporting so you can review progress and execution updates without relying on informal follow-up.",
+        "You receive a fixed reporting cadence: weekly status updates, milestone evidence packs, and escalation notices when thresholds are missed.",
     },
     {
-      question: "Do you only handle construction projects?",
+      question: "Do you only support construction projects?",
       answer:
-        "No. HomeTrust Africa supports multiple project categories including construction, agriculture, business setup, vendor verification, and other operations requiring trusted local coordination.",
+        "No. We support construction, business setup, agriculture, infrastructure-linked execution, procurement oversight, and related local operations.",
     },
   ];
 
@@ -64,11 +64,11 @@ export default function FAQ() {
             Frequently Asked Questions
           </p>
           <h2 id="faq-heading" className="mt-5">
-            Clarity before commitment.
+            Decisions deserve clear answers.
           </h2>
           <p className="mt-6 max-w-2xl text-base leading-8 text-muted-foreground md:text-[1.05rem]">
-            A concise overview of verification, reporting, fees, and remote
-            oversight before work begins.
+            A direct overview of diaspora project oversight and managed local
+            execution before any project commitment.
           </p>
         </motion.div>
 

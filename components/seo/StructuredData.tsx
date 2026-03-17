@@ -26,7 +26,7 @@ export function OrganizationSchema() {
       process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com"
     }/icon.svg`,
     description:
-      "Building Back Home, Without the Fear. We help Africans in the diaspora build and manage their homes, projects, and businesses back home with full transparency and fraud protection.",
+      "HomeTrust Africa provides diaspora project oversight and managed local execution through verification, milestone controls, reporting cadence, and governance checkpoints.",
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
@@ -57,7 +57,7 @@ export function ServiceSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    serviceType: "Project Management Services",
+    serviceType: "Diaspora Project Oversight and Managed Local Execution",
     provider: {
       "@type": "Organization",
       name: "HomeTrust Africa",
@@ -67,7 +67,7 @@ export function ServiceSchema() {
       name: ["Nigeria", "Ghana", "Kenya", "South Africa", "Tanzania", "Uganda"],
     },
     description:
-      "Safe, transparent project management services for Africans in the diaspora. We help you build and manage homes, projects, and businesses back home with verified partners and fraud protection.",
+      "Diaspora project oversight and managed local execution with operator verification, milestone governance, and structured reporting.",
     offers: {
       "@type": "Offer",
       description: "Project management and oversight services",
@@ -94,7 +94,7 @@ export function WebsiteSchema() {
     name: "HomeTrust Africa",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://hometrustafrica.com",
     description:
-      "Building Back Home, Without the Fear. Safe project management for the diaspora.",
+      "Diaspora project oversight and managed local execution for projects back home.",
   };
 
   return (

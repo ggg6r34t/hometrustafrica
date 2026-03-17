@@ -16,39 +16,39 @@ import { fadeInUp, viewportOptions } from "@/lib/animations";
 const pillars = [
   {
     icon: Building2,
-    title: "Project oversight",
+    title: "Execution governance",
     description:
-      "Keep execution visible through clearer coordination, milestone discipline, and day-to-day delivery follow-through.",
+      "You get a written control model before kickoff. Scope ownership, governance checkpoints, and decision rights are documented in advance.",
   },
   {
     icon: UserRoundSearch,
-    title: "Verified contractors",
+    title: "Operator verification",
     description:
-      "Work begins with vetted local contractors and operators who are screened before engagement.",
+      "Every operator is screened before engagement. Identity, relevant work history, and project-fit criteria are reviewed and recorded.",
   },
   {
     icon: ClipboardCheck,
-    title: "Milestone reporting",
+    title: "Milestone controls",
     description:
-      "Translate local progress into documented updates that can be reviewed remotely and acted on with confidence.",
+      "Milestones define when work is accepted and when funds can move. Evidence is checked before approvals are released.",
   },
   {
     icon: Factory,
-    title: "Spending reports",
+    title: "Financial visibility",
     description:
-      "Support delivery with clearer financial reporting so spend can be reviewed alongside progress.",
+      "You receive structured spend visibility tied to delivery status. A milestone financial pack shows what was spent, approved, and pending.",
   },
   {
     icon: Sprout,
-    title: "Asset monitoring",
+    title: "Asset and site monitoring",
     description:
-      "Maintain visibility over physical assets and ongoing activity without relying on informal updates alone.",
+      "Site activity is tracked against defined outputs. Field checks are documented and reflected in regular progress updates.",
   },
   {
     icon: Radar,
-    title: "Risk escalation",
+    title: "Early risk escalation",
     description:
-      "Flag issues early when timelines slip, controls weaken, or conditions on the ground start to change.",
+      "Control breaches are escalated early. Slippages, quality gaps, and blocked decisions are surfaced while corrective action is still possible.",
   },
 ];
 
@@ -68,15 +68,18 @@ export default function Solution() {
           viewport={viewportOptions}
         >
           <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
-            Our Solution
+            What We Do
           </p>
           <h2 id="solution-heading" className="mt-5 max-w-lg">
-            The operating layer that turns intent into controlled execution.
+            Diaspora project oversight and managed local execution.
           </h2>
           <p className="mt-6 max-w-md text-lg text-muted-foreground">
-            HomeTrust Africa defines how execution is handled from a distance:
-            who gets verified, how progress is tracked, how spending is
-            documented, and when issues are escalated before they become losses.
+            You receive clear operating documents before work starts: a control
+            model, milestone map, and approval path.
+          </p>
+          <p className="mt-3 max-w-md text-base text-muted-foreground">
+            During delivery, you get weekly status updates and milestone packs
+            built for remote decisions.
           </p>
         </motion.div>
 

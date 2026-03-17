@@ -181,20 +181,24 @@ export default function ContactForm() {
               Before you submit
             </p>
             <h2 id="contact-heading" className="mt-5 max-w-sm">
-              A clear brief helps.
+              Strong inputs improve execution quality.
             </h2>
             <div className="mt-6 space-y-6">
               <div>
                 <h3 className="text-xl">Include</h3>
                 <p className="mt-3 max-w-sm text-base text-muted-foreground">
-                  Project type, location, current stage, and the support you
-                  need on the ground.
+                  Project objective, location, current stage, budget range, and
+                  where local execution is currently exposed.
                 </p>
               </div>
               <div>
-                <h3 className="text-xl">Next</h3>
+                <h3 className="text-xl">What happens next</h3>
                 <p className="mt-3 max-w-sm text-base text-muted-foreground">
-                  We review the enquiry and reply with the next step.
+                  We review your brief within 48 hours.
+                </p>
+                <p className="mt-2 max-w-sm text-base text-muted-foreground">
+                  You receive a recommended next-step plan. No commitment is
+                  required at this stage.
                 </p>
               </div>
             </div>
@@ -434,7 +438,7 @@ export default function ContactForm() {
                         </FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Share the key details of your project."
+                            placeholder="Describe scope, location, stage, target timeline, and current execution risks."
                             rows={6}
                             disabled={isPending}
                             className="min-h-40 rounded-2xl border-border/70 bg-white shadow-none transition-all duration-200"
@@ -448,10 +452,7 @@ export default function ContactForm() {
                 </motion.div>
 
                 {/* Privacy Notice */}
-                <motion.div
-                  variants={staggerItem}
-                  className="pt-5"
-                >
+                <motion.div variants={staggerItem} className="pt-5">
                   <p className="max-w-2xl text-sm text-muted-foreground">
                     By submitting this form, you agree to our{" "}
                     <Link
@@ -499,7 +500,8 @@ export default function ContactForm() {
                       aria-hidden="true"
                     />
                     <p className="text-sm font-medium leading-relaxed">
-                      Thank you. Your brief has been received.
+                      Thank you. Your brief has been received and queued for
+                      review.
                     </p>
                   </motion.div>
                 )}
@@ -527,7 +529,7 @@ export default function ContactForm() {
                       </span>
                     ) : (
                       <>
-                        Submit Brief
+                        Request a Project Review
                         <ArrowRight
                           className="ml-2 group-hover:translate-x-1 transition-transform duration-300 inline-block"
                           size={18}

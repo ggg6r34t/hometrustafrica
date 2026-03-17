@@ -24,23 +24,24 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "HomeTrust Africa - Safe Project Management for Diaspora",
+    default:
+      "HomeTrust Africa - Diaspora Project Oversight and Managed Local Execution",
     template: "%s | HomeTrust Africa",
   },
   description:
-    "Building Back Home, Without the Fear. We help Africans in the diaspora build and manage their homes, projects, and businesses back home with full transparency and fraud protection.",
+    "HomeTrust Africa provides diaspora project oversight and managed local execution through verification, milestone controls, reporting cadence, and governance checkpoints.",
   keywords: [
     "diaspora",
     "project management",
     "Africa",
-    "fraud protection",
+    "execution oversight",
     "business",
     "home building",
     "Nigeria",
     "Ghana",
     "Kenya",
     "diaspora projects",
-    "secure escrow",
+    "milestone controls",
     "verified partners",
   ],
   authors: [{ name: "HomeTrust Africa" }],
@@ -61,9 +62,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "/",
-    title: "HomeTrust Africa - Safe Project Management for Diaspora",
+    title:
+      "HomeTrust Africa - Diaspora Project Oversight and Managed Local Execution",
     description:
-      "Building Back Home, Without the Fear. We help Africans in the diaspora build and manage their homes, projects, and businesses back home with full transparency.",
+      "Diaspora project oversight and managed local execution with verification, milestone controls, and structured reporting.",
     siteName: "HomeTrust Africa",
     // TODO: Replace with actual Open Graph images
     // images: [
@@ -77,8 +79,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "HomeTrust Africa - Safe Project Management for Diaspora",
-    description: "Building Back Home, Without the Fear.",
+    title:
+      "HomeTrust Africa - Diaspora Project Oversight and Managed Local Execution",
+    description:
+      "Diaspora project oversight and managed local execution with structured controls.",
     // TODO: Replace with actual Twitter handle
     // creator: "@hometrustafrica",
   },

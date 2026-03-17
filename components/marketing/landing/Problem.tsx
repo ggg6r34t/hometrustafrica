@@ -6,39 +6,39 @@ import SectionContainer from "@/components/ui/section-container";
 
 const problemSignals = [
   {
-    stat: "High Fraud Risk",
+    stat: "Unverified execution",
     detail: (
       <>
-        Diaspora members sending money back home face constant threats of{" "}
+        Too many projects begin with{" "}
         <strong className="font-medium text-foreground">
-          fraudulent schemes and misappropriation of funds
-        </strong>{" "}
-        by unverified intermediaries.
+          unverified operators and informal agreements
+        </strong>
+        , creating avoidable risk before work even starts.
       </>
     ),
   },
   {
-    stat: "Lack of Oversight",
+    stat: "Payment without proof",
     detail: (
       <>
-        Without local presence,{" "}
+        Funds are often released without reliable evidence that milestones were
+        met, which leads to{" "}
         <strong className="font-medium text-foreground">
-          monitoring project progress becomes nearly impossible
+          cost overruns, scope drift, and stalled delivery
         </strong>
-        . You&apos;re left hoping for updates and trusting strangers with your
-        investments.
+        .
       </>
     ),
   },
   {
-    stat: "No Transparency",
+    stat: "Visibility that arrives late",
     detail: (
       <>
-        Most intermediaries lack{" "}
+        Updates typically arrive after issues compound, when{" "}
         <strong className="font-medium text-foreground">
-          proper documentation, legal oversight, and accountability measures
+          timelines, quality, and accountability are already compromised
         </strong>
-        , leaving your projects vulnerable.
+        .
       </>
     ),
   },
@@ -63,7 +63,7 @@ export default function Problem() {
             Why We Exist
           </p>
           <h2 id="problem-heading" className="mt-5 max-w-xl">
-            Building back home should not feel like sending capital into the dark.
+            Capital moves globally. Execution risk stays local.
           </h2>
         </motion.div>
 
@@ -76,15 +76,17 @@ export default function Problem() {
         >
           <div className="border-l-2 border-[#d7b740] pl-6 md:pl-8">
             <p className="max-w-2xl text-xl leading-9 text-foreground md:text-2xl">
-              Diaspora families and investors are willing to build, launch, and
-              invest. What they often lack is a dependable operating layer that
-              makes local execution visible, structured, and accountable.
+              Most failures are not caused by weak demand. They come from weak
+              execution controls after funds are already committed.
             </p>
           </div>
           <p className="mt-8 max-w-2xl text-base text-muted-foreground">
-            HomeTrust Africa exists because too many important projects still
-            depend on informal coordination, weak verification, and updates that
-            arrive too late to change outcomes.
+            HomeTrust Africa addresses this through diaspora project oversight
+            and managed local execution.
+          </p>
+          <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+            A common pattern is payment release before verified milestone
+            evidence, followed by delayed issue visibility and costly rework.
           </p>
         </motion.div>
       </div>
@@ -97,8 +99,9 @@ export default function Problem() {
         className="mt-18 md:mt-20"
       >
         <p className="max-w-2xl text-[1.02rem] leading-8 text-muted-foreground">
-          The pattern is consistent: when serious projects move forward without
-          verified local oversight, the same risks appear early.
+          Serious projects need governance at the point of execution: verified
+          operators, controlled milestone approvals, and reporting that supports
+          timely decisions.
         </p>
 
         <div className="mt-10 border-t border-[#ddd0cb]">
@@ -116,7 +119,7 @@ export default function Problem() {
                   : ""
               }`}
             >
-              <p className="max-w-[12.5rem] text-[1.32rem] font-semibold leading-[1.2] text-foreground md:text-[1.45rem]">
+              <p className="max-w-50 text-[1.32rem] font-semibold leading-[1.2] text-foreground md:text-[1.45rem]">
                 {item.stat}
               </p>
               <p className="max-w-2xl text-[0.96rem] leading-7 text-muted-foreground">

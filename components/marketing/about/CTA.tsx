@@ -10,10 +10,7 @@ import { fadeInUp, viewportOptions } from "@/lib/animations";
 
 export default function AboutCTA() {
   return (
-    <SectionContainer
-      id="about-cta"
-      className="bg-[#dfeee7]"
-    >
+    <SectionContainer id="about-cta" className="bg-[#dfeee7]">
       <motion.div
         variants={fadeInUp}
         initial="hidden"
@@ -23,15 +20,20 @@ export default function AboutCTA() {
       >
         <div className="max-w-4xl">
           <h2 className="max-w-3xl text-foreground">
-            If this is the kind of oversight you need, let&apos;s talk.
+            If your project requires disciplined oversight, let&apos;s begin
+            with a review.
           </h2>
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Tell us what you are trying to build, where it is happening, and
-            where you need support on the ground.
+            Share what you are building, where execution is happening, and the
+            operational controls you need locally.
           </p>
-          <Button asChild size="lg" className="group mt-8 rounded-full px-6 shadow-none">
+          <Button
+            asChild
+            size="lg"
+            className="group mt-8 rounded-full px-6 shadow-none"
+          >
             <Link href="/contact">
-              Start Your Project
+              Request a Project Review
               <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
@@ -40,4 +42,3 @@ export default function AboutCTA() {
     </SectionContainer>
   );
 }
-

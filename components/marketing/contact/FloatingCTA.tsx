@@ -47,7 +47,7 @@ export default function FloatingCTA() {
       // Show/hide based on scroll position (hide when near bottom to avoid conflict with scroll-to-top)
       setIsVisible(
         scrollY > windowHeight * 0.5 &&
-          scrollY < document.documentElement.scrollHeight - windowHeight - 150
+          scrollY < document.documentElement.scrollHeight - windowHeight - 150,
       );
     };
 
@@ -75,11 +75,11 @@ export default function FloatingCTA() {
             asChild
             size="lg"
             className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl hover:shadow-2xl rounded-full px-6 py-6 h-auto group flex items-center gap-2 font-semibold"
-            aria-label="Start your project - go to contact page"
+            aria-label="Request a project review - go to contact page"
           >
             <Link href="/contact">
               <MessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="hidden sm:inline">Start Project</span>
+              <span className="hidden sm:inline">Project Review</span>
               <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
             </Link>
           </Button>

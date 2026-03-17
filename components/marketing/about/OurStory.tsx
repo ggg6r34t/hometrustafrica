@@ -20,7 +20,8 @@ export default function OurStory() {
             Why It Exists
           </p>
           <h2 className="mt-5 max-w-md">
-            The demand is real. The missing layer has been dependable execution.
+            The opportunity is clear. Execution confidence has been the missing
+            layer.
           </h2>
         </motion.div>
 
@@ -34,20 +35,18 @@ export default function OurStory() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-12">
             <div className="space-y-6 text-lg text-muted-foreground md:text-xl">
               <p>
-                Many diaspora clients are ready to build homes, launch
-                businesses, support farms, or manage long-term investments back
-                home. What has often stood in the way is not ambition, but
-                confidence in how local execution will actually be handled.
+                Diaspora families and investors are already funding ambitious
+                projects back home. What has been missing is confidence in the
+                local execution model behind those investments.
               </p>
               <p>
-                Informal coordination, weak verification, and inconsistent
-                updates create risk long before anyone notices that funds,
-                timelines, or decisions are exposed.
+                Informal coordination and delayed visibility expose timelines,
+                quality, and capital long before stakeholders can intervene.
               </p>
               <p>
-                HomeTrust Africa is being built to close that gap with a more
-                visible, documented, and accountable way to manage serious work
-                on the ground.
+                HomeTrust Africa is designed to close that risk gap with
+                verification standards, milestone controls, and reporting that
+                supports timely decisions.
               </p>
             </div>
 
@@ -56,7 +55,9 @@ export default function OurStory() {
                 In practice
               </p>
               <div className="mt-4 space-y-5 text-sm text-foreground/78">
-                <p>Projects should start with clearer scope and responsibilities.</p>
+                <p>
+                  Projects should start with clearer scope and responsibilities.
+                </p>
                 <p>Operators should be screened before execution begins.</p>
                 <p>Reporting should support decisions, not just reassurance.</p>
                 <p>Issues should surface early enough for action.</p>

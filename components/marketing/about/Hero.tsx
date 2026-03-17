@@ -30,9 +30,9 @@ export default function AboutHero() {
 
         <div className="lg:col-span-5 lg:pl-8">
           <p className="max-w-xl text-lg text-muted-foreground md:text-xl">
-            HomeTrust Africa is being built for diaspora families, founders, and
-            investors who need local execution to feel structured, visible, and
-            accountable from day one.
+            HomeTrust Africa supports diaspora families, founders, and investors
+            who need local execution to be structured, visible, and accountable
+            from day one.
           </p>
         </div>
       </motion.div>

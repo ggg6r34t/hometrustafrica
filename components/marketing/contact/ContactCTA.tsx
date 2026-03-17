@@ -23,11 +23,13 @@ export default function ContactCTA() {
         className="mx-auto max-w-5xl rounded-3xl bg-[#dfeee7] px-8 py-10 md:px-12 md:py-14"
       >
         <h2 id="contact-cta-heading" className="mt-5 max-w-3xl text-foreground">
-          Start your project with trusted oversight.
+          Request a Project Review
         </h2>
-        <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-          Tell us what you are building, where it is happening, and the support
-          you need on the ground.
+        <p className="mt-6 max-w-xl text-lg text-muted-foreground md:text-xl">
+          Share your project objective, location, and current constraints.
+        </p>
+        <p className="mt-2 max-w-xl text-base text-muted-foreground">
+          We assess project risk and identify priority control gaps.
         </p>
         <Button
           asChild
@@ -35,10 +37,14 @@ export default function ContactCTA() {
           className="group mt-8 rounded-full px-6 shadow-none"
         >
           <Link href="/contact">
-            Start Your Project
+            Request a Project Review
             <ArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </Button>
+        <p className="mt-4 text-sm text-muted-foreground/70">
+          15-minute call to review your project and next steps. You leave with a
+          recommended execution and oversight path.
+        </p>
       </motion.div>
     </SectionContainer>
   );

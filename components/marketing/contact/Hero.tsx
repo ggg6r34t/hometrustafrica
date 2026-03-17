@@ -24,8 +24,12 @@ export default function ContactHero() {
             Contact
           </p>
           <h1 id="contact-hero-heading" className="max-w-4xl text-foreground">
-            Start the conversation about what you need back home.
+            Request a Project Review
           </h1>
+          <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+            15-minute call to review your project, execution risk, and next
+            steps.
+          </p>
         </div>
       </motion.div>
     </SectionContainer>

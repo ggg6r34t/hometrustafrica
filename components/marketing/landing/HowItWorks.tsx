@@ -7,21 +7,21 @@ import { fadeInUp, viewportOptions } from "@/lib/animations";
 const steps = [
   {
     number: "01",
-    title: "Tell us your goal",
+    title: "Onboarding and project review",
     description:
-      "We begin with the project, location, constraints, and what success should look like.",
+      "You share objectives, location, budget, and constraints. Timeline: 48 hours. Deliverable: scope brief, risk register, and recommended control model.",
   },
   {
     number: "02",
-    title: "We verify and structure execution",
+    title: "Verification and control setup",
     description:
-      "We define the operating model, local coordination, and reporting cadence before work begins.",
+      "We verify operators and define approvals. Timeline: 3-5 business days. Deliverable: operator checklist, milestone plan, and governance checkpoints.",
   },
   {
     number: "03",
-    title: "Track progress from anywhere",
+    title: "Managed execution and reporting",
     description:
-      "You stay informed through clearer updates designed for visibility and decision-making.",
+      "Execution begins under agreed controls. Cadence: weekly status updates, milestone evidence packs, and escalation notices when thresholds are missed.",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function HowItWorks() {
           How It Works
         </p>
         <h2 id="how-it-works-heading" className="mt-5 text-white">
-          Straightforward for clients. Rigorous underneath.
+          A controlled process from onboarding to delivery.
         </h2>
       </motion.div>
 

@@ -4,13 +4,13 @@ import ContactForm from "@/components/forms/ContactForm";
 import ContactHero from "@/components/marketing/contact/Hero";
 
 export const metadata: Metadata = {
-  title: "Contact Us | HomeTrust Africa",
+  title: "Request a Project Review | HomeTrust Africa",
   description:
-    "Get in touch with HomeTrust Africa to start your project back home. We'll respond within 24 hours to discuss your vision and next steps.",
+    "Request a project review with HomeTrust Africa. 15-minute call to review project context, execution risk, and next steps.",
   openGraph: {
-    title: "Contact Us | HomeTrust Africa",
+    title: "Request a Project Review | HomeTrust Africa",
     description:
-      "Get in touch with HomeTrust Africa to start your project back home.",
+      "15-minute call to review your project scope, execution risk, and next-step plan.",
   },
 };
 

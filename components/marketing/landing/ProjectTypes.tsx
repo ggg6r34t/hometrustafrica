@@ -1,13 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Building,
-  HardHat,
-  Leaf,
-  ShoppingBag,
-  SunMedium,
-} from "lucide-react";
+import { Building, HardHat, Leaf, ShoppingBag, SunMedium } from "lucide-react";
 
 import SectionContainer from "@/components/ui/section-container";
 import { fadeInUp, viewportOptions } from "@/lib/animations";
@@ -16,33 +10,39 @@ const projects = [
   {
     icon: Building,
     title: "Business launches",
-    description: "Entity setup, operating readiness, and partner coordination.",
-    context: "For founders, family ventures, and market-entry plans.",
+    description:
+      "Outcome: launch readiness with fewer coordination gaps. Mechanism: operator screening, milestone approvals, and tracked dependencies.",
+    context: "For founders, family ventures, and new market-entry operations.",
   },
   {
     icon: HardHat,
     title: "Construction",
     description:
-      "Multi-stage projects requiring stronger vendor and milestone management.",
-    context: "For builds where site progress and spend must stay visible.",
+      "Outcome: controlled delivery across complex phases. Mechanism: stage-gated approvals, site verification, and spend checkpoints.",
+    context:
+      "For projects where schedule, quality, and budget must stay aligned.",
   },
   {
     icon: Leaf,
     title: "Agriculture",
-    description: "Field execution, procurement oversight, and reporting structure.",
-    context: "For farming, processing, and land-based operating projects.",
+    description:
+      "Outcome: clearer field execution across seasonal cycles. Mechanism: procurement controls, milestone evidence, and periodic reporting.",
+    context: "For farming, processing, and land-based operating programs.",
   },
   {
     icon: SunMedium,
     title: "Solar installations",
-    description: "Technical delivery where site readiness and procurement matter.",
-    context: "For energy projects with equipment, logistics, and setup risk.",
+    description:
+      "Outcome: safer technical rollout with fewer downstream issues. Mechanism: readiness checks, vendor verification, and phased acceptance.",
+    context:
+      "For energy projects with logistics, equipment, and commissioning risk.",
   },
   {
     icon: ShoppingBag,
     title: "Retail stores",
-    description: "Fit-out, launch preparation, and local operating coordination.",
-    context: "For store openings, expansion work, and launch readiness.",
+    description:
+      "Outcome: predictable openings across distributed sites. Mechanism: fit-out controls, launch checklists, and governed handover.",
+    context: "For store openings, expansion programs, and operating handoffs.",
   },
 ];
 
@@ -65,21 +65,25 @@ export default function ProjectTypes() {
             Project Types
           </p>
           <h2 id="project-types-heading" className="mt-5 max-w-xl">
-            Where the operating model gets applied.
+            Built for diaspora project oversight and managed local execution.
           </h2>
           <p className="mt-6 max-w-md text-lg text-muted-foreground">
-            HomeTrust Africa is designed for project categories where local
-            execution needs stronger visibility, coordination, and control.
+            We focus on project categories where local execution must be
+            verified, governed, and reported through clear operating controls.
           </p>
 
           <div className="mt-10 max-w-md rounded-[1.75rem] bg-white px-6 py-6">
             <p className="text-sm font-medium tracking-[0.04em] text-muted-foreground/80">
-              Typical fit
+              Execution scenario
             </p>
             <p className="mt-4 text-base leading-8 text-foreground/78">
-              Work that involves multiple vendors, on-the-ground execution,
-              milestone decisions, or spend that should be reviewed with better
-              discipline.
+              Mini snapshot: a two-site rollout with four milestones from
+              procurement to handover. Each milestone requires documented proof
+              before approval.
+            </p>
+            <p className="mt-3 text-sm leading-7 text-foreground/72">
+              Reporting example: weekly execution brief, milestone evidence
+              pack, spend-by-line-item summary, and escalated blockers.
             </p>
           </div>
         </motion.div>
