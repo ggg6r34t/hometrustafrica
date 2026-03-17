@@ -407,10 +407,10 @@ export default function Privacy() {
                   </p>
                   <p>
                     <a
-                      href="mailto:hello@hometrustafrica.com"
+                      href="mailto:info@hometrustafrica.com"
                       className="text-primary hover:underline"
                     >
-                      hello@hometrustafrica.com
+                      info@hometrustafrica.com
                     </a>
                   </p>
                 </div>

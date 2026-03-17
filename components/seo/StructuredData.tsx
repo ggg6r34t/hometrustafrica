@@ -30,7 +30,7 @@ export function OrganizationSchema() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      email: "hello@hometrustafrica.com",
+      email: "info@hometrustafrica.com",
       areaServed: ["NG", "GH", "KE", "ZA", "TZ", "UG"], // Country codes
       availableLanguage: ["en"],
       ...(phoneNumber ? { telephone: phoneNumber } : {}),

@@ -147,12 +147,12 @@ export default function Footer() {
               ) : null}
               <SocialLinks />
               <Link
-                href="mailto:hello@hometrustafrica.com"
+                href="mailto:info@hometrustafrica.com"
                 className="flex items-center gap-2 text-sm text-white/72 transition-colors duration-200 hover:text-primary"
                 aria-label="Contact us"
               >
                 <IoMailOutline size={16} />
-                hello@hometrustafrica.com
+                info@hometrustafrica.com
               </Link>
             </div>
           </div>
