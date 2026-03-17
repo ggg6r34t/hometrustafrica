@@ -15,6 +15,11 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHomepage = pathname === "/";
   const isHomeHeroMode = isHomepage && !scrolled && !isOpen;
+  const mobileMenuBgClass = isHomepage
+    ? scrolled
+      ? "bg-background/96"
+      : "bg-background/88"
+    : "bg-background/82";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -376,7 +381,7 @@ export default function Navbar() {
                 style={{
                   overflow: "hidden",
                 }}
-                className="absolute left-0 right-0 top-full z-50 border-b border-border/40 bg-background/96 backdrop-blur-md md:hidden"
+                className={`absolute left-0 right-0 top-full z-50 border-b border-border/40 ${mobileMenuBgClass} backdrop-blur-md md:hidden`}
                 role="navigation"
                 aria-label="Mobile menu"
               >

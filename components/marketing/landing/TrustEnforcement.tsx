@@ -110,7 +110,8 @@ export default function TrustEnforcement() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-white">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="mt-6 text-xl">{item.title}</h3>
+                  <div className="mt-5 border-t border-border/50" />
+                  <h3 className="mt-5 text-xl">{item.title}</h3>
                   <p className="mt-3 text-sm leading-7 text-muted-foreground">
                     {item.description}
                   </p>

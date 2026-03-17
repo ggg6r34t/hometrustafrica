@@ -538,6 +538,11 @@ export default function ContactForm() {
                       </>
                     )}
                   </Button>
+                  {mutation.isSuccess && (
+                    <p className="mt-3 text-sm text-primary">
+                      Submitted successfully. We will respond within 48 hours.
+                    </p>
+                  )}
                 </motion.div>
               </form>
             </Form>

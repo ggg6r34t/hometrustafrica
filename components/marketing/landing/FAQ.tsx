@@ -90,7 +90,7 @@ export default function FAQ() {
                 value={`item-${index}`}
                 className="border-b border-border/60 last:border-b-0"
               >
-                <AccordionTrigger className="py-6 text-left text-lg font-semibold text-foreground hover:no-underline">
+                <AccordionTrigger className="min-h-16 py-7 text-left text-lg font-semibold text-foreground hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="max-w-3xl pb-6 text-sm leading-7 text-muted-foreground">

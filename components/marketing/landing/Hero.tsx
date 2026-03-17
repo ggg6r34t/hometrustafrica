@@ -34,7 +34,7 @@ export default function Hero() {
             <div className="max-w-4xl">
               <motion.h1
                 variants={fadeInUp}
-                className="max-w-4xl text-[3.35rem] leading-[0.98] tracking-[-0.05em] text-white md:text-[4.8rem] lg:text-[5.4rem]"
+                className="max-w-3xl text-[3.35rem] leading-[0.95] tracking-[-0.05em] text-white md:max-w-4xl md:text-[4.8rem] lg:text-[5.4rem]"
               >
                 Run Projects Back Home With Verified Local Execution.
               </motion.h1>
@@ -62,7 +62,7 @@ export default function Hero() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white/18 bg-white/6 px-8 text-white hover:bg-white/12 hover:text-white"
+                  className="border-white/12 bg-white/3 px-8 text-white/82 hover:border-white/20 hover:bg-white/8 hover:text-white"
                   onClick={handleSecondaryClick}
                 >
                   See How It Works
