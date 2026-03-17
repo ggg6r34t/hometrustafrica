@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import * as AccordionPrimitive from '@radix-ui/react-accordion'
-import { MinusIcon, PlusIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import * as React from "react";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 function Accordion({
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-  return <AccordionPrimitive.Root data-slot="accordion" {...props} />
+  return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
 }
 
 function AccordionItem({
@@ -18,10 +18,10 @@ function AccordionItem({
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn('border-b last:border-b-0', className)}
+      className={cn("border-b last:border-b-0", className)}
       {...props}
     />
-  )
+  );
 }
 
 function AccordionTrigger({
@@ -34,7 +34,7 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          'focus-visible:border-ring focus-visible:ring-ring/50 group flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50',
+          "focus-visible:border-ring focus-visible:ring-ring/50 group flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50",
           className,
         )}
         {...props}
@@ -42,14 +42,16 @@ function AccordionTrigger({
         {children}
         <span
           aria-hidden="true"
-          className="text-muted-foreground pointer-events-none mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center"
+          className="pointer-events-none mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center"
         >
-          <PlusIcon className="block h-5 w-5 group-data-[state=open]:hidden" />
-          <MinusIcon className="hidden h-5 w-5 group-data-[state=open]:block" />
+          <span className="relative h-5.5 w-5.5">
+            <PlusIcon className="text-muted-foreground absolute inset-0 h-5.5 w-5.5 transition-all duration-300 ease-out group-hover:scale-110 group-data-[state=open]:rotate-90 group-data-[state=open]:scale-75 group-data-[state=open]:opacity-0 group-data-[state=open]:text-primary" />
+            <MinusIcon className="text-muted-foreground absolute inset-0 h-5.5 w-5.5 rotate-90 scale-75 opacity-0 transition-all duration-300 ease-out group-hover:scale-110 group-data-[state=open]:rotate-0 group-data-[state=open]:scale-100 group-data-[state=open]:opacity-100 group-data-[state=open]:text-primary" />
+          </span>
         </span>
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
-  )
+  );
 }
 
 function AccordionContent({
@@ -63,9 +65,9 @@ function AccordionContent({
       className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
       {...props}
     >
-      <div className={cn('pt-0 pb-4', className)}>{children}</div>
+      <div className={cn("pt-0 pb-4", className)}>{children}</div>
     </AccordionPrimitive.Content>
-  )
+  );
 }
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
