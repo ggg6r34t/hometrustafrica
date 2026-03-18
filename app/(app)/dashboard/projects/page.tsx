@@ -6,8 +6,8 @@ import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AutoSubmitSelect } from "@/components/dashboard/auto-submit-select";
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -105,7 +105,7 @@ export default async function ProjectsPage({
                 className="pl-9"
               />
             </div>
-            <Select name="status" defaultValue={selectedStatus}>
+            <AutoSubmitSelect name="status" defaultValue={selectedStatus}>
               <SelectTrigger size="dashboard" className="md:w-44">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -117,8 +117,8 @@ export default async function ProjectsPage({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
-            <Select name="type" defaultValue={selectedType}>
+            </AutoSubmitSelect>
+            <AutoSubmitSelect name="type" defaultValue={selectedType}>
               <SelectTrigger size="dashboard" className="md:w-52">
                 <SelectValue placeholder="Project type" />
               </SelectTrigger>
@@ -130,8 +130,8 @@ export default async function ProjectsPage({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
-            <Select name="sort" defaultValue={selectedSort}>
+            </AutoSubmitSelect>
+            <AutoSubmitSelect name="sort" defaultValue={selectedSort}>
               <SelectTrigger size="dashboard" className="md:w-56">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
@@ -142,10 +142,7 @@ export default async function ProjectsPage({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
-            <Button type="submit" size="dashboard">
-              Apply filters
-            </Button>
+            </AutoSubmitSelect>
           </form>
           {activeFilters.length ? (
             <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">

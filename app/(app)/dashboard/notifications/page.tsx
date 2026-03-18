@@ -14,8 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AutoSubmitSelect } from "@/components/dashboard/auto-submit-select";
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -90,7 +90,7 @@ export default async function NotificationsPage({
         <div className="flex w-full flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="w-full space-y-3">
             <form className="flex w-full flex-col gap-4 md:flex-row">
-              <Select name="type" defaultValue={selectedType}>
+              <AutoSubmitSelect name="type" defaultValue={selectedType}>
                 <SelectTrigger size="dashboard" className="md:w-64">
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
@@ -102,10 +102,7 @@ export default async function NotificationsPage({
                     </SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
-              <Button type="submit" variant="outline" size="dashboard">
-                Filter
-              </Button>
+              </AutoSubmitSelect>
             </form>
             {activeFilters.length ? (
               <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">

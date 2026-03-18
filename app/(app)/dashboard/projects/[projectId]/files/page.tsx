@@ -22,8 +22,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AutoSubmitSelect } from "@/components/dashboard/auto-submit-select";
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -115,7 +115,7 @@ export default async function ProjectFilesPage({
                 className="pl-9"
               />
             </div>
-            <Select name="category" defaultValue={selectedCategory}>
+            <AutoSubmitSelect name="category" defaultValue={selectedCategory}>
               <SelectTrigger size="dashboard" className="md:w-72">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -127,7 +127,7 @@ export default async function ProjectFilesPage({
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </AutoSubmitSelect>
             <Input
               name="uploadedBy"
               defaultValue={
@@ -136,9 +136,6 @@ export default async function ProjectFilesPage({
               placeholder="Uploader"
               className="md:w-48"
             />
-            <Button type="submit" size="dashboard">
-              Apply filters
-            </Button>
           </form>
           {activeFilters.length ? (
             <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">
