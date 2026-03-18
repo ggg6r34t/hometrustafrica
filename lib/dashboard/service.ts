@@ -13,7 +13,10 @@ export const dashboardService = {
   getOverview(session: DashboardSession) {
     return repository.getOverview(session);
   },
-  listProjects(session: DashboardSession, filters?: Record<string, string | undefined>) {
+  listProjects(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ) {
     return repository.listProjects(session, filters);
   },
   getProjectById(session: DashboardSession, projectId: string) {
@@ -22,13 +25,25 @@ export const dashboardService = {
   getProjectTimeline(session: DashboardSession, projectId: string) {
     return repository.getProjectTimeline(session, projectId);
   },
-  getProjectReports(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+  getProjectReports(
+    session: DashboardSession,
+    projectId: string,
+    filters?: Record<string, string | undefined>,
+  ) {
     return repository.getProjectReports(session, projectId, filters);
   },
-  getProjectReportById(session: DashboardSession, projectId: string, reportId: string) {
+  getProjectReportById(
+    session: DashboardSession,
+    projectId: string,
+    reportId: string,
+  ) {
     return repository.getProjectReportById(session, projectId, reportId);
   },
-  getProjectFiles(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+  getProjectFiles(
+    session: DashboardSession,
+    projectId: string,
+    filters?: Record<string, string | undefined>,
+  ) {
     return repository.getProjectFiles(session, projectId, filters);
   },
   getProjectBudget(session: DashboardSession, projectId: string) {
@@ -40,13 +55,19 @@ export const dashboardService = {
   getProjectTeam(session: DashboardSession, projectId: string) {
     return repository.getProjectTeam(session, projectId);
   },
-  listConversations(session: DashboardSession, filters?: Record<string, string | undefined>) {
+  listConversations(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ) {
     return repository.listConversations(session, filters);
   },
   getConversation(session: DashboardSession, threadId: string) {
     return repository.getConversation(session, threadId);
   },
-  listNotifications(session: DashboardSession, filters?: Record<string, string | undefined>) {
+  listNotifications(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ) {
     return repository.listNotifications(session, filters);
   },
   listSupportThreads(session: DashboardSession) {

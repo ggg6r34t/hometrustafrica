@@ -1,10 +1,12 @@
 "use server";
 
 import { headers } from "next/headers";
-import { Resend } from "resend";
-import { render } from "@react-email/render";
 import { rateLimit, getClientIdentifier } from "@/lib/rate-limit";
-import { NewsletterWelcomeEmail } from "@/emails/newsletter-welcome";
+import {
+  NewsletterWelcomeEmail,
+  subject as newsletterWelcomeSubject,
+} from "@/emails/newsletter-welcome";
+import { sendEmail } from "@/lib/email/send";
 
 /**
  * Server Action for handling newsletter subscriptions
@@ -27,7 +29,7 @@ export interface NewsletterActionResult {
 }
 
 export async function subscribeNewsletter(
-  email: string
+  email: string,
 ): Promise<NewsletterActionResult> {
   try {
     // Basic email validation
@@ -75,27 +77,19 @@ export async function subscribeNewsletter(
       // In development, log instead of failing
       if (process.env.NODE_ENV === "development") {
         console.warn(
-          "RESEND_API_KEY not set. Email sending disabled. Set RESEND_API_KEY in .env.local to enable email sending."
+          "RESEND_API_KEY not set. Email sending disabled. Set RESEND_API_KEY in .env.local to enable email sending.",
         );
       } else {
         throw new Error("Email service not configured");
       }
     } else {
-      const resend = new Resend(resendApiKey);
-
-      // Render welcome email template
-      const welcomeEmailHtml = await render(
-        NewsletterWelcomeEmail({
-          email: trimmedEmail,
-        })
-      );
-
-      // Send welcome email to subscriber
-      await resend.emails.send({
+      await sendEmail({
         from: fromEmail,
         to: trimmedEmail,
-        subject: "Welcome to HomeTrust Africa Newsletter",
-        html: welcomeEmailHtml,
+        subject: newsletterWelcomeSubject,
+        react: NewsletterWelcomeEmail({
+          email: trimmedEmail,
+        }),
       });
     }
 

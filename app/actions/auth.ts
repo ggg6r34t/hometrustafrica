@@ -1,10 +1,25 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { render } from "@react-email/render";
-import { Resend } from "resend";
-import { PortalInviteEmail } from "@/emails/portal-invite";
+import { headers } from "next/headers";
+import {
+  AuthInviteAcceptedConfirmationEmail,
+  subject as inviteAcceptedSubject,
+} from "@/emails/auth-invite-accepted-confirmation";
+import {
+  AuthLoginAlertEmail,
+  subject as loginAlertSubject,
+} from "@/emails/auth-login-alert";
+import {
+  OnboardingWelcomeEmail,
+  subject as onboardingWelcomeSubject,
+} from "@/emails/onboarding-welcome";
+import {
+  PortalInviteEmail,
+  subject as portalInviteSubject,
+} from "@/emails/portal-invite";
 import { recordAuditEvent } from "@/lib/dashboard/audit";
+import { sendEmail } from "@/lib/email/send";
 import { createInviteToken, hashInviteToken } from "@/lib/auth/invites";
 import {
   getDashboardHomePath,
@@ -62,6 +77,26 @@ export async function loginAction(
     });
     if (error) {
       return { status: "error", message: "Email or password is incorrect." };
+    }
+
+    try {
+      const headerStore = await headers();
+      const userAgent = headerStore.get("user-agent") || "Unknown device";
+      const forwardedFor =
+        headerStore.get("x-forwarded-for") || "Unknown location";
+
+      await sendEmail({
+        to: parsed.data.email,
+        subject: loginAlertSubject,
+        react: AuthLoginAlertEmail({
+          fullName: parsed.data.email,
+          loginTime: new Date().toISOString(),
+          device: userAgent,
+          location: forwardedFor,
+        }),
+      });
+    } catch (emailError) {
+      console.error("[auth.login-alert]", emailError);
     }
   } catch (error) {
     return {
@@ -205,6 +240,28 @@ export async function acceptInviteAction(
     if (signInError) {
       throw signInError;
     }
+
+    try {
+      await Promise.all([
+        sendEmail({
+          to: invite.invited_email,
+          subject: inviteAcceptedSubject,
+          react: AuthInviteAcceptedConfirmationEmail({
+            fullName: parsed.data.fullName,
+            acceptedAt: new Date().toISOString(),
+          }),
+        }),
+        sendEmail({
+          to: invite.invited_email,
+          subject: onboardingWelcomeSubject,
+          react: OnboardingWelcomeEmail({
+            fullName: parsed.data.fullName,
+          }),
+        }),
+      ]);
+    } catch (emailError) {
+      console.error("[auth.invite.accept-email]", emailError);
+    }
   } catch (error) {
     return {
       status: "error",
@@ -306,23 +363,19 @@ export async function sendPortalInviteAction(input: SendPortalInviteInput) {
   acceptUrl.searchParams.set("token", rawToken);
 
   const resendApiKey = env.resendApiKey;
-  const fromEmail = env.fromEmail;
-  const html = await render(
-    PortalInviteEmail({
-      fullName: input.fullName,
-      invitedByName: session.name,
-      acceptUrl: acceptUrl.toString(),
-      expiresAt: new Date(insertedInvite.expires_at).toLocaleString("en-US"),
-    }),
-  );
+  const fromEmail = env.fromEmail || "noreply@hometrustafrica.com";
 
-  if (resendApiKey && fromEmail) {
-    const resend = new Resend(resendApiKey);
-    await resend.emails.send({
+  if (resendApiKey) {
+    await sendEmail({
       from: fromEmail,
       to: input.email,
-      subject: "Your HomeTrust Africa portal invitation",
-      html,
+      subject: portalInviteSubject,
+      react: PortalInviteEmail({
+        fullName: input.fullName,
+        invitedByName: session.name,
+        acceptUrl: acceptUrl.toString(),
+        expiresAt: new Date(insertedInvite.expires_at).toLocaleString("en-US"),
+      }),
     });
   } else {
     console.info(

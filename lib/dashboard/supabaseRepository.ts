@@ -33,7 +33,11 @@ import type {
   SupportReplyInput,
   SupportRequestInput,
 } from "@/lib/validators/dashboard";
-import { getSupabaseEnv, hasSupabaseAdminEnv, hasSupabaseBrowserEnv } from "@/lib/supabase/env";
+import {
+  getSupabaseEnv,
+  hasSupabaseAdminEnv,
+  hasSupabaseBrowserEnv,
+} from "@/lib/supabase/env";
 
 type AnyClient = SupabaseClient<any, "public", any>;
 
@@ -117,8 +121,19 @@ function formatDateLabel(value?: string | null) {
   return value ? dateFormatter.format(new Date(value)) : null;
 }
 
-function formatLocation(project: Pick<ProjectRow, "location_city" | "location_state" | "location_country">) {
-  return [project.location_city, project.location_state, project.location_country].filter(Boolean).join(", ");
+function formatLocation(
+  project: Pick<
+    ProjectRow,
+    "location_city" | "location_state" | "location_country"
+  >,
+) {
+  return [
+    project.location_city,
+    project.location_state,
+    project.location_country,
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
 function formatBytes(sizeBytes?: number | null) {
@@ -155,7 +170,11 @@ function rolePriority(role: string) {
 }
 
 function pickPrimaryRole(roles: string[]) {
-  return [...roles].sort((left, right) => rolePriority(right) - rolePriority(left))[0] || "CLIENT";
+  return (
+    [...roles].sort(
+      (left, right) => rolePriority(right) - rolePriority(left),
+    )[0] || "CLIENT"
+  );
 }
 
 function buildAssignments(projectId: string, assignments: AssignmentRow[]) {
@@ -188,14 +207,22 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
   private async getClients(session: DashboardSession) {
     const admin = createSupabaseAdminClient();
-    const queryClient = session.authSource === "supabase" ? await createSupabaseServerClient() : admin;
+    const queryClient =
+      session.authSource === "supabase"
+        ? await createSupabaseServerClient()
+        : admin;
     const scopedProjectIds =
-      session.authSource === "supabase" ? null : await this.resolveScopedProjectIds(admin, session);
+      session.authSource === "supabase"
+        ? null
+        : await this.resolveScopedProjectIds(admin, session);
 
     return { admin, queryClient, scopedProjectIds };
   }
 
-  private async resolveScopedProjectIds(admin: AnyClient, session: DashboardSession) {
+  private async resolveScopedProjectIds(
+    admin: AnyClient,
+    session: DashboardSession,
+  ) {
     if (session.role === "ADMIN" || session.role === "OPERATIONS_MANAGER") {
       const { data } = await admin.from("projects").select("id");
       return (data || []).map((row: { id: string }) => row.id);
@@ -203,24 +230,40 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     const scopedIds = new Set<string>();
     const [{ data: assignments }, { data: memberships }] = await Promise.all([
-      admin.from("project_assignments").select("project_id").eq("user_id", session.userId),
-      admin.from("client_account_members").select("client_account_id").eq("user_id", session.userId),
+      admin
+        .from("project_assignments")
+        .select("project_id")
+        .eq("user_id", session.userId),
+      admin
+        .from("client_account_members")
+        .select("client_account_id")
+        .eq("user_id", session.userId),
     ]);
 
-    (assignments || []).forEach((row: { project_id: string }) => scopedIds.add(row.project_id));
+    (assignments || []).forEach((row: { project_id: string }) =>
+      scopedIds.add(row.project_id),
+    );
 
     if (memberships?.length) {
       const { data: projects } = await admin
         .from("projects")
         .select("id")
-        .in("client_account_id", memberships.map((row: { client_account_id: string }) => row.client_account_id));
+        .in(
+          "client_account_id",
+          memberships.map(
+            (row: { client_account_id: string }) => row.client_account_id,
+          ),
+        );
       (projects || []).forEach((row: { id: string }) => scopedIds.add(row.id));
     }
 
     return [...scopedIds];
   }
 
-  private async queryProjects(session: DashboardSession, filters?: Record<string, string | undefined>) {
+  private async queryProjects(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ) {
     const { queryClient, scopedProjectIds } = await this.getClients(session);
 
     if (scopedProjectIds && scopedProjectIds.length === 0) {
@@ -239,7 +282,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
 
     if (filters?.q) {
-      query = query.or(`name.ilike.%${filters.q}%,location_city.ilike.%${filters.q}%,location_state.ilike.%${filters.q}%`);
+      query = query.or(
+        `name.ilike.%${filters.q}%,location_city.ilike.%${filters.q}%,location_state.ilike.%${filters.q}%`,
+      );
     }
     if (filters?.status) {
       query = query.eq("status", filters.status);
@@ -250,7 +295,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     if (filters?.sort === "created") {
       query = query.order("created_at", { ascending: false });
     } else if (filters?.sort === "status") {
-      query = query.order("status", { ascending: true }).order("updated_at", { ascending: false });
+      query = query
+        .order("status", { ascending: true })
+        .order("updated_at", { ascending: false });
     }
 
     const { data, error } = await query;
@@ -261,7 +308,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     return (data || []) as ProjectRow[];
   }
 
-  private async getProjectRelatedRows(session: DashboardSession, projectIds: string[]) {
+  private async getProjectRelatedRows(
+    session: DashboardSession,
+    projectIds: string[],
+  ) {
     if (!projectIds.length) {
       return {
         assignments: [] as AssignmentRow[],
@@ -275,7 +325,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
 
     const { queryClient, scopedProjectIds } = await this.getClients(session);
-    const effectiveIds = scopedProjectIds ? projectIds.filter((id) => scopedProjectIds.includes(id)) : projectIds;
+    const effectiveIds = scopedProjectIds
+      ? projectIds.filter((id) => scopedProjectIds.includes(id))
+      : projectIds;
     if (!effectiveIds.length) {
       return {
         assignments: [] as AssignmentRow[],
@@ -303,20 +355,28 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         .in("project_id", effectiveIds),
       queryClient
         .from("milestones")
-        .select("id, project_id, title, due_at, completed_at, status, visible_to_client")
+        .select(
+          "id, project_id, title, due_at, completed_at, status, visible_to_client",
+        )
         .in("project_id", effectiveIds),
       queryClient
         .from("project_contacts")
-        .select("project_id, full_name, role_label, email, phone, availability_note, is_client_visible")
+        .select(
+          "project_id, full_name, role_label, email, phone, availability_note, is_client_visible",
+        )
         .in("project_id", effectiveIds),
       queryClient
         .from("timeline_events")
-        .select("id, project_id, event_type, title, summary, actor_user_id, actor_name_override, occurred_at, client_visible")
+        .select(
+          "id, project_id, event_type, title, summary, actor_user_id, actor_name_override, occurred_at, client_visible",
+        )
         .in("project_id", effectiveIds)
         .order("occurred_at", { ascending: false }),
       queryClient
         .from("reports")
-        .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
+        .select(
+          "id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible",
+        )
         .in("project_id", effectiveIds)
         .order("uploaded_at", { ascending: false }),
       queryClient
@@ -344,17 +404,33 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
 
     const admin = createSupabaseAdminClient();
-    const { data } = await admin.from("profiles").select("id, full_name, email").in("id", uniqueIds);
-    return new Map((data || []).map((profile: { id: string; full_name: string; email: string }) => [profile.id, profile]));
+    const { data } = await admin
+      .from("profiles")
+      .select("id, full_name, email")
+      .in("id", uniqueIds);
+    return new Map(
+      (data || []).map(
+        (profile: { id: string; full_name: string; email: string }) => [
+          profile.id,
+          profile,
+        ],
+      ),
+    );
   }
 
-  private async createSignedFileLinks(file: Pick<FileRow, "storage_bucket" | "storage_path" | "mime_type">) {
+  private async createSignedFileLinks(
+    file: Pick<FileRow, "storage_bucket" | "storage_path" | "mime_type">,
+  ) {
     const admin = createSupabaseAdminClient();
     try {
-      const { data: signed } = await admin.storage.from(file.storage_bucket).createSignedUrl(file.storage_path, 60 * 30);
+      const { data: signed } = await admin.storage
+        .from(file.storage_bucket)
+        .createSignedUrl(file.storage_path, 60 * 30);
       return {
         downloadUrl: signed?.signedUrl || null,
-        previewUrl: isPreviewableMimeType(file.mime_type) ? signed?.signedUrl || null : null,
+        previewUrl: isPreviewableMimeType(file.mime_type)
+          ? signed?.signedUrl || null
+          : null,
       };
     } catch {
       return { downloadUrl: null, previewUrl: null };
@@ -362,7 +438,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
   }
 
   private async buildFileItems(rows: FileRow[]) {
-    const uploaderMap = await this.getProfileMap(rows.map((file) => file.uploaded_by));
+    const uploaderMap = await this.getProfileMap(
+      rows.map((file) => file.uploaded_by),
+    );
     return Promise.all(
       rows.map(async (file) => {
         const links = await this.createSignedFileLinks(file);
@@ -373,7 +451,8 @@ export class SupabaseDashboardRepository implements DashboardRepository {
           category: file.category_code as FileItem["category"],
           description: file.description,
           uploadedAt: file.uploaded_at,
-          uploadedBy: uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa",
+          uploadedBy:
+            uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa",
           sizeLabel: formatBytes(file.size_bytes),
           mimeType: file.mime_type,
           downloadUrl: links.downloadUrl,
@@ -383,7 +462,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     );
   }
 
-  private async buildProjectSummaries(session: DashboardSession, projects: ProjectRow[]): Promise<ProjectSummary[]> {
+  private async buildProjectSummaries(
+    session: DashboardSession,
+    projects: ProjectRow[],
+  ): Promise<ProjectSummary[]> {
     const related = await this.getProjectRelatedRows(
       session,
       projects.map((project) => project.id),
@@ -391,24 +473,40 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     return projects.map((project) => {
       const nextMilestone = related.milestones
-        .filter((milestone) => milestone.project_id === project.id && milestone.status !== "completed")
-        .sort((left, right) => (left.due_at || "").localeCompare(right.due_at || ""))[0];
+        .filter(
+          (milestone) =>
+            milestone.project_id === project.id &&
+            milestone.status !== "completed",
+        )
+        .sort((left, right) =>
+          (left.due_at || "").localeCompare(right.due_at || ""),
+        )[0];
 
-      const latestTimelineEvent = related.timelineEvents.find((event: any) => event.project_id === project.id);
-      const projectManager = related.contacts.find(
-        (contact: any) => contact.project_id === project.id && /project manager/i.test(contact.role_label),
+      const latestTimelineEvent = related.timelineEvents.find(
+        (event: any) => event.project_id === project.id,
       );
-      const projectType = related.projectTypes.find((item: any) => item.code === project.project_type_code);
+      const projectManager = related.contacts.find(
+        (contact: any) =>
+          contact.project_id === project.id &&
+          /project manager/i.test(contact.role_label),
+      );
+      const projectType = related.projectTypes.find(
+        (item: any) => item.code === project.project_type_code,
+      );
 
       return {
         id: project.id,
         name: project.name,
-        type: (projectType?.label || project.project_type_code) as ProjectSummary["type"],
+        type: (projectType?.label ||
+          project.project_type_code) as ProjectSummary["type"],
         location: formatLocation(project),
         status: project.status as ProjectSummary["status"],
         health: project.health as ProjectSummary["health"],
         completionPercentage: project.completion_percentage,
-        latestUpdateAt: formatDateLabel(latestTimelineEvent?.occurred_at || project.updated_at) || undefined,
+        latestUpdateAt:
+          formatDateLabel(
+            latestTimelineEvent?.occurred_at || project.updated_at,
+          ) || undefined,
         nextMilestone: nextMilestone
           ? {
               id: nextMilestone.id,
@@ -425,15 +523,23 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     });
   }
 
-  async getCurrentUser(session: DashboardSession): Promise<DashboardUser | null> {
+  async getCurrentUser(
+    session: DashboardSession,
+  ): Promise<DashboardUser | null> {
     const { queryClient } = await this.getClients(session);
     const [{ data: profile }, { data: preferences }] = await Promise.all([
       queryClient
         .from("profiles")
-        .select("id, full_name, email, phone, diaspora_country, preferred_contact_method")
+        .select(
+          "id, full_name, email, phone, diaspora_country, preferred_contact_method",
+        )
         .eq("id", session.userId)
         .maybeSingle(),
-      queryClient.from("user_preferences").select("timezone, currency_code").eq("user_id", session.userId).maybeSingle(),
+      queryClient
+        .from("user_preferences")
+        .select("timezone, currency_code")
+        .eq("user_id", session.userId)
+        .maybeSingle(),
     ]);
 
     if (!profile) {
@@ -454,16 +560,44 @@ export class SupabaseDashboardRepository implements DashboardRepository {
   }
 
   async getOverview(session: DashboardSession): Promise<DashboardOverview> {
-    const projects = await this.buildProjectSummaries(session, await this.queryProjects(session));
-    const activeProjects = projects.filter((project) => !["ARCHIVED", "COMPLETED"].includes(project.status)).slice(0, 6);
-    const recentActivity = (await this.getRecentActivity(session, activeProjects.map((project) => project.id), 8)).slice(0, 6);
-    const latestReports = await this.getRecentReports(session, activeProjects.map((project) => project.id), 4);
-    const unreadConversations = (await this.listConversations(session)).filter((thread) => thread.unreadCount > 0).slice(0, 4);
-    const upcomingMilestones = activeProjects.flatMap((project) => (project.nextMilestone ? [project.nextMilestone] : [])).slice(0, 6);
+    const projects = await this.buildProjectSummaries(
+      session,
+      await this.queryProjects(session),
+    );
+    const activeProjects = projects
+      .filter((project) => !["ARCHIVED", "COMPLETED"].includes(project.status))
+      .slice(0, 6);
+    const recentActivity = (
+      await this.getRecentActivity(
+        session,
+        activeProjects.map((project) => project.id),
+        8,
+      )
+    ).slice(0, 6);
+    const latestReports = await this.getRecentReports(
+      session,
+      activeProjects.map((project) => project.id),
+      4,
+    );
+    const unreadConversations = (await this.listConversations(session))
+      .filter((thread) => thread.unreadCount > 0)
+      .slice(0, 4);
+    const upcomingMilestones = activeProjects
+      .flatMap((project) =>
+        project.nextMilestone ? [project.nextMilestone] : [],
+      )
+      .slice(0, 6);
     const budgetSnapshots = (
-      await Promise.all(activeProjects.slice(0, 4).map((project) => this.getProjectBudget(session, project.id)))
+      await Promise.all(
+        activeProjects
+          .slice(0, 4)
+          .map((project) => this.getProjectBudget(session, project.id)),
+      )
     ).filter(Boolean) as ProjectBudget[];
-    const pendingApprovalsCount = budgetSnapshots.reduce((sum, item) => sum + item.pendingApprovalsCount, 0);
+    const pendingApprovalsCount = budgetSnapshots.reduce(
+      (sum, item) => sum + item.pendingApprovalsCount,
+      0,
+    );
 
     const nextActions: DashboardActionItem[] = [
       ...activeProjects
@@ -497,11 +631,20 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
-  async listProjects(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<ProjectSummary[]> {
-    return this.buildProjectSummaries(session, await this.queryProjects(session, filters));
+  async listProjects(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ): Promise<ProjectSummary[]> {
+    return this.buildProjectSummaries(
+      session,
+      await this.queryProjects(session, filters),
+    );
   }
 
-  async getProjectById(session: DashboardSession, projectId: string): Promise<ProjectDetail | null> {
+  async getProjectById(
+    session: DashboardSession,
+    projectId: string,
+  ): Promise<ProjectDetail | null> {
     const rawProjects = await this.queryProjects(session);
     const projects = await this.buildProjectSummaries(
       session,
@@ -521,17 +664,24 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     return {
       ...project,
-      description: rawProjects.find((item) => item.id === projectId)?.description || null,
+      description:
+        rawProjects.find((item) => item.id === projectId)?.description || null,
       latestReportSummary: reports[0]?.summary || null,
       pendingApprovalsCount: budget?.pendingApprovalsCount || 0,
       unreadMessagesCount: conversations
         .filter((conversation) => conversation.projectId === projectId)
         .reduce((sum, conversation) => sum + conversation.unreadCount, 0),
-      outstandingActionsCount: (budget?.pendingApprovalsCount || 0) + timeline.filter((item) => item.type === "approval").length,
+      outstandingActionsCount:
+        (budget?.pendingApprovalsCount || 0) +
+        timeline.filter((item) => item.type === "approval").length,
     };
   }
 
-  private async getRecentActivity(session: DashboardSession, projectIds: string[], limit = 10): Promise<TimelineEvent[]> {
+  private async getRecentActivity(
+    session: DashboardSession,
+    projectIds: string[],
+    limit = 10,
+  ): Promise<TimelineEvent[]> {
     if (!projectIds.length) {
       return [];
     }
@@ -539,12 +689,18 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const { queryClient } = await this.getClients(session);
     const { data } = await queryClient
       .from("timeline_events")
-      .select("id, project_id, event_type, title, summary, actor_user_id, actor_name_override, occurred_at, client_visible")
+      .select(
+        "id, project_id, event_type, title, summary, actor_user_id, actor_name_override, occurred_at, client_visible",
+      )
       .in("project_id", projectIds)
       .order("occurred_at", { ascending: false })
       .limit(limit);
 
-    const actorIds = [...new Set((data || []).map((row: any) => row.actor_user_id).filter(Boolean))];
+    const actorIds = [
+      ...new Set(
+        (data || []).map((row: any) => row.actor_user_id).filter(Boolean),
+      ),
+    ];
     const profileMap = await this.getProfileMap(actorIds);
 
     return (data || []).map((event: any) => ({
@@ -553,15 +709,23 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       type: event.event_type,
       title: event.title,
       summary: event.summary,
-      actorName: event.actor_name_override || profileMap.get(event.actor_user_id)?.full_name || "HomeTrust Africa",
-      actorRoleLabel: event.actor_user_id ? "Project Team" : "Operations Update",
+      actorName:
+        event.actor_name_override ||
+        profileMap.get(event.actor_user_id)?.full_name ||
+        "HomeTrust Africa",
+      actorRoleLabel: event.actor_user_id
+        ? "Project Team"
+        : "Operations Update",
       occurredAt: event.occurred_at,
       clientVisible: event.client_visible,
       attachments: [],
     }));
   }
 
-  async getProjectTimeline(session: DashboardSession, projectId: string): Promise<TimelineEvent[]> {
+  async getProjectTimeline(
+    session: DashboardSession,
+    projectId: string,
+  ): Promise<TimelineEvent[]> {
     return this.getRecentActivity(session, [projectId], 50);
   }
 
@@ -578,7 +742,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const { queryClient } = await this.getClients(session);
     let reportsQuery = queryClient
       .from("reports")
-      .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
+      .select(
+        "id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible",
+      )
       .in("project_id", projectIds)
       .order("uploaded_at", { ascending: false })
       .limit(limit);
@@ -587,16 +753,24 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       reportsQuery = reportsQuery.eq("report_type", filters.type);
     }
     if (filters?.q) {
-      reportsQuery = reportsQuery.or(`title.ilike.%${filters.q}%,summary.ilike.%${filters.q}%`);
+      reportsQuery = reportsQuery.or(
+        `title.ilike.%${filters.q}%,summary.ilike.%${filters.q}%`,
+      );
     }
 
-    const [{ data: reports }, { data: reportAttachments }, { data: mediaAssets }] = await Promise.all([
+    const [
+      { data: reports },
+      { data: reportAttachments },
+      { data: mediaAssets },
+    ] = await Promise.all([
       reportsQuery,
       queryClient.from("report_attachments").select("report_id, file_id"),
       queryClient.from("media_assets").select("project_id, file_id"),
     ]);
 
-    const uploaderMap = await this.getProfileMap((reports || []).map((report: any) => report.uploaded_by));
+    const uploaderMap = await this.getProfileMap(
+      (reports || []).map((report: any) => report.uploaded_by),
+    );
 
     return (reports || []).map((report: any) => ({
       id: report.id,
@@ -606,43 +780,66 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       reportingPeriodLabel: report.reporting_period_label,
       summary: report.summary,
       uploadedAt: report.uploaded_at,
-      uploadedBy: uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
-      attachmentsCount: (reportAttachments || []).filter((attachment: any) => attachment.report_id === report.id).length,
-      mediaCount: (mediaAssets || []).filter((asset: any) => asset.project_id === report.project_id).length,
+      uploadedBy:
+        uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
+      attachmentsCount: (reportAttachments || []).filter(
+        (attachment: any) => attachment.report_id === report.id,
+      ).length,
+      mediaCount: (mediaAssets || []).filter(
+        (asset: any) => asset.project_id === report.project_id,
+      ).length,
     }));
   }
 
-  async getProjectReports(session: DashboardSession, projectId: string, filters?: Record<string, string | undefined>) {
+  async getProjectReports(
+    session: DashboardSession,
+    projectId: string,
+    filters?: Record<string, string | undefined>,
+  ) {
     return this.getRecentReports(session, [projectId], 50, filters);
   }
 
-  async getProjectReportById(session: DashboardSession, projectId: string, reportId: string): Promise<ReportDetail | null> {
+  async getProjectReportById(
+    session: DashboardSession,
+    projectId: string,
+    reportId: string,
+  ): Promise<ReportDetail | null> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: report }, { data: sections }, { data: reportAttachments }] = await Promise.all([
-      queryClient
-        .from("reports")
-        .select("id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible")
-        .eq("id", reportId)
-        .eq("project_id", projectId)
-        .maybeSingle(),
-      queryClient
-        .from("report_sections")
-        .select("id, report_id, section_title, body, sort_order")
-        .order("sort_order", { ascending: true }),
-      queryClient.from("report_attachments").select("report_id, file_id").eq("report_id", reportId),
-    ]);
+    const [{ data: report }, { data: sections }, { data: reportAttachments }] =
+      await Promise.all([
+        queryClient
+          .from("reports")
+          .select(
+            "id, project_id, title, report_type, reporting_period_label, summary, uploaded_at, uploaded_by, client_visible",
+          )
+          .eq("id", reportId)
+          .eq("project_id", projectId)
+          .maybeSingle(),
+        queryClient
+          .from("report_sections")
+          .select("id, report_id, section_title, body, sort_order")
+          .order("sort_order", { ascending: true }),
+        queryClient
+          .from("report_attachments")
+          .select("report_id, file_id")
+          .eq("report_id", reportId),
+      ]);
 
     if (!report) {
       return null;
     }
 
     const uploaderMap = await this.getProfileMap([report.uploaded_by]);
-    const attachmentIds = (reportAttachments || []).map((attachment: any) => attachment.file_id);
+    const attachmentIds = (reportAttachments || []).map(
+      (attachment: any) => attachment.file_id,
+    );
     const attachmentRows = attachmentIds.length
       ? (
           await queryClient
             .from("files")
-            .select("id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible")
+            .select(
+              "id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible",
+            )
             .in("id", attachmentIds)
             .order("uploaded_at", { ascending: false })
         ).data || []
@@ -656,7 +853,8 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       reportingPeriodLabel: report.reporting_period_label,
       summary: report.summary,
       uploadedAt: report.uploaded_at,
-      uploadedBy: uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
+      uploadedBy:
+        uploaderMap.get(report.uploaded_by)?.full_name || "HomeTrust Africa",
       attachmentsCount: attachmentIds.length,
       mediaCount: 0,
       sections: ((sections || []) as ReportSectionRow[])
@@ -666,7 +864,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
           title: section.section_title,
           body: section.body,
         })),
-      attachments: await this.buildFileItems((attachmentRows || []) as FileRow[]),
+      attachments: await this.buildFileItems(
+        (attachmentRows || []) as FileRow[],
+      ),
     };
   }
 
@@ -678,7 +878,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const { queryClient } = await this.getClients(session);
     let query = queryClient
       .from("files")
-      .select("id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible")
+      .select(
+        "id, project_id, category_code, name, description, uploaded_at, uploaded_by, size_bytes, mime_type, storage_bucket, storage_path, client_visible",
+      )
       .eq("project_id", projectId)
       .order("uploaded_at", { ascending: false });
 
@@ -689,7 +891,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const { data } = await query;
     let rows = (data || []) as FileRow[];
     if (filters?.uploadedBy) {
-      const uploaderMap = await this.getProfileMap(rows.map((file) => file.uploaded_by));
+      const uploaderMap = await this.getProfileMap(
+        rows.map((file) => file.uploaded_by),
+      );
       rows = rows.filter((file) =>
         (uploaderMap.get(file.uploaded_by)?.full_name || "HomeTrust Africa")
           .toLowerCase()
@@ -700,33 +904,53 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     return this.buildFileItems(rows);
   }
 
-  async getProjectBudget(session: DashboardSession, projectId: string): Promise<ProjectBudget | null> {
+  async getProjectBudget(
+    session: DashboardSession,
+    projectId: string,
+  ): Promise<ProjectBudget | null> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: budget }, { data: categories }, { data: transactions }, { data: receipts }, { data: approvals }] =
-      await Promise.all([
-        queryClient
-          .from("project_budgets")
-          .select("id, project_id, currency_code, allocated_amount, spent_amount")
-          .eq("project_id", projectId)
-          .maybeSingle(),
-        queryClient
-          .from("budget_categories")
-          .select("id, budget_id, label, allocated_amount, spent_amount, sort_order")
-          .order("sort_order", { ascending: true }),
-        queryClient
-          .from("transactions")
-          .select("id, project_id, budget_category_id, description, amount, currency_code, status, occurred_at")
-          .eq("project_id", projectId)
-          .order("occurred_at", { ascending: false }),
-        queryClient.from("transaction_receipts").select("transaction_id, receipt_id"),
-        queryClient.from("approval_requests").select("id, status").eq("project_id", projectId).eq("status", "pending"),
-      ]);
+    const [
+      { data: budget },
+      { data: categories },
+      { data: transactions },
+      { data: receipts },
+      { data: approvals },
+    ] = await Promise.all([
+      queryClient
+        .from("project_budgets")
+        .select("id, project_id, currency_code, allocated_amount, spent_amount")
+        .eq("project_id", projectId)
+        .maybeSingle(),
+      queryClient
+        .from("budget_categories")
+        .select(
+          "id, budget_id, label, allocated_amount, spent_amount, sort_order",
+        )
+        .order("sort_order", { ascending: true }),
+      queryClient
+        .from("transactions")
+        .select(
+          "id, project_id, budget_category_id, description, amount, currency_code, status, occurred_at",
+        )
+        .eq("project_id", projectId)
+        .order("occurred_at", { ascending: false }),
+      queryClient
+        .from("transaction_receipts")
+        .select("transaction_id, receipt_id"),
+      queryClient
+        .from("approval_requests")
+        .select("id, status")
+        .eq("project_id", projectId)
+        .eq("status", "pending"),
+    ]);
 
     if (!budget) {
       return null;
     }
 
-    const categoryRows = (categories || []).filter((item: any) => item.budget_id === budget.id);
+    const categoryRows = (categories || []).filter(
+      (item: any) => item.budget_id === budget.id,
+    );
 
     return {
       projectId,
@@ -744,33 +968,49 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         id: transaction.id,
         projectId: transaction.project_id,
         description: transaction.description,
-        category: categoryRows.find((category: any) => category.id === transaction.budget_category_id)?.label || "General",
+        category:
+          categoryRows.find(
+            (category: any) => category.id === transaction.budget_category_id,
+          )?.label || "General",
         amount: Number(transaction.amount),
         status: transaction.status,
-        occurredAt: formatDateLabel(transaction.occurred_at) || transaction.occurred_at,
-        receiptFileId: (receipts || []).find((receipt: any) => receipt.transaction_id === transaction.id)?.receipt_id || null,
+        occurredAt:
+          formatDateLabel(transaction.occurred_at) || transaction.occurred_at,
+        receiptFileId:
+          (receipts || []).find(
+            (receipt: any) => receipt.transaction_id === transaction.id,
+          )?.receipt_id || null,
       })),
     };
   }
 
-  async getProjectApprovals(session: DashboardSession, projectId: string): Promise<ApprovalItem[]> {
+  async getProjectApprovals(
+    session: DashboardSession,
+    projectId: string,
+  ): Promise<ApprovalItem[]> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: approvals }, { data: approvalRequests }] = await Promise.all([
-      queryClient
-        .from("approvals")
-        .select("id, project_id, title, description, status, requested_by, requested_from_user_id, due_at")
-        .eq("project_id", projectId)
-        .order("due_at", { ascending: true }),
-      queryClient
-        .from("approval_requests")
-        .select("approval_id, amount, currency_code")
-        .eq("project_id", projectId),
-    ]);
+    const [{ data: approvals }, { data: approvalRequests }] = await Promise.all(
+      [
+        queryClient
+          .from("approvals")
+          .select(
+            "id, project_id, title, description, status, requested_by, requested_from_user_id, due_at",
+          )
+          .eq("project_id", projectId)
+          .order("due_at", { ascending: true }),
+        queryClient
+          .from("approval_requests")
+          .select("approval_id, amount, currency_code")
+          .eq("project_id", projectId),
+      ],
+    );
 
     const requestByApproval = new Map(
       (approvalRequests || []).map((row: any) => [row.approval_id, row]),
     );
-    const profileMap = await this.getProfileMap((approvals || []).map((approval: any) => approval.requested_by));
+    const profileMap = await this.getProfileMap(
+      (approvals || []).map((approval: any) => approval.requested_by),
+    );
 
     return (approvals || []).map((approval: any) => ({
       id: approval.id,
@@ -779,18 +1019,26 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       description: approval.description,
       status: approval.status,
       dueAt: approval.due_at,
-      requestedBy: profileMap.get(approval.requested_by)?.full_name || "HomeTrust Africa",
+      requestedBy:
+        profileMap.get(approval.requested_by)?.full_name || "HomeTrust Africa",
       requestedFromUserId: approval.requested_from_user_id,
-      amount: requestByApproval.get(approval.id)?.amount ? Number(requestByApproval.get(approval.id)?.amount) : null,
+      amount: requestByApproval.get(approval.id)?.amount
+        ? Number(requestByApproval.get(approval.id)?.amount)
+        : null,
       currency: requestByApproval.get(approval.id)?.currency_code || null,
     }));
   }
 
-  async getProjectTeam(session: DashboardSession, projectId: string): Promise<TeamMember[]> {
+  async getProjectTeam(
+    session: DashboardSession,
+    projectId: string,
+  ): Promise<TeamMember[]> {
     const { queryClient } = await this.getClients(session);
     const { data } = await queryClient
       .from("project_contacts")
-      .select("id, project_id, full_name, role_label, email, phone, availability_note")
+      .select(
+        "id, project_id, full_name, role_label, email, phone, availability_note",
+      )
       .eq("project_id", projectId)
       .eq("is_client_visible", true);
 
@@ -805,27 +1053,45 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }));
   }
 
-  async listConversations(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<ConversationSummary[]> {
+  async listConversations(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ): Promise<ConversationSummary[]> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: conversations }, { data: participants }, { data: messages }, { data: projects }] = await Promise.all([
+    const [
+      { data: conversations },
+      { data: participants },
+      { data: messages },
+      { data: projects },
+    ] = await Promise.all([
       queryClient
         .from("conversations")
         .select("id, project_id, subject, kind, updated_at")
         .order("updated_at", { ascending: false }),
-      queryClient.from("conversation_participants").select("conversation_id, user_id, last_read_at"),
-      queryClient.from("messages").select("id, conversation_id, body, sent_at").order("sent_at", { ascending: false }),
+      queryClient
+        .from("conversation_participants")
+        .select("conversation_id, user_id, last_read_at"),
+      queryClient
+        .from("messages")
+        .select("id, conversation_id, body, sent_at")
+        .order("sent_at", { ascending: false }),
       queryClient.from("projects").select("id, name"),
     ]);
 
     let rows = (conversations || []).map((conversation: any) => {
-      const lastMessage = (messages || []).find((message: any) => message.conversation_id === conversation.id);
+      const lastMessage = (messages || []).find(
+        (message: any) => message.conversation_id === conversation.id,
+      );
       const participant = (participants || []).find(
-        (item: any) => item.conversation_id === conversation.id && item.user_id === session.userId,
+        (item: any) =>
+          item.conversation_id === conversation.id &&
+          item.user_id === session.userId,
       );
       const unreadCount = (messages || []).filter(
         (message: any) =>
           message.conversation_id === conversation.id &&
-          (!participant?.last_read_at || new Date(message.sent_at) > new Date(participant.last_read_at)),
+          (!participant?.last_read_at ||
+            new Date(message.sent_at) > new Date(participant.last_read_at)),
       ).length;
 
       return {
@@ -833,10 +1099,15 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         subject: conversation.subject,
         kind: conversation.kind,
         projectId: conversation.project_id,
-        projectName: (projects || []).find((project: any) => project.id === conversation.project_id)?.name || null,
+        projectName:
+          (projects || []).find(
+            (project: any) => project.id === conversation.project_id,
+          )?.name || null,
         unreadCount,
         lastMessagePreview: lastMessage?.body?.slice(0, 120) || null,
-        lastMessageAt: formatDateLabel(lastMessage?.sent_at || conversation.updated_at) || null,
+        lastMessageAt:
+          formatDateLabel(lastMessage?.sent_at || conversation.updated_at) ||
+          null,
       };
     });
 
@@ -853,29 +1124,40 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     return rows;
   }
 
-  async getConversation(session: DashboardSession, threadId: string): Promise<ConversationDetail | null> {
+  async getConversation(
+    session: DashboardSession,
+    threadId: string,
+  ): Promise<ConversationDetail | null> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: conversation }, { data: participants }, { data: messages }] = await Promise.all([
-      queryClient.from("conversations").select("id, project_id, subject, updated_at").eq("id", threadId).maybeSingle(),
-      queryClient
-        .from("conversation_participants")
-        .select("conversation_id, user_id, last_read_at")
-        .eq("conversation_id", threadId),
-      queryClient
-        .from("messages")
-        .select("id, conversation_id, sender_user_id, body, sent_at")
-        .eq("conversation_id", threadId)
-        .order("sent_at", { ascending: true }),
-    ]);
+    const [{ data: conversation }, { data: participants }, { data: messages }] =
+      await Promise.all([
+        queryClient
+          .from("conversations")
+          .select("id, project_id, subject, updated_at")
+          .eq("id", threadId)
+          .maybeSingle(),
+        queryClient
+          .from("conversation_participants")
+          .select("conversation_id, user_id, last_read_at")
+          .eq("conversation_id", threadId),
+        queryClient
+          .from("messages")
+          .select("id, conversation_id, sender_user_id, body, sent_at")
+          .eq("conversation_id", threadId)
+          .order("sent_at", { ascending: true }),
+      ]);
 
     if (!conversation) {
       return null;
     }
 
-    await queryClient.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).match({
-      conversation_id: threadId,
-      user_id: session.userId,
-    });
+    await queryClient
+      .from("conversation_participants")
+      .update({ last_read_at: new Date().toISOString() })
+      .match({
+        conversation_id: threadId,
+        user_id: session.userId,
+      });
 
     const profileMap = await this.getProfileMap([
       ...(participants || []).map((participant: any) => participant.user_id),
@@ -885,14 +1167,18 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     const { data: roleRows } = await admin
       .from("user_roles")
       .select("user_id, role")
-      .in(
-        "user_id",
-        [...new Set((participants || []).map((participant: any) => participant.user_id))],
-      );
+      .in("user_id", [
+        ...new Set(
+          (participants || []).map((participant: any) => participant.user_id),
+        ),
+      ]);
 
     const rolesByUser = new Map<string, string[]>();
     (roleRows || []).forEach((row: any) => {
-      rolesByUser.set(row.user_id, [...(rolesByUser.get(row.user_id) || []), row.role]);
+      rolesByUser.set(row.user_id, [
+        ...(rolesByUser.get(row.user_id) || []),
+        row.role,
+      ]);
     });
 
     const conversationSummaries = await this.listConversations(session);
@@ -908,14 +1194,21 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       lastMessageAt: summary?.lastMessageAt || null,
       participants: (participants || []).map((participant: any) => ({
         id: participant.user_id,
-        fullName: profileMap.get(participant.user_id)?.full_name || "HomeTrust Africa",
-        roleLabel: pickPrimaryRole(rolesByUser.get(participant.user_id) || ["CLIENT"]).replaceAll("_", " "),
+        fullName:
+          profileMap.get(participant.user_id)?.full_name || "HomeTrust Africa",
+        roleLabel: pickPrimaryRole(
+          rolesByUser.get(participant.user_id) || ["CLIENT"],
+        ).replaceAll("_", " "),
       })),
       messages: (messages || []).map((message: any) => ({
         id: message.id,
         threadId: message.conversation_id,
-        senderName: profileMap.get(message.sender_user_id)?.full_name || "HomeTrust Africa",
-        senderRoleLabel: pickPrimaryRole(rolesByUser.get(message.sender_user_id) || ["CLIENT"]).replaceAll("_", " "),
+        senderName:
+          profileMap.get(message.sender_user_id)?.full_name ||
+          "HomeTrust Africa",
+        senderRoleLabel: pickPrimaryRole(
+          rolesByUser.get(message.sender_user_id) || ["CLIENT"],
+        ).replaceAll("_", " "),
         body: message.body,
         sentAt: formatDateLabel(message.sent_at) || message.sent_at,
         isOwnMessage: message.sender_user_id === session.userId,
@@ -923,17 +1216,26 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
-  async listNotifications(session: DashboardSession, filters?: Record<string, string | undefined>): Promise<NotificationItem[]> {
+  async listNotifications(
+    session: DashboardSession,
+    filters?: Record<string, string | undefined>,
+  ): Promise<NotificationItem[]> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: notifications }, { data: reads }, { data: projects }] = await Promise.all([
-      queryClient
-        .from("notifications")
-        .select("id, user_id, project_id, type, title, body, href, created_at")
-        .eq("user_id", session.userId)
-        .order("created_at", { ascending: false }),
-      queryClient.from("notification_reads").select("notification_id, read_at").eq("user_id", session.userId),
-      queryClient.from("projects").select("id, name"),
-    ]);
+    const [{ data: notifications }, { data: reads }, { data: projects }] =
+      await Promise.all([
+        queryClient
+          .from("notifications")
+          .select(
+            "id, user_id, project_id, type, title, body, href, created_at",
+          )
+          .eq("user_id", session.userId)
+          .order("created_at", { ascending: false }),
+        queryClient
+          .from("notification_reads")
+          .select("notification_id, read_at")
+          .eq("user_id", session.userId),
+        queryClient.from("projects").select("id, name"),
+      ]);
 
     let rows = (notifications || []).map((notification: any) => ({
       id: notification.id,
@@ -941,9 +1243,15 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       title: notification.title,
       body: notification.body,
       createdAt: notification.created_at,
-      readAt: (reads || []).find((read: any) => read.notification_id === notification.id)?.read_at || null,
+      readAt:
+        (reads || []).find(
+          (read: any) => read.notification_id === notification.id,
+        )?.read_at || null,
       href: notification.href,
-      projectName: (projects || []).find((project: any) => project.id === notification.project_id)?.name || null,
+      projectName:
+        (projects || []).find(
+          (project: any) => project.id === notification.project_id,
+        )?.name || null,
     }));
 
     if (filters?.type) {
@@ -953,33 +1261,47 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     return rows;
   }
 
-  async listSupportThreads(session: DashboardSession): Promise<SupportThreadSummary[]> {
+  async listSupportThreads(
+    session: DashboardSession,
+  ): Promise<SupportThreadSummary[]> {
     const { queryClient } = await this.getClients(session);
-    const [{ data: threads }, { data: messages }, { data: projects }] = await Promise.all([
-      queryClient
-        .from("support_threads")
-        .select("id, project_id, subject, priority, status, updated_at")
-        .order("updated_at", { ascending: false }),
-      queryClient.from("support_messages").select("support_thread_id, body, created_at").order("created_at", { ascending: false }),
-      queryClient.from("projects").select("id, name"),
-    ]);
+    const [{ data: threads }, { data: messages }, { data: projects }] =
+      await Promise.all([
+        queryClient
+          .from("support_threads")
+          .select("id, project_id, subject, priority, status, updated_at")
+          .order("updated_at", { ascending: false }),
+        queryClient
+          .from("support_messages")
+          .select("support_thread_id, body, created_at")
+          .order("created_at", { ascending: false }),
+        queryClient.from("projects").select("id, name"),
+      ]);
 
     return (threads || []).map((thread: any) => {
-      const latestMessage = (messages || []).find((message: any) => message.support_thread_id === thread.id);
+      const latestMessage = (messages || []).find(
+        (message: any) => message.support_thread_id === thread.id,
+      );
       return {
         id: thread.id,
         subject: thread.subject,
         priority: thread.priority,
         status: thread.status,
         projectId: thread.project_id,
-        projectName: (projects || []).find((project: any) => project.id === thread.project_id)?.name || null,
+        projectName:
+          (projects || []).find(
+            (project: any) => project.id === thread.project_id,
+          )?.name || null,
         updatedAt: thread.updated_at,
         lastMessagePreview: latestMessage?.body?.slice(0, 140) || null,
       };
     });
   }
 
-  async getSupportThread(session: DashboardSession, threadId: string): Promise<SupportThreadDetail | null> {
+  async getSupportThread(
+    session: DashboardSession,
+    threadId: string,
+  ): Promise<SupportThreadDetail | null> {
     const { queryClient } = await this.getClients(session);
     const [{ data: thread }, { data: messages }] = await Promise.all([
       queryClient
@@ -1000,17 +1322,30 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     const [threads, projects, profileMap, roleRows] = await Promise.all([
       this.listSupportThreads(session),
-      queryClient.from("projects").select("id, name").eq("id", thread.project_id).maybeSingle(),
-      this.getProfileMap((messages || []).map((message: any) => message.sender_user_id)),
+      queryClient
+        .from("projects")
+        .select("id, name")
+        .eq("id", thread.project_id)
+        .maybeSingle(),
+      this.getProfileMap(
+        (messages || []).map((message: any) => message.sender_user_id),
+      ),
       createSupabaseAdminClient()
         .from("user_roles")
         .select("user_id, role")
-        .in("user_id", [...new Set((messages || []).map((message: any) => message.sender_user_id))]),
+        .in("user_id", [
+          ...new Set(
+            (messages || []).map((message: any) => message.sender_user_id),
+          ),
+        ]),
     ]);
 
     const rolesByUser = new Map<string, string[]>();
     (roleRows.data || []).forEach((row: any) => {
-      rolesByUser.set(row.user_id, [...(rolesByUser.get(row.user_id) || []), row.role]);
+      rolesByUser.set(row.user_id, [
+        ...(rolesByUser.get(row.user_id) || []),
+        row.role,
+      ]);
     });
 
     const summary = threads.find((item) => item.id === threadId);
@@ -1027,8 +1362,12 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       messages: (messages || []).map((message: any) => ({
         id: message.id,
         threadId: message.support_thread_id,
-        senderName: profileMap.get(message.sender_user_id)?.full_name || "HomeTrust Africa",
-        senderRoleLabel: pickPrimaryRole(rolesByUser.get(message.sender_user_id) || ["CLIENT"]).replaceAll("_", " "),
+        senderName:
+          profileMap.get(message.sender_user_id)?.full_name ||
+          "HomeTrust Africa",
+        senderRoleLabel: pickPrimaryRole(
+          rolesByUser.get(message.sender_user_id) || ["CLIENT"],
+        ).replaceAll("_", " "),
         body: message.body,
         sentAt: message.created_at,
         isOwnMessage: message.sender_user_id === session.userId,
@@ -1036,7 +1375,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
-  async getSettings(session: DashboardSession): Promise<DashboardSettings | null> {
+  async getSettings(
+    session: DashboardSession,
+  ): Promise<DashboardSettings | null> {
     const user = await this.getCurrentUser(session);
     if (!user) {
       return null;
@@ -1055,8 +1396,16 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         )
         .eq("user_id", session.userId)
         .maybeSingle(),
-      queryClient.from("profiles").select("last_sign_in_at, two_factor_enabled").eq("id", session.userId).maybeSingle(),
-      queryClient.from("user_preferences").select("timezone, currency_code, density").eq("user_id", session.userId).maybeSingle(),
+      queryClient
+        .from("profiles")
+        .select("last_sign_in_at, two_factor_enabled")
+        .eq("id", session.userId)
+        .maybeSingle(),
+      queryClient
+        .from("user_preferences")
+        .select("timezone, currency_code, density")
+        .eq("user_id", session.userId)
+        .maybeSingle(),
     ]);
 
     return {
@@ -1079,7 +1428,8 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         emailMessages: notificationPreferences?.email_messages ?? true,
         inAppReports: notificationPreferences?.in_app_reports ?? true,
         inAppMilestones: notificationPreferences?.in_app_milestones ?? true,
-        inAppBudgetAlerts: notificationPreferences?.in_app_budget_alerts ?? true,
+        inAppBudgetAlerts:
+          notificationPreferences?.in_app_budget_alerts ?? true,
         inAppMessages: notificationPreferences?.in_app_messages ?? true,
       },
       preferences: {
@@ -1090,7 +1440,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     };
   }
 
-  async updateProfile(session: DashboardSession, input: ProfileSettingsInput): Promise<void> {
+  async updateProfile(
+    session: DashboardSession,
+    input: ProfileSettingsInput,
+  ): Promise<void> {
     const { queryClient, admin } = await this.getClients(session);
     const { error: profileError } = await queryClient
       .from("profiles")
@@ -1109,15 +1462,21 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     if (session.email !== input.email) {
       if (session.authSource === "supabase") {
-        const { error } = await queryClient.auth.updateUser({ email: input.email, data: { full_name: input.fullName } });
+        const { error } = await queryClient.auth.updateUser({
+          email: input.email,
+          data: { full_name: input.fullName },
+        });
         if (error) {
           throw new Error(error.message);
         }
       } else {
-        const { error } = await admin.auth.admin.updateUserById(session.userId, {
-          email: input.email,
-          user_metadata: { full_name: input.fullName },
-        });
+        const { error } = await admin.auth.admin.updateUserById(
+          session.userId,
+          {
+            email: input.email,
+            user_metadata: { full_name: input.fullName },
+          },
+        );
         if (error) {
           throw new Error(error.message);
         }
@@ -1125,7 +1484,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
-  async updateSecurity(session: DashboardSession, input: SecuritySettingsInput): Promise<void> {
+  async updateSecurity(
+    session: DashboardSession,
+    input: SecuritySettingsInput,
+  ): Promise<void> {
     const verifier = await getAnonPasswordVerifier();
     const { error: verifyError } = await verifier.auth.signInWithPassword({
       email: session.email,
@@ -1137,7 +1499,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
 
     if (session.authSource === "supabase") {
       const client = await createSupabaseServerClient();
-      const { error } = await client.auth.updateUser({ password: input.newPassword });
+      const { error } = await client.auth.updateUser({
+        password: input.newPassword,
+      });
       if (error) {
         throw new Error(error.message);
       }
@@ -1145,13 +1509,18 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
 
     const admin = createSupabaseAdminClient();
-    const { error } = await admin.auth.admin.updateUserById(session.userId, { password: input.newPassword });
+    const { error } = await admin.auth.admin.updateUserById(session.userId, {
+      password: input.newPassword,
+    });
     if (error) {
       throw new Error(error.message);
     }
   }
 
-  async updateNotifications(session: DashboardSession, input: NotificationSettingsInput): Promise<void> {
+  async updateNotifications(
+    session: DashboardSession,
+    input: NotificationSettingsInput,
+  ): Promise<void> {
     const { queryClient } = await this.getClients(session);
     const { error } = await queryClient.from("notification_preferences").upsert(
       {
@@ -1172,7 +1541,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
-  async updatePreferences(session: DashboardSession, input: PreferenceSettingsInput): Promise<void> {
+  async updatePreferences(
+    session: DashboardSession,
+    input: PreferenceSettingsInput,
+  ): Promise<void> {
     const { queryClient } = await this.getClients(session);
     const { error } = await queryClient.from("user_preferences").upsert(
       {
@@ -1188,25 +1560,36 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
-  async sendMessage(session: DashboardSession, input: SendMessageInput): Promise<void> {
+  async sendMessage(
+    session: DashboardSession,
+    input: SendMessageInput,
+  ): Promise<void> {
     const { queryClient, admin } = await this.getClients(session);
-    const [{ error: messageError }, { data: participants }] = await Promise.all([
-      queryClient.from("messages").insert({
-        conversation_id: input.threadId,
-        sender_user_id: session.userId,
-        body: input.body,
-      }),
-      queryClient.from("conversation_participants").select("user_id").eq("conversation_id", input.threadId),
-    ]);
+    const [{ error: messageError }, { data: participants }] = await Promise.all(
+      [
+        queryClient.from("messages").insert({
+          conversation_id: input.threadId,
+          sender_user_id: session.userId,
+          body: input.body,
+        }),
+        queryClient
+          .from("conversation_participants")
+          .select("user_id")
+          .eq("conversation_id", input.threadId),
+      ],
+    );
 
     if (messageError) {
       throw new Error(messageError.message);
     }
 
-    await queryClient.from("conversation_participants").update({ last_read_at: new Date().toISOString() }).match({
-      conversation_id: input.threadId,
-      user_id: session.userId,
-    });
+    await queryClient
+      .from("conversation_participants")
+      .update({ last_read_at: new Date().toISOString() })
+      .match({
+        conversation_id: input.threadId,
+        user_id: session.userId,
+      });
 
     const { data: conversation } = await queryClient
       .from("conversations")
@@ -1214,7 +1597,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       .eq("id", input.threadId)
       .maybeSingle();
 
-    const otherParticipants = (participants || []).filter((participant: any) => participant.user_id !== session.userId);
+    const otherParticipants = (participants || []).filter(
+      (participant: any) => participant.user_id !== session.userId,
+    );
     if (otherParticipants.length) {
       await (admin.from("notifications" as never) as any).insert(
         otherParticipants.map((participant: any) => ({
@@ -1229,7 +1614,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
-  async resolveApproval(session: DashboardSession, input: ApprovalDecisionInput): Promise<void> {
+  async resolveApproval(
+    session: DashboardSession,
+    input: ApprovalDecisionInput,
+  ): Promise<void> {
     const { queryClient, admin } = await this.getClients(session);
     const { data: approval } = await queryClient
       .from("approvals")
@@ -1240,7 +1628,11 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     if (!approval) {
       throw new Error("Approval could not be found.");
     }
-    if (approval.requested_from_user_id && approval.requested_from_user_id !== session.userId && !["ADMIN", "OPERATIONS_MANAGER"].includes(session.role)) {
+    if (
+      approval.requested_from_user_id &&
+      approval.requested_from_user_id !== session.userId &&
+      !["ADMIN", "OPERATIONS_MANAGER"].includes(session.role)
+    ) {
       throw new Error("You are not authorized to resolve this approval.");
     }
 
@@ -1266,7 +1658,8 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       project_id: approval.project_id,
       event_type: "approval",
       title: `${approval.title} ${input.decision === "approved" ? "approved" : "rejected"}`,
-      summary: input.note || `Approval was ${input.decision} by ${session.name}.`,
+      summary:
+        input.note || `Approval was ${input.decision} by ${session.name}.`,
       actor_user_id: session.userId,
       client_visible: true,
       related_table: "approvals",
@@ -1275,7 +1668,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     });
   }
 
-  async markNotificationsRead(session: DashboardSession, notificationIds: string[]): Promise<void> {
+  async markNotificationsRead(
+    session: DashboardSession,
+    notificationIds: string[],
+  ): Promise<void> {
     const { queryClient } = await this.getClients(session);
     const { error } = await queryClient.from("notification_reads").upsert(
       notificationIds.map((notificationId) => ({
@@ -1290,7 +1686,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
     }
   }
 
-  async requestSupport(session: DashboardSession, input: SupportRequestInput): Promise<void> {
+  async requestSupport(
+    session: DashboardSession,
+    input: SupportRequestInput,
+  ): Promise<{ threadId: string }> {
     const { queryClient, admin } = await this.getClients(session);
     const { data: membership } = await queryClient
       .from("client_account_members")
@@ -1321,7 +1720,10 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       body: input.details,
     });
 
-    const { data: adminUsers } = await admin.from("user_roles").select("user_id").in("role", ["ADMIN", "OPERATIONS_MANAGER"]);
+    const { data: adminUsers } = await admin
+      .from("user_roles")
+      .select("user_id")
+      .in("role", ["ADMIN", "OPERATIONS_MANAGER"]);
     if (adminUsers?.length) {
       await (admin.from("notifications" as never) as any).insert(
         adminUsers.map((row: any) => ({
@@ -1333,9 +1735,14 @@ export class SupabaseDashboardRepository implements DashboardRepository {
         })),
       );
     }
+
+    return { threadId: thread.id };
   }
 
-  async replySupportThread(session: DashboardSession, input: SupportReplyInput): Promise<void> {
+  async replySupportThread(
+    session: DashboardSession,
+    input: SupportReplyInput,
+  ): Promise<void> {
     const { queryClient, admin } = await this.getClients(session);
     const { data: thread } = await queryClient
       .from("support_threads")
@@ -1356,10 +1763,16 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       throw new Error(error.message);
     }
 
-    await queryClient.from("support_threads").update({ updated_at: new Date().toISOString() }).eq("id", input.threadId);
+    await queryClient
+      .from("support_threads")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", input.threadId);
 
     if (session.role === "CLIENT") {
-      const { data: adminUsers } = await admin.from("user_roles").select("user_id").in("role", ["ADMIN", "OPERATIONS_MANAGER"]);
+      const { data: adminUsers } = await admin
+        .from("user_roles")
+        .select("user_id")
+        .in("role", ["ADMIN", "OPERATIONS_MANAGER"]);
       if (adminUsers?.length) {
         await (admin.from("notifications" as never) as any).insert(
           adminUsers.map((row: any) => ({

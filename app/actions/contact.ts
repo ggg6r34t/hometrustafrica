@@ -1,12 +1,17 @@
 "use server";
 
 import { headers } from "next/headers";
-import { Resend } from "resend";
-import { render } from "@react-email/render";
 import { sanitizeFormData } from "@/lib/security";
 import { rateLimit, getClientIdentifier } from "@/lib/rate-limit";
-import { ContactFormEmail } from "@/emails/contact-form";
-import { ContactConfirmationEmail } from "@/emails/contact-confirmation";
+import {
+  ContactFormEmail,
+  subject as contactFormSubject,
+} from "@/emails/contact-form";
+import {
+  ContactConfirmationEmail,
+  subject as contactConfirmationSubject,
+} from "@/emails/contact-confirmation";
+import { sendEmail } from "@/lib/email/send";
 
 /**
  * Server Action for handling contact form submissions
@@ -38,7 +43,7 @@ export interface ActionResult {
 }
 
 export async function submitContactForm(
-  data: ContactFormData
+  data: ContactFormData,
 ): Promise<ActionResult> {
   try {
     // Rate limiting
@@ -106,47 +111,34 @@ export async function submitContactForm(
       // In development, log instead of failing
       if (process.env.NODE_ENV === "development") {
         console.warn(
-          "RESEND_API_KEY not set. Email sending disabled. Set RESEND_API_KEY in .env.local to enable email sending."
+          "RESEND_API_KEY not set. Email sending disabled. Set RESEND_API_KEY in .env.local to enable email sending.",
         );
       } else {
         throw new Error("Email service not configured");
       }
     } else {
-      const resend = new Resend(resendApiKey);
-
-      // Render email templates
-      const inquiryEmailHtml = await render(
-        ContactFormEmail({
+      await sendEmail({
+        from: fromEmail,
+        to: adminEmail,
+        replyTo: sanitized.email,
+        subject: `${contactFormSubject}: ${sanitized.name}`,
+        react: ContactFormEmail({
           name: sanitized.name,
           email: sanitized.email,
           phone: sanitized.phone || undefined,
           country: data.country,
           projectType: data.projectType,
           message: sanitized.message,
-        })
-      );
-
-      const confirmationEmailHtml = await render(
-        ContactConfirmationEmail({
-          name: sanitized.name,
-        })
-      );
-
-      // Send email to admin
-      await resend.emails.send({
-        from: fromEmail,
-        to: adminEmail,
-        replyTo: sanitized.email,
-        subject: `New Project Inquiry from ${sanitized.name}`,
-        html: inquiryEmailHtml,
+        }),
       });
 
-      // Send confirmation email to user
-      await resend.emails.send({
+      await sendEmail({
         from: fromEmail,
         to: sanitized.email,
-        subject: "We've received your project inquiry - HomeTrust Africa",
-        html: confirmationEmailHtml,
+        subject: contactConfirmationSubject,
+        react: ContactConfirmationEmail({
+          name: sanitized.name,
+        }),
       });
     }
 

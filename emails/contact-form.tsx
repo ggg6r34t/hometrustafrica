@@ -1,13 +1,4 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components";
+import { DataBlock, BaseEmail, MutedNote } from "./_components/base-email";
 
 interface ContactFormEmailProps {
   name: string;
@@ -18,6 +9,8 @@ interface ContactFormEmailProps {
   message: string;
 }
 
+export const subject = "New project inquiry";
+
 export const ContactFormEmail = ({
   name,
   email,
@@ -27,141 +20,31 @@ export const ContactFormEmail = ({
   message,
 }: ContactFormEmailProps) => {
   return (
-    <Html>
-      <Head />
-      <Preview>New project inquiry from {name}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={h1}>New Project Inquiry</Heading>
-          <Text style={text}>
-            You have received a new project inquiry from the HomeTrust Africa
-            contact form.
-          </Text>
-
-          <Section style={section}>
-            <Text style={label}>Name:</Text>
-            <Text style={value}>{name}</Text>
-          </Section>
-
-          <Section style={section}>
-            <Text style={label}>Email:</Text>
-            <Text style={value}>
-              <a href={`mailto:${email}`} style={link}>
-                {email}
-              </a>
-            </Text>
-          </Section>
-
-          {phone && (
-            <Section style={section}>
-              <Text style={label}>Phone:</Text>
-              <Text style={value}>
-                <a href={`tel:${phone}`} style={link}>
-                  {phone}
-                </a>
-              </Text>
-            </Section>
-          )}
-
-          <Section style={section}>
-            <Text style={label}>Country:</Text>
-            <Text style={value}>{country}</Text>
-          </Section>
-
-          <Section style={section}>
-            <Text style={label}>Project Type:</Text>
-            <Text style={value}>{projectType}</Text>
-          </Section>
-
-          <Section style={section}>
-            <Text style={label}>Message:</Text>
-            <Text style={messageText}>{message}</Text>
-          </Section>
-
-          <Section style={footer}>
-            <Text style={footerText}>
-              This email was sent from the HomeTrust Africa contact form.
-            </Text>
-            <Text style={footerText}>
-              Please respond to the inquiry within 24 hours.
-            </Text>
-          </Section>
-        </Container>
-      </Body>
-    </Html>
+    <BaseEmail
+      previewText={`New project inquiry: ${name}`}
+      title="Support request received"
+      intro="A new project inquiry has been submitted through the contact form."
+      actionLabel="Reply to requester"
+      actionUrl={`mailto:${email}`}
+      actionNote="Respond within one business day and confirm next step ownership."
+      footerNote="Internal notification · Client intake workflow"
+    >
+      <DataBlock label="Requester" value={name} />
+      <DataBlock
+        label="Email"
+        value={<a href={`mailto:${email}`}>{email}</a>}
+      />
+      {phone ? (
+        <DataBlock label="Phone" value={<a href={`tel:${phone}`}>{phone}</a>} />
+      ) : null}
+      <DataBlock label="Country" value={country} />
+      <DataBlock label="Project type" value={projectType} />
+      <DataBlock label="Project brief" value={message} />
+      <MutedNote>
+        Record this request in project intake tracking before responding.
+      </MutedNote>
+    </BaseEmail>
   );
-};
-
-const main = {
-  backgroundColor: "#ffffff",
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-};
-
-const container = {
-  margin: "0 auto",
-  padding: "20px 0 48px",
-  maxWidth: "560px",
-};
-
-const h1 = {
-  color: "#23B245",
-  fontSize: "24px",
-  fontWeight: "bold",
-  margin: "40px 0",
-  padding: "0",
-};
-
-const text = {
-  color: "#333",
-  fontSize: "16px",
-  lineHeight: "26px",
-};
-
-const section = {
-  margin: "24px 0",
-};
-
-const label = {
-  color: "#666",
-  fontSize: "14px",
-  fontWeight: "600",
-  margin: "0 0 4px 0",
-};
-
-const value = {
-  color: "#333",
-  fontSize: "16px",
-  margin: "0",
-};
-
-const link = {
-  color: "#23B245",
-  textDecoration: "underline",
-};
-
-const messageText = {
-  color: "#333",
-  fontSize: "16px",
-  lineHeight: "24px",
-  margin: "8px 0 0 0",
-  padding: "16px",
-  backgroundColor: "#f5f5f5",
-  borderRadius: "4px",
-  whiteSpace: "pre-wrap",
-};
-
-const footer = {
-  marginTop: "32px",
-  paddingTop: "24px",
-  borderTop: "1px solid #e5e5e5",
-};
-
-const footerText = {
-  color: "#666",
-  fontSize: "12px",
-  lineHeight: "18px",
-  margin: "4px 0",
 };
 
 export default ContactFormEmail;

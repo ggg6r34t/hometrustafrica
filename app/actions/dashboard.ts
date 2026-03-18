@@ -1,9 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import {
+  SupportRequestReceivedEmail,
+  subject as supportRequestReceivedSubject,
+} from "@/emails/support-request-received";
 import { requireDashboardSession } from "@/lib/auth/session";
 import { recordAuditEvent } from "@/lib/dashboard/audit";
 import { dashboardService } from "@/lib/dashboard/service";
+import { sendEmail } from "@/lib/email/send";
 import {
   approvalDecisionSchema,
   notificationBulkActionSchema,
@@ -41,16 +46,27 @@ export async function updateProfileAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invalid profile details." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Invalid profile details.",
+    };
   }
 
   try {
     await dashboardService.updateProfile(session, parsed.data);
-    await recordAuditEvent(session, { action: "profile.update", targetType: "user", targetId: session.userId });
+    await recordAuditEvent(session, {
+      action: "profile.update",
+      targetType: "user",
+      targetId: session.userId,
+    });
     revalidatePath("/dashboard/settings/profile");
     return { status: "success", message: "Profile updated successfully." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to update profile." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Unable to update profile.",
+    };
   }
 }
 
@@ -66,16 +82,29 @@ export async function updateSecurityAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invalid security details." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Invalid security details.",
+    };
   }
 
   try {
     await dashboardService.updateSecurity(session, parsed.data);
-    await recordAuditEvent(session, { action: "security.password.rotate", targetType: "user", targetId: session.userId });
+    await recordAuditEvent(session, {
+      action: "security.password.rotate",
+      targetType: "user",
+      targetId: session.userId,
+    });
     revalidatePath("/dashboard/settings/security");
     return { status: "success", message: "Security settings updated." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to update security settings." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to update security settings.",
+    };
   }
 }
 
@@ -96,17 +125,31 @@ export async function updateNotificationsAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invalid notification settings." };
+    return {
+      status: "error",
+      message:
+        parsed.error.issues[0]?.message || "Invalid notification settings.",
+    };
   }
 
   try {
     await dashboardService.updateNotifications(session, parsed.data);
-    await recordAuditEvent(session, { action: "notifications.preferences.update", targetType: "user", targetId: session.userId });
+    await recordAuditEvent(session, {
+      action: "notifications.preferences.update",
+      targetType: "user",
+      targetId: session.userId,
+    });
     revalidatePath("/dashboard/settings/notifications");
     revalidatePath("/dashboard/notifications");
     return { status: "success", message: "Notification preferences updated." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to update notifications." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to update notifications.",
+    };
   }
 }
 
@@ -122,16 +165,30 @@ export async function updatePreferencesAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Invalid dashboard preferences." };
+    return {
+      status: "error",
+      message:
+        parsed.error.issues[0]?.message || "Invalid dashboard preferences.",
+    };
   }
 
   try {
     await dashboardService.updatePreferences(session, parsed.data);
-    await recordAuditEvent(session, { action: "preferences.update", targetType: "user", targetId: session.userId });
+    await recordAuditEvent(session, {
+      action: "preferences.update",
+      targetType: "user",
+      targetId: session.userId,
+    });
     revalidatePath("/dashboard/settings/preferences");
     return { status: "success", message: "Preferences updated." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to update preferences." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to update preferences.",
+    };
   }
 }
 
@@ -146,17 +203,28 @@ export async function sendMessageAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Message content is invalid." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Message content is invalid.",
+    };
   }
 
   try {
     await dashboardService.sendMessage(session, parsed.data);
-    await recordAuditEvent(session, { action: "conversation.message.send", targetType: "thread", targetId: parsed.data.threadId });
+    await recordAuditEvent(session, {
+      action: "conversation.message.send",
+      targetType: "thread",
+      targetId: parsed.data.threadId,
+    });
     revalidatePath(`/dashboard/inbox/${parsed.data.threadId}`);
     revalidatePath("/dashboard/inbox");
     return { status: "success", message: "Message sent securely." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to send message." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Unable to send message.",
+    };
   }
 }
 
@@ -172,7 +240,11 @@ export async function resolveApprovalAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Approval decision is invalid." };
+    return {
+      status: "error",
+      message:
+        parsed.error.issues[0]?.message || "Approval decision is invalid.",
+    };
   }
 
   try {
@@ -188,19 +260,28 @@ export async function resolveApprovalAction(
     revalidatePath("/dashboard/notifications");
     return { status: "success", message: `Approval ${parsed.data.decision}.` };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to update approval." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Unable to update approval.",
+    };
   }
 }
 
 export async function markNotificationsReadAction(formData: FormData) {
   const session = await requireDashboardSession();
   const values = formData.getAll("notificationIds").map(String);
-  const parsed = notificationBulkActionSchema.safeParse({ notificationIds: values });
+  const parsed = notificationBulkActionSchema.safeParse({
+    notificationIds: values,
+  });
   if (!parsed.success) {
     return;
   }
 
-  await dashboardService.markNotificationsRead(session, parsed.data.notificationIds);
+  await dashboardService.markNotificationsRead(
+    session,
+    parsed.data.notificationIds,
+  );
   await recordAuditEvent(session, {
     action: "notifications.mark_read",
     targetType: "notification",
@@ -221,20 +302,51 @@ export async function requestSupportAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Support request is invalid." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Support request is invalid.",
+    };
   }
 
   try {
-    await dashboardService.requestSupport(session, parsed.data);
+    const supportRequest = await dashboardService.requestSupport(
+      session,
+      parsed.data,
+    );
+
+    try {
+      await sendEmail({
+        to: session.email,
+        subject: supportRequestReceivedSubject,
+        react: SupportRequestReceivedEmail({
+          fullName: session.name,
+          ticketId: supportRequest.threadId,
+          issueCategory: parsed.data.urgency,
+          submittedAt: new Date().toISOString(),
+        }),
+      });
+    } catch (emailError) {
+      console.error("[support.request.email]", emailError);
+    }
+
     await recordAuditEvent(session, {
       action: "support.request.create",
       targetType: "support_request",
-      metadata: { urgency: parsed.data.urgency },
+      metadata: {
+        urgency: parsed.data.urgency,
+        threadId: supportRequest.threadId,
+      },
     });
     revalidatePath("/dashboard/support");
     return { status: "success", message: "Support request submitted." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to submit support request." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to submit support request.",
+    };
   }
 }
 
@@ -249,7 +361,10 @@ export async function replySupportThreadAction(
   });
 
   if (!parsed.success) {
-    return { status: "error", message: parsed.error.issues[0]?.message || "Support reply is invalid." };
+    return {
+      status: "error",
+      message: parsed.error.issues[0]?.message || "Support reply is invalid.",
+    };
   }
 
   try {
@@ -263,6 +378,12 @@ export async function replySupportThreadAction(
     revalidatePath(`/dashboard/support/${parsed.data.threadId}`);
     return { status: "success", message: "Reply sent securely." };
   } catch (error) {
-    return { status: "error", message: error instanceof Error ? error.message : "Unable to send support reply." };
+    return {
+      status: "error",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to send support reply.",
+    };
   }
 }
