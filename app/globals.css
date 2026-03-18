@@ -182,7 +182,7 @@
 
   p {
     @apply leading-[1.75];
-    font-size: 1.0625rem;
+    font-size: inherit;
   }
 
   .eyebrow {
