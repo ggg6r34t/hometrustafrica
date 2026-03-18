@@ -51,19 +51,28 @@ export default async function DashboardNewsletterPage() {
                 Delivery controls
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-muted-foreground">
-              <p className="inline-flex items-center gap-2">
-                <ShieldCheck className="size-4" /> Campaign sends honor
-                subscriber opt-out preferences automatically.
-              </p>
-              <p className="inline-flex items-center gap-2">
-                <Mail className="size-4" /> Use this panel for marketing and
-                newsletter communications only.
-              </p>
-              <p className="inline-flex items-center gap-2">
-                <Send className="size-4" /> Use operational notification flows
-                for account, support, and transactional communications.
-              </p>
+            <CardContent className="space-y-4 text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <ShieldCheck className="mt-1 size-3.5 shrink-0" />
+                <p className="text-sm leading-relaxed">
+                  Campaign sends honor subscriber opt-out preferences
+                  automatically.
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Mail className="mt-1 size-3.5 shrink-0" />
+                <p className="text-sm leading-relaxed">
+                  Use this panel for marketing and newsletter communications
+                  only.
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <Send className="mt-1 size-3.5 shrink-0" />
+                <p className="text-sm leading-relaxed">
+                  Use operational notification flows for account, support, and
+                  transactional communications.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
