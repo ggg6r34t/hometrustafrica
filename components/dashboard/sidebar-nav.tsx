@@ -11,6 +11,7 @@ import {
   FolderKanban,
   LifeBuoy,
   LogOut,
+  Mail,
   MessageSquareText,
   MoreHorizontal,
   PanelsTopLeft,
@@ -39,6 +40,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { isPrivilegedDashboardRole } from "@/lib/dashboard/roles";
 import type { DashboardSession, ProjectSummary } from "@/lib/dashboard/types";
 
 function isPathWithin(pathname: string, href: string) {
@@ -172,6 +174,20 @@ export function DashboardSidebarNav({
       ],
     },
   ];
+
+  if (isPrivilegedDashboardRole(session.role)) {
+    sections.splice(3, 0, {
+      label: "Operations",
+      items: [
+        {
+          href: "/dashboard/newsletter",
+          label: "Newsletter",
+          icon: Mail,
+          active: isPathWithin(pathname, "/dashboard/newsletter"),
+        },
+      ],
+    });
+  }
 
   return (
     <>

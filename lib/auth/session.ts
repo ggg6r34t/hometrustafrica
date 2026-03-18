@@ -1,26 +1,19 @@
 import { redirect } from "next/navigation";
 import type { DashboardSession } from "@/lib/dashboard/types";
+import { dashboardRolePriority } from "@/lib/dashboard/roles";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getSupabaseEnv, hasSupabaseAdminEnv, hasSupabaseBrowserEnv } from "@/lib/supabase/env";
+import {
+  getSupabaseEnv,
+  hasSupabaseAdminEnv,
+  hasSupabaseBrowserEnv,
+} from "@/lib/supabase/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-function rolePriority(role: string) {
-  switch (role) {
-    case "ADMIN":
-      return 4;
-    case "OPERATIONS_MANAGER":
-      return 3;
-    case "TEAM_MEMBER":
-      return 2;
-    default:
-      return 1;
-  }
-}
-
 function resolvePrimaryRole(roles: Array<{ role: string }>) {
-  return [...roles]
-    .sort((left, right) => rolePriority(right.role) - rolePriority(left.role))[0]
-    ?.role as DashboardSession["role"] | undefined;
+  return [...roles].sort(
+    (left, right) =>
+      dashboardRolePriority(right.role) - dashboardRolePriority(left.role),
+  )[0]?.role as DashboardSession["role"] | undefined;
 }
 
 async function getSupabaseBackedDashboardSession(): Promise<DashboardSession | null> {
@@ -29,10 +22,9 @@ async function getSupabaseBackedDashboardSession(): Promise<DashboardSession | n
   }
 
   const client = await createSupabaseServerClient();
-  const [{ data: authUserResult }, { data: sessionResult }] = await Promise.all([
-    client.auth.getUser(),
-    client.auth.getSession(),
-  ]);
+  const [{ data: authUserResult }, { data: sessionResult }] = await Promise.all(
+    [client.auth.getUser(), client.auth.getSession()],
+  );
 
   const user = authUserResult.user;
   if (!user) {
@@ -40,7 +32,11 @@ async function getSupabaseBackedDashboardSession(): Promise<DashboardSession | n
   }
 
   const [{ data: profile }, { data: roles }] = await Promise.all([
-    client.from("profiles").select("id, full_name, email").eq("id", user.id).maybeSingle(),
+    client
+      .from("profiles")
+      .select("id, full_name, email")
+      .eq("id", user.id)
+      .maybeSingle(),
     client.from("user_roles").select("role").eq("user_id", user.id),
   ]);
 
@@ -50,7 +46,11 @@ async function getSupabaseBackedDashboardSession(): Promise<DashboardSession | n
     userId: user.id,
     role: primaryRole || "CLIENT",
     email: profile?.email || user.email || "",
-    name: profile?.full_name || (typeof user.user_metadata.full_name === "string" ? user.user_metadata.full_name : user.email || "HomeTrust User"),
+    name:
+      profile?.full_name ||
+      (typeof user.user_metadata.full_name === "string"
+        ? user.user_metadata.full_name
+        : user.email || "HomeTrust User"),
     expiresAt: sessionResult.session?.expires_at
       ? new Date(sessionResult.session.expires_at * 1000).toISOString()
       : new Date(Date.now() + 60 * 60 * 1000).toISOString(),
@@ -75,13 +75,20 @@ async function getDevelopmentOverrideSession(): Promise<DashboardSession | null>
     .select("id, full_name, email")
     .eq("email", env.devUserEmail)
     .maybeSingle();
-  const profile = data as { id: string; full_name: string; email: string } | null;
+  const profile = data as {
+    id: string;
+    full_name: string;
+    email: string;
+  } | null;
 
   if (!profile) {
     return null;
   }
 
-  const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", profile.id);
+  const { data: roles } = await admin
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", profile.id);
 
   return {
     userId: profile.id,
@@ -94,7 +101,10 @@ async function getDevelopmentOverrideSession(): Promise<DashboardSession | null>
 }
 
 export async function getDashboardSession() {
-  return (await getSupabaseBackedDashboardSession()) || (await getDevelopmentOverrideSession());
+  return (
+    (await getSupabaseBackedDashboardSession()) ||
+    (await getDevelopmentOverrideSession())
+  );
 }
 
 export function getDashboardHomePath() {
@@ -105,6 +115,16 @@ export async function requireDashboardSession() {
   const session = await getDashboardSession();
   if (!session) {
     redirect("/login");
+  }
+
+  return session;
+}
+
+export async function requireDashboardRoles(roles: DashboardSession["role"][]) {
+  const session = await requireDashboardSession();
+
+  if (!roles.includes(session.role)) {
+    redirect("/dashboard");
   }
 
   return session;

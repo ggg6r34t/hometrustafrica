@@ -22,6 +22,13 @@ ADMIN_EMAIL=info@hometrustafrica.com
 # Must be verified in your Resend account
 FROM_EMAIL=contact@hometrustafrica.com
 
+# Newsletter audience configuration
+# Prefer the fixed audience ID from Resend in production.
+# If omitted, the app will look up the audience by name.
+# Automatic audience creation is limited to non-production environments.
+RESEND_NEWSLETTER_AUDIENCE_ID=aud_123456789
+RESEND_NEWSLETTER_AUDIENCE_NAME=HomeTrust Africa Newsletter
+
 # Error Tracking (Sentry)
 # Get your DSN from https://sentry.io/settings/projects/
 NEXT_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
@@ -51,6 +58,9 @@ SENTRY_AUTH_TOKEN=your-sentry-auth-token
 4. Add it to `.env.local` as `RESEND_API_KEY`
 5. Verify your domain in Resend dashboard
 6. Set `FROM_EMAIL` to a verified email address
+7. Create a Resend Audience/Segment for newsletter subscribers
+8. Copy its ID into `RESEND_NEWSLETTER_AUDIENCE_ID`
+9. Optionally set `RESEND_NEWSLETTER_AUDIENCE_NAME` for local and staging lookups when no ID is configured
 
 ### 2. Sentry Error Tracking
 
@@ -66,4 +76,5 @@ SENTRY_AUTH_TOKEN=your-sentry-auth-token
 - The `.env.local` file is already in `.gitignore`
 - In development, if `RESEND_API_KEY` is not set, emails will be logged to console instead of sent
 - In production, missing `RESEND_API_KEY` will cause form submissions to fail
-
+- In production, `RESEND_NEWSLETTER_AUDIENCE_ID` should point to a pre-created Resend audience for deterministic newsletter subscriptions
+- In local and staging environments, the app can create the audience automatically when it does not exist yet

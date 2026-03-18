@@ -1,6 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import {
+  deleteNewsletterDraftAction,
+  saveNewsletterDraftAction,
+  sendNewsletterBroadcastAction,
+  sendNewsletterTestAction,
+  type NewsletterBroadcastActionState,
+  type NewsletterDraftActionState,
+} from "@/app/actions/newsletter";
 import {
   replySupportThreadAction,
   resolveApprovalAction,
@@ -14,6 +22,7 @@ import {
 } from "@/app/actions/dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -25,11 +34,33 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type { NewsletterBroadcastDraftRecord } from "@/lib/email/newsletter-drafts";
 import type { ApprovalItem, DashboardSettings } from "@/lib/dashboard/types";
 
 const initialState: DashboardActionState = { status: "idle" };
+const initialNewsletterBroadcastState: NewsletterBroadcastActionState = {
+  status: "idle",
+};
+const initialNewsletterDraftState: NewsletterDraftActionState = {
+  status: "idle",
+};
+const newsletterDraftStorageKey = "dashboard-newsletter-broadcast-draft";
+const initialNewsletterDraft = {
+  campaignName: "",
+  subject: "",
+  previewText: "",
+  title: "",
+  intro: "",
+  body: "",
+  ctaLabel: "",
+  ctaUrl: "",
+};
 
-function ActionFeedback({ state }: { state: DashboardActionState }) {
+function ActionFeedback({
+  state,
+}: {
+  state: { status: "idle" | "success" | "error"; message?: string };
+}) {
   if (state.status === "idle") {
     return null;
   }
@@ -510,5 +541,485 @@ export function SupportReplyForm({ threadId }: { threadId: string }) {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+export function NewsletterBroadcastForm({
+  disabled = false,
+  savedDrafts,
+}: {
+  disabled?: boolean;
+  savedDrafts: NewsletterBroadcastDraftRecord[];
+}) {
+  const [sendState, sendAction, sendPending] = useActionState(
+    sendNewsletterBroadcastAction,
+    initialNewsletterBroadcastState,
+  );
+  const [saveState, saveAction, savePending] = useActionState(
+    saveNewsletterDraftAction,
+    initialNewsletterDraftState,
+  );
+  const [testState, testAction, testPending] = useActionState(
+    sendNewsletterTestAction,
+    initialNewsletterDraftState,
+  );
+  const [deleteState, deleteAction, deletePending] = useActionState(
+    deleteNewsletterDraftAction,
+    initialNewsletterDraftState,
+  );
+  const [draft, setDraft] = useState(initialNewsletterDraft);
+  const [reviewConfirmed, setReviewConfirmed] = useState(false);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [currentDraftId, setCurrentDraftId] = useState("");
+  const isBusy = sendPending || savePending || testPending || deletePending;
+
+  useEffect(() => {
+    try {
+      const rawDraft = window.localStorage.getItem(newsletterDraftStorageKey);
+      if (!rawDraft) {
+        setDraftLoaded(true);
+        return;
+      }
+
+      const parsedDraft = JSON.parse(rawDraft) as Partial<
+        typeof initialNewsletterDraft
+      > & { reviewConfirmed?: boolean };
+
+      setDraft({
+        campaignName: parsedDraft.campaignName || "",
+        subject: parsedDraft.subject || "",
+        previewText: parsedDraft.previewText || "",
+        title: parsedDraft.title || "",
+        intro: parsedDraft.intro || "",
+        body: parsedDraft.body || "",
+        ctaLabel: parsedDraft.ctaLabel || "",
+        ctaUrl: parsedDraft.ctaUrl || "",
+      });
+      setReviewConfirmed(Boolean(parsedDraft.reviewConfirmed));
+    } catch {
+      window.localStorage.removeItem(newsletterDraftStorageKey);
+    } finally {
+      setDraftLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      newsletterDraftStorageKey,
+      JSON.stringify({
+        ...draft,
+        reviewConfirmed,
+      }),
+    );
+  }, [draft, draftLoaded, reviewConfirmed]);
+
+  useEffect(() => {
+    if (sendState.status !== "success") {
+      return;
+    }
+
+    setDraft(initialNewsletterDraft);
+    setReviewConfirmed(false);
+    setCurrentDraftId("");
+    window.localStorage.removeItem(newsletterDraftStorageKey);
+  }, [sendState.status]);
+
+  useEffect(() => {
+    if (saveState.status === "success" && saveState.draftId) {
+      setCurrentDraftId(saveState.draftId);
+    }
+  }, [saveState.draftId, saveState.status]);
+
+  useEffect(() => {
+    if (
+      deleteState.status === "success" &&
+      deleteState.draftId === currentDraftId
+    ) {
+      setCurrentDraftId("");
+    }
+  }, [currentDraftId, deleteState.draftId, deleteState.status]);
+
+  function updateDraftField(
+    field: keyof typeof initialNewsletterDraft,
+    value: string,
+  ) {
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      [field]: value,
+    }));
+  }
+
+  function clearDraft() {
+    setDraft(initialNewsletterDraft);
+    setReviewConfirmed(false);
+    setCurrentDraftId("");
+    window.localStorage.removeItem(newsletterDraftStorageKey);
+  }
+
+  function restoreSharedDraft(savedDraft: NewsletterBroadcastDraftRecord) {
+    setDraft({
+      campaignName: savedDraft.campaignName,
+      subject: savedDraft.subject,
+      previewText: savedDraft.previewText,
+      title: savedDraft.title,
+      intro: savedDraft.intro,
+      body: savedDraft.body,
+      ctaLabel: savedDraft.ctaLabel,
+      ctaUrl: savedDraft.ctaUrl,
+    });
+    setCurrentDraftId(savedDraft.id);
+    setReviewConfirmed(false);
+  }
+
+  const previewBodyParagraphs = draft.body
+    .split(/\r?\n\s*\r?\n/g)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="grid items-start gap-6 2xl:grid-cols-[1.05fr_0.95fr]">
+      <Card className="dashboard-panel">
+        <CardHeader className="border-b border-border pb-4">
+          <CardTitle className="text-sm font-semibold text-muted-foreground">
+            Compose broadcast
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <form action={sendAction} className="space-y-4">
+            <input
+              type="hidden"
+              name="reviewConfirmed"
+              value={reviewConfirmed ? "on" : ""}
+            />
+            <input type="hidden" name="draftId" value={currentDraftId} />
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="campaignName">Campaign name</Label>
+                <Input
+                  id="campaignName"
+                  name="campaignName"
+                  placeholder="March 2026 platform update"
+                  disabled={disabled || isBusy}
+                  value={draft.campaignName}
+                  onChange={(event) =>
+                    updateDraftField("campaignName", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject line</Label>
+                <Input
+                  id="subject"
+                  name="subject"
+                  placeholder="Platform updates from HomeTrust Africa"
+                  disabled={disabled || isBusy}
+                  value={draft.subject}
+                  onChange={(event) =>
+                    updateDraftField("subject", event.target.value)
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="previewText">Preview text</Label>
+              <Input
+                id="previewText"
+                name="previewText"
+                placeholder="A short inbox preview snippet for this campaign"
+                disabled={disabled || isBusy}
+                value={draft.previewText}
+                onChange={(event) =>
+                  updateDraftField("previewText", event.target.value)
+                }
+              />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="title">Headline</Label>
+                <Input
+                  id="title"
+                  name="title"
+                  placeholder="New project oversight updates"
+                  disabled={disabled || isBusy}
+                  value={draft.title}
+                  onChange={(event) =>
+                    updateDraftField("title", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="intro">Intro</Label>
+                <Input
+                  id="intro"
+                  name="intro"
+                  placeholder="Here is your latest operational and platform update."
+                  disabled={disabled || isBusy}
+                  value={draft.intro}
+                  onChange={(event) =>
+                    updateDraftField("intro", event.target.value)
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="body">Body</Label>
+              <Textarea
+                id="body"
+                name="body"
+                rows={10}
+                placeholder="Write the campaign body here. Use blank lines to separate paragraphs."
+                disabled={disabled || isBusy}
+                value={draft.body}
+                onChange={(event) =>
+                  updateDraftField("body", event.target.value)
+                }
+              />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="ctaLabel">CTA label</Label>
+                <Input
+                  id="ctaLabel"
+                  name="ctaLabel"
+                  placeholder="Open the dashboard"
+                  disabled={disabled || isBusy}
+                  value={draft.ctaLabel}
+                  onChange={(event) =>
+                    updateDraftField("ctaLabel", event.target.value)
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ctaUrl">CTA URL</Label>
+                <Input
+                  id="ctaUrl"
+                  name="ctaUrl"
+                  placeholder="https://hometrustafrica.com/dashboard"
+                  disabled={disabled || isBusy}
+                  value={draft.ctaUrl}
+                  onChange={(event) =>
+                    updateDraftField("ctaUrl", event.target.value)
+                  }
+                />
+              </div>
+            </div>
+            <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="reviewConfirmed"
+                  checked={reviewConfirmed}
+                  onCheckedChange={(checked) =>
+                    setReviewConfirmed(checked === true)
+                  }
+                  disabled={disabled || isBusy}
+                />
+                <div className="space-y-1">
+                  <Label
+                    htmlFor="reviewConfirmed"
+                    className="font-medium text-foreground"
+                  >
+                    Review complete
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Confirm that the preview, links, and campaign copy have been
+                    reviewed before sending to the full audience.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <ActionFeedback state={sendState} />
+            <ActionFeedback state={saveState} />
+            <ActionFeedback state={testState} />
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-foreground">
+                {draftLoaded
+                  ? "This draft autosaves locally in your browser. Use Save shared draft to keep it available across devices."
+                  : "Loading saved draft..."}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="dashboard"
+                  onClick={clearDraft}
+                  disabled={disabled || isBusy}
+                >
+                  Clear draft
+                </Button>
+                <Button
+                  type="submit"
+                  formAction={saveAction}
+                  variant="outline"
+                  size="dashboard"
+                  disabled={disabled || isBusy}
+                >
+                  Save shared draft
+                </Button>
+                <Button
+                  type="submit"
+                  formAction={testAction}
+                  variant="outline"
+                  size="dashboard"
+                  disabled={disabled || isBusy}
+                >
+                  Send test email
+                </Button>
+                <Button
+                  type="submit"
+                  size="dashboard"
+                  disabled={disabled || isBusy || !reviewConfirmed}
+                >
+                  Send broadcast
+                </Button>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="dashboard-panel sticky top-6">
+        <CardHeader className="border-b border-border pb-4">
+          <CardTitle className="text-sm font-semibold text-muted-foreground">
+            Live preview
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5 pt-6">
+          <div className="rounded-xl border border-border/70 bg-muted/20 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Inbox preview
+            </p>
+            <p className="mt-3 text-sm font-semibold text-foreground">
+              {draft.subject || "Subject line preview"}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {draft.previewText ||
+                draft.intro ||
+                "Preview text will appear here."}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-background shadow-sm">
+            <div className="border-b border-border px-6 py-4">
+              <p className="text-sm font-semibold text-foreground">
+                HomeTrust Africa
+              </p>
+            </div>
+            <div className="space-y-4 px-6 py-6">
+              <h3 className="text-2xl font-semibold tracking-[-0.02em] text-foreground">
+                {draft.title || "Campaign headline preview"}
+              </h3>
+              <p className="text-sm leading-6 text-muted-foreground">
+                {draft.intro || "Campaign introduction will appear here."}
+              </p>
+              {previewBodyParagraphs.length ? (
+                previewBodyParagraphs.map((paragraph) => (
+                  <p
+                    key={paragraph}
+                    className="text-sm leading-6 text-foreground/90"
+                  >
+                    {paragraph}
+                  </p>
+                ))
+              ) : (
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Write the body with blank lines between paragraphs to preview
+                  the campaign layout.
+                </p>
+              )}
+              {draft.ctaLabel && draft.ctaUrl ? (
+                <div className="space-y-2 pt-2">
+                  <Button type="button" size="dashboard" disabled>
+                    {draft.ctaLabel}
+                  </Button>
+                  <p className="break-all text-xs text-muted-foreground">
+                    {draft.ctaUrl}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+            <div className="border-t border-border px-6 py-4 text-xs text-muted-foreground">
+              Campaign: {draft.campaignName || "Untitled campaign"}
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-2xl border border-border bg-background px-6 py-5 shadow-sm">
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-foreground">
+                Shared drafts
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Restore shared drafts to resume work on any device.
+              </p>
+            </div>
+            <ActionFeedback state={deleteState} />
+            {savedDrafts.length ? (
+              <div className="space-y-3">
+                {savedDrafts.map((savedDraft) => (
+                  <div
+                    key={savedDraft.id}
+                    className="rounded-xl border border-border/70 bg-muted/20 p-4"
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="space-y-1">
+                        <p className="font-medium text-foreground">
+                          {savedDraft.campaignName}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {savedDraft.subject}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Updated{" "}
+                          {new Date(savedDraft.updatedAt).toLocaleString()}
+                        </p>
+                        {savedDraft.lastTestedAt ? (
+                          <p className="text-xs text-muted-foreground">
+                            Last test sent{" "}
+                            {new Date(savedDraft.lastTestedAt).toLocaleString()}
+                          </p>
+                        ) : null}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="dashboard"
+                          onClick={() => restoreSharedDraft(savedDraft)}
+                          disabled={disabled || isBusy}
+                        >
+                          Restore
+                        </Button>
+                        <form action={deleteAction}>
+                          <input
+                            type="hidden"
+                            name="draftId"
+                            value={savedDraft.id}
+                          />
+                          <Button
+                            type="submit"
+                            variant="outline"
+                            size="dashboard"
+                            disabled={disabled || isBusy}
+                          >
+                            Delete
+                          </Button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No shared drafts saved yet.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

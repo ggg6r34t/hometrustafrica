@@ -48,6 +48,7 @@ export async function sendEmail({
 
   const resend = new Resend(resendApiKey);
   const html = await render(react);
+  const text = await render(react, { plainText: true });
 
   let lastError: unknown;
 
@@ -58,6 +59,7 @@ export async function sendEmail({
         to,
         subject,
         html,
+        text,
         ...(replyTo ? { replyTo } : {}),
       });
 
