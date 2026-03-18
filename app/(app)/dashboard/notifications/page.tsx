@@ -14,7 +14,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -28,18 +34,42 @@ import { dashboardService } from "@/lib/dashboard/service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
+const NOTIFICATION_TYPE_OPTIONS = [
+  { value: "report_uploaded", label: "Report uploaded" },
+  { value: "milestone_completed", label: "Milestone completed" },
+  { value: "approval_needed", label: "Approval needed" },
+  { value: "new_message", label: "New message" },
+  { value: "budget_threshold", label: "Budget threshold" },
+  { value: "document_added", label: "Document added" },
+  { value: "security", label: "Security" },
+] as const;
+
 export default async function NotificationsPage({
   searchParams,
 }: {
   searchParams: SearchParams;
 }) {
   const session = await requireDashboardSession();
-  const filters = Object.fromEntries(
+  const rawFilters = Object.fromEntries(
     Object.entries(await searchParams).map(([key, value]) => [
       key,
       Array.isArray(value) ? value[0] : value,
     ]),
   );
+  const selectedType =
+    typeof rawFilters.type === "string" &&
+    NOTIFICATION_TYPE_OPTIONS.some((option) => option.value === rawFilters.type)
+      ? rawFilters.type
+      : "all";
+  const filters = {
+    ...rawFilters,
+    type: selectedType === "all" ? undefined : selectedType,
+  };
+  const activeFilters = [
+    selectedType !== "all"
+      ? `Type: ${NOTIFICATION_TYPE_OPTIONS.find((option) => option.value === selectedType)?.label ?? selectedType}`
+      : null,
+  ].filter(Boolean) as string[];
   const notifications = await dashboardService.listNotifications(
     session,
     filters,
@@ -57,18 +87,42 @@ export default async function NotificationsPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <form className="flex w-full flex-col gap-4 md:flex-row">
-            <Input
-              name="type"
-              defaultValue={filters.type}
-              placeholder="Filter by type, e.g. new_message"
-              className="md:w-64"
-            />
-            <Button type="submit" variant="outline" size="dashboard">
-              Filter
-            </Button>
-          </form>
+        <div className="flex w-full flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="w-full space-y-3">
+            <form className="flex w-full flex-col gap-4 md:flex-row">
+              <Select name="type" defaultValue={selectedType}>
+                <SelectTrigger size="dashboard" className="md:w-64">
+                  <SelectValue placeholder="Filter by type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All types</SelectItem>
+                  {NOTIFICATION_TYPE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="submit" variant="outline" size="dashboard">
+                Filter
+              </Button>
+            </form>
+            {activeFilters.length ? (
+              <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">
+                <span className="text-xs font-semibold text-muted-foreground">
+                  Active filters:
+                </span>
+                {activeFilters.map((label) => (
+                  <span key={label} className="dashboard-chip">
+                    {label}
+                  </span>
+                ))}
+                <Button variant="ghost" size="dashboard" asChild>
+                  <Link href="/dashboard/notifications">Clear all</Link>
+                </Button>
+              </div>
+            ) : null}
+          </div>
           {unreadCount ? (
             <form action={markNotificationsReadAction}>
               {notifications
@@ -164,9 +218,9 @@ export default async function NotificationsPage({
                             Read
                           </span>
                         ) : (
-                           <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[11px] font-medium leading-4 text-primary">
-                             Unread
-                           </span>
+                          <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/8 px-2 py-0.5 text-[11px] font-medium leading-4 text-primary">
+                            Unread
+                          </span>
                         )}
                       </TableCell>
                       <TableCell className="pr-6 text-right">

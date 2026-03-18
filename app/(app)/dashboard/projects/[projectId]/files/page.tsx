@@ -1,4 +1,12 @@
-import { Download, FileImage, FileText, FolderOpen, ReceiptText, Search } from "lucide-react";
+import Link from "next/link";
+import {
+  Download,
+  FileImage,
+  FileText,
+  FolderOpen,
+  ReceiptText,
+  Search,
+} from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
 import { FilePreviewDialog } from "@/components/dashboard/file-preview-dialog";
@@ -15,6 +23,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -27,6 +42,14 @@ import { dashboardService } from "@/lib/dashboard/service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
+const FILE_CATEGORY_OPTIONS = [
+  "Document",
+  "Photo",
+  "Video",
+  "Receipt",
+  "Contract",
+] as const;
+
 export default async function ProjectFilesPage({
   params,
   searchParams,
@@ -37,12 +60,32 @@ export default async function ProjectFilesPage({
   const { projectId } = await params;
   const { session } = await requireAuthorizedProject(projectId);
   const filters = await searchParams;
+  const selectedCategory =
+    typeof filters.category === "string" &&
+    FILE_CATEGORY_OPTIONS.includes(
+      filters.category as (typeof FILE_CATEGORY_OPTIONS)[number],
+    )
+      ? filters.category
+      : "all";
   const normalizedFilters = Object.fromEntries(
     Object.entries(filters).map(([key, value]) => [
       key,
       Array.isArray(value) ? value[0] : value,
     ]),
   );
+  normalizedFilters.category =
+    selectedCategory === "all" ? undefined : selectedCategory;
+  const searchTerm =
+    typeof normalizedFilters.q === "string" ? normalizedFilters.q.trim() : "";
+  const uploadedByFilter =
+    typeof normalizedFilters.uploadedBy === "string"
+      ? normalizedFilters.uploadedBy.trim()
+      : "";
+  const activeFilters = [
+    searchTerm ? `Search: ${searchTerm}` : null,
+    selectedCategory !== "all" ? `Category: ${selectedCategory}` : null,
+    uploadedByFilter ? `Uploader: ${uploadedByFilter}` : null,
+  ].filter(Boolean) as string[];
   const files = await dashboardService.getProjectFiles(
     session,
     projectId,
@@ -61,34 +104,60 @@ export default async function ProjectFilesPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
-          <div className="relative min-w-[16rem] flex-1 md:max-w-md">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="w-full space-y-3">
+          <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
+            <div className="relative min-w-[16rem] flex-1 md:max-w-md">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                name="q"
+                defaultValue={typeof filters.q === "string" ? filters.q : ""}
+                placeholder="Search file name or description"
+                className="pl-9"
+              />
+            </div>
+            <Select name="category" defaultValue={selectedCategory}>
+              <SelectTrigger size="dashboard" className="md:w-72">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                {FILE_CATEGORY_OPTIONS.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Input
-              name="q"
-              defaultValue={typeof filters.q === "string" ? filters.q : ""}
-              placeholder="Search file name or description"
-              className="pl-9"
+              name="uploadedBy"
+              defaultValue={
+                typeof filters.uploadedBy === "string" ? filters.uploadedBy : ""
+              }
+              placeholder="Uploader"
+              className="md:w-48"
             />
-          </div>
-          <Input
-            name="category"
-            defaultValue={
-              typeof filters.category === "string" ? filters.category : ""
-            }
-            placeholder="Category: documents, photos, videos..."
-            className="md:w-72"
-          />
-          <Input
-            name="uploadedBy"
-            defaultValue={
-              typeof filters.uploadedBy === "string" ? filters.uploadedBy : ""
-            }
-            placeholder="Uploader"
-            className="md:w-48"
-          />
-          <Button type="submit" size="dashboard">Apply filters</Button>
-        </form>
+            <Button type="submit" size="dashboard">
+              Apply filters
+            </Button>
+          </form>
+          {activeFilters.length ? (
+            <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">
+              <span className="text-xs font-semibold text-muted-foreground">
+                Active filters:
+              </span>
+              {activeFilters.map((label) => (
+                <span key={label} className="dashboard-chip">
+                  {label}
+                </span>
+              ))}
+              <Button variant="ghost" size="dashboard" asChild>
+                <Link href={`/dashboard/projects/${projectId}/files`}>
+                  Clear all
+                </Link>
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </FilterBar>
       {files.length ? (
         <>

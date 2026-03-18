@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Bell, FolderKanban, MessageSquareMore, Search } from "lucide-react";
 import { DashboardEmptyState } from "@/components/dashboard/empty-state";
 import { FilterBar } from "@/components/dashboard/filter-bar";
-  import { formatDateLabel } from "@/components/dashboard/formatters";
+import { formatDateLabel } from "@/components/dashboard/formatters";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,10 @@ export default async function InboxPage({
       Array.isArray(value) ? value[0] : value,
     ]),
   );
+  const searchTerm = typeof filters.q === "string" ? filters.q.trim() : "";
+  const activeFilters = [searchTerm ? `Search: ${searchTerm}` : null].filter(
+    Boolean,
+  ) as string[];
   const threads = await dashboardService.listConversations(session, filters);
   const unreadThreads = threads.filter(
     (thread) => thread.unreadCount > 0,
@@ -51,18 +55,37 @@ export default async function InboxPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <form className="flex w-full flex-col gap-4 md:flex-row">
-          <div className="relative flex-1 md:max-w-md">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              name="q"
-              defaultValue={filters.q}
-              placeholder="Search subject, project, or message preview"
-              className="pl-9"
-            />
-          </div>
-          <Button type="submit" size="dashboard">Search inbox</Button>
-        </form>
+        <div className="w-full space-y-3">
+          <form className="flex w-full flex-col gap-4 md:flex-row">
+            <div className="relative flex-1 md:max-w-md">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                name="q"
+                defaultValue={filters.q}
+                placeholder="Search subject, project, or message preview"
+                className="pl-9"
+              />
+            </div>
+            <Button type="submit" size="dashboard">
+              Search inbox
+            </Button>
+          </form>
+          {activeFilters.length ? (
+            <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">
+              <span className="text-xs font-semibold text-muted-foreground">
+                Active filters:
+              </span>
+              {activeFilters.map((label) => (
+                <span key={label} className="dashboard-chip">
+                  {label}
+                </span>
+              ))}
+              <Button variant="ghost" size="dashboard" asChild>
+                <Link href="/dashboard/inbox">Clear all</Link>
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </FilterBar>
       {threads.length ? (
         <>

@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -27,6 +34,15 @@ import { dashboardService } from "@/lib/dashboard/service";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
+const REPORT_TYPE_OPTIONS = [
+  "Progress Report",
+  "Site Verification",
+  "Budget Report",
+  "Procurement Report",
+  "Compliance Report",
+  "Inspection Report",
+] as const;
+
 export default async function ProjectReportsPage({
   params,
   searchParams,
@@ -37,12 +53,26 @@ export default async function ProjectReportsPage({
   const { projectId } = await params;
   const { session } = await requireAuthorizedProject(projectId);
   const filters = await searchParams;
+  const selectedType =
+    typeof filters.type === "string" &&
+    REPORT_TYPE_OPTIONS.includes(
+      filters.type as (typeof REPORT_TYPE_OPTIONS)[number],
+    )
+      ? filters.type
+      : "all";
   const normalizedFilters = Object.fromEntries(
     Object.entries(filters).map(([key, value]) => [
       key,
       Array.isArray(value) ? value[0] : value,
     ]),
   );
+  normalizedFilters.type = selectedType === "all" ? undefined : selectedType;
+  const searchTerm =
+    typeof normalizedFilters.q === "string" ? normalizedFilters.q.trim() : "";
+  const activeFilters = [
+    searchTerm ? `Search: ${searchTerm}` : null,
+    selectedType !== "all" ? `Report type: ${selectedType}` : null,
+  ].filter(Boolean) as string[];
   const reports = await dashboardService.getProjectReports(
     session,
     projectId,
@@ -63,24 +93,52 @@ export default async function ProjectReportsPage({
   return (
     <div className="space-y-6">
       <FilterBar>
-        <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
-          <div className="relative min-w-[16rem] flex-1 md:max-w-md">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              name="q"
-              defaultValue={typeof filters.q === "string" ? filters.q : ""}
-              placeholder="Search title or summary"
-              className="pl-9"
-            />
-          </div>
-          <Input
-            name="type"
-            defaultValue={typeof filters.type === "string" ? filters.type : ""}
-            placeholder="Report type"
-            className="md:w-52"
-          />
-          <Button type="submit" size="dashboard">Apply filters</Button>
-        </form>
+        <div className="w-full space-y-3">
+          <form className="flex w-full flex-col gap-4 md:flex-row md:flex-wrap">
+            <div className="relative min-w-[16rem] flex-1 md:max-w-md">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                name="q"
+                defaultValue={typeof filters.q === "string" ? filters.q : ""}
+                placeholder="Search title or summary"
+                className="pl-9"
+              />
+            </div>
+            <Select name="type" defaultValue={selectedType}>
+              <SelectTrigger size="dashboard" className="md:w-52">
+                <SelectValue placeholder="Report type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All report types</SelectItem>
+                {REPORT_TYPE_OPTIONS.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button type="submit" size="dashboard">
+              Apply filters
+            </Button>
+          </form>
+          {activeFilters.length ? (
+            <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-2">
+              <span className="text-xs font-semibold text-muted-foreground">
+                Active filters:
+              </span>
+              {activeFilters.map((label) => (
+                <span key={label} className="dashboard-chip">
+                  {label}
+                </span>
+              ))}
+              <Button variant="ghost" size="dashboard" asChild>
+                <Link href={`/dashboard/projects/${projectId}/reports`}>
+                  Clear all
+                </Link>
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </FilterBar>
       {reports.length ? (
         <>
