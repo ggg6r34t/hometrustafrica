@@ -11,11 +11,11 @@ interface NewsletterBroadcastEmailProps {
 }
 
 export function NewsletterBroadcastEmail({
-  subject,
+  subject = "Newsletter",
   previewText,
-  title,
-  intro,
-  body,
+  title = "Newsletter",
+  intro = "",
+  body = "",
   ctaLabel,
   ctaUrl,
 }: NewsletterBroadcastEmailProps) {
