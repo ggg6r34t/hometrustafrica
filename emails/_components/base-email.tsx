@@ -159,17 +159,17 @@ const styles = {
   },
   container: {
     margin: "0 auto",
-    maxWidth: "640px",
-    padding: "24px 16px 40px",
+    maxWidth: "600px",
+    padding: "24px 24px 40px",
   },
   header: {
-    padding: "16px 24px",
+    padding: "16px 0",
   },
   logo: {
     display: "block",
   },
   content: {
-    padding: "24px",
+    padding: "24px 0",
   },
   title: {
     fontSize: "24px",
@@ -231,7 +231,7 @@ const styles = {
   },
   footer: {
     borderTop: "1px solid #e4e7df",
-    padding: "16px 24px",
+    padding: "16px 0",
   },
   footerText: {
     margin: "0 0 6px",
