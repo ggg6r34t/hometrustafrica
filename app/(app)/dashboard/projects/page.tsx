@@ -100,7 +100,7 @@ export default async function ProjectsPage({
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 name="q"
-                defaultValue={filters.q}
+                defaultValue={searchTerm}
                 placeholder="Search by project name or location"
                 className="pl-9"
               />
