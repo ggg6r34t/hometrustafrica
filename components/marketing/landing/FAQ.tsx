@@ -72,34 +72,36 @@ export default function FAQ() {
           </p>
         </motion.div>
 
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOptions}
-          className="mt-12 md:mt-14"
-        >
+        <div className="mt-12 md:mt-14">
           <Accordion
             type="single"
             collapsible
             className="border-t border-border/60"
           >
             {faqs.map((faq, index) => (
-              <AccordionItem
+              <motion.div
                 key={index}
-                value={`item-${index}`}
-                className="border-b border-border/60 last:border-b-0"
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewportOptions}
+                transition={{ duration: 0.45 }}
               >
-                <AccordionTrigger className="min-h-16 py-7 text-left text-lg font-semibold text-foreground hover:no-underline">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="max-w-3xl pb-6 text-sm leading-7 text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <AccordionItem
+                  value={`item-${index}`}
+                  className="border-b border-border/60 last:border-b-0"
+                >
+                  <AccordionTrigger className="min-h-16 py-7 text-left text-lg font-semibold text-foreground hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="max-w-3xl pb-6 text-sm leading-7 text-muted-foreground">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
-        </motion.div>
+        </div>
       </SectionContainer>
     </>
   );

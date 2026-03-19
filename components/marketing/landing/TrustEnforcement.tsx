@@ -87,13 +87,7 @@ export default function TrustEnforcement() {
           </div>
         </motion.div>
 
-        <motion.div
-          className="lg:col-span-8"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOptions}
-        >
+        <div className="lg:col-span-8">
           <div className="grid gap-px overflow-hidden rounded-[1.75rem] bg-border/30 md:grid-cols-2">
             {mechanisms.map((item, index) => {
               const Icon = item.icon;
@@ -119,7 +113,7 @@ export default function TrustEnforcement() {
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </SectionContainer>
   );

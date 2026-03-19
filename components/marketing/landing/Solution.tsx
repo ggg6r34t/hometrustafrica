@@ -83,13 +83,7 @@ export default function Solution() {
           </p>
         </motion.div>
 
-        <motion.div
-          className="lg:col-span-7"
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOptions}
-        >
+        <div className="lg:col-span-7">
           <div className="grid gap-5 md:auto-rows-fr md:grid-cols-2 md:gap-6">
             {pillars.map((pillar, index) => {
               const Icon = pillar.icon;
@@ -118,7 +112,7 @@ export default function Solution() {
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </SectionContainer>
   );

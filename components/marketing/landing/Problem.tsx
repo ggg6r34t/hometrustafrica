@@ -91,13 +91,7 @@ export default function Problem() {
         </motion.div>
       </div>
 
-      <motion.div
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOptions}
-        className="mt-18 md:mt-20"
-      >
+      <div className="mt-18 md:mt-20">
         <p className="max-w-2xl text-[1.02rem] leading-8 text-muted-foreground">
           Serious projects need governance at the point of execution: verified
           operators, controlled milestone approvals, and reporting that supports
@@ -128,7 +122,7 @@ export default function Problem() {
             </motion.div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </SectionContainer>
   );
 }
