@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -38,6 +43,7 @@ import {
   Briefcase,
   Sprout,
   Users,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -233,7 +239,6 @@ export default function ContactForm() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="John"
                             disabled={isPending}
                             className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
@@ -253,7 +258,6 @@ export default function ContactForm() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Doe"
                             disabled={isPending}
                             className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
@@ -278,7 +282,6 @@ export default function ContactForm() {
                         <FormControl>
                           <Input
                             type="email"
-                            placeholder="john.doe@example.com"
                             disabled={isPending}
                             className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
@@ -301,7 +304,8 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Country <span className="text-destructive">*</span>
+                          Country of Residence{" "}
+                          <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -310,7 +314,7 @@ export default function ContactForm() {
                         >
                           <FormControl>
                             <SelectTrigger className="h-12 w-full rounded-xl border-border/70 bg-white shadow-none">
-                              <SelectValue placeholder="Select your country" />
+                              <SelectValue placeholder="Choose your current country" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -357,7 +361,7 @@ export default function ContactForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-foreground">
-                          Project Type{" "}
+                          Project Category{" "}
                           <span className="text-destructive">*</span>
                         </FormLabel>
                         <Select
@@ -367,7 +371,7 @@ export default function ContactForm() {
                         >
                           <FormControl>
                             <SelectTrigger className="h-12 w-full rounded-xl border-border/70 bg-white shadow-none">
-                              <SelectValue placeholder="Select project type" />
+                              <SelectValue placeholder="Choose the closest project category" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -413,12 +417,15 @@ export default function ContactForm() {
                         <FormControl>
                           <Input
                             type="tel"
-                            placeholder="+1 (234) 567-8900"
                             disabled={isPending}
                             className="h-12 rounded-xl border-border/70 bg-white shadow-none transition-all duration-200"
                             {...field}
                           />
                         </FormControl>
+                        <p className="text-sm text-muted-foreground">
+                          Optional. Useful if you prefer a call or WhatsApp
+                          reply.
+                        </p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -432,13 +439,30 @@ export default function ContactForm() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-foreground">
-                          Project Brief{" "}
-                          <span className="text-destructive">*</span>
-                        </FormLabel>
+                        <div className="flex items-center gap-2">
+                          <FormLabel className="text-sm font-medium text-foreground">
+                            Project Brief{" "}
+                            <span className="text-destructive">*</span>
+                          </FormLabel>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                className="inline-flex h-5 w-5 min-h-5 min-w-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
+                                aria-label="Project brief guidance"
+                              >
+                                <Info className="h-4 w-4" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-xs">
+                              The more specific your brief is, the more useful
+                              the first review will be.
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                         <FormControl>
                           <Textarea
-                            placeholder="Describe scope, location, stage, target timeline, and current execution risks."
+                            placeholder="Outline the project objective, location, current stage, budget range, expected timeline, and where local execution needs oversight."
                             rows={6}
                             disabled={isPending}
                             className="min-h-40 rounded-2xl border-border/70 bg-white shadow-none transition-all duration-200"
@@ -452,7 +476,7 @@ export default function ContactForm() {
                 </motion.div>
 
                 {/* Privacy Notice */}
-                <motion.div variants={staggerItem} className="pt-5">
+                <motion.div variants={staggerItem}>
                   <p className="max-w-2xl text-sm text-muted-foreground">
                     By submitting this form, you agree to our{" "}
                     <Link

@@ -100,13 +100,13 @@ export default async function ProjectReportsPage({
               <Input
                 name="q"
                 defaultValue={typeof filters.q === "string" ? filters.q : ""}
-                placeholder="Search title or summary"
+                placeholder="Search by report title or summary"
                 className="pl-9"
               />
             </div>
             <AutoSubmitSelect name="type" defaultValue={selectedType}>
               <SelectTrigger size="dashboard" className="md:w-52">
-                <SelectValue placeholder="Report type" />
+                <SelectValue placeholder="Filter by report type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All report types</SelectItem>

@@ -111,13 +111,13 @@ export default async function ProjectFilesPage({
               <Input
                 name="q"
                 defaultValue={typeof filters.q === "string" ? filters.q : ""}
-                placeholder="Search file name or description"
+                placeholder="Search by file title, description, or evidence note"
                 className="pl-9"
               />
             </div>
             <AutoSubmitSelect name="category" defaultValue={selectedCategory}>
               <SelectTrigger size="dashboard" className="md:w-72">
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All categories</SelectItem>
@@ -133,7 +133,7 @@ export default async function ProjectFilesPage({
               defaultValue={
                 typeof filters.uploadedBy === "string" ? filters.uploadedBy : ""
               }
-              placeholder="Uploader"
+              placeholder="Filter by uploader name"
               className="md:w-48"
             />
           </form>

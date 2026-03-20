@@ -7,7 +7,7 @@ export const newsletterSchema = z.object({
   email: z
     .string()
     .min(1, "Email is required")
-    .email("Please enter a valid email address")
+    .email("Enter a valid email address")
     .toLowerCase()
     .trim(),
 });

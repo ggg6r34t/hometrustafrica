@@ -62,7 +62,7 @@ export default async function InboxPage({
               <Input
                 name="q"
                 defaultValue={filters.q}
-                placeholder="Search subject, project, or message preview"
+                placeholder="Search by subject, project, or recent message"
                 className="pl-9"
               />
             </div>

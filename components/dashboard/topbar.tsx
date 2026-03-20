@@ -95,7 +95,7 @@ export function DashboardTopbar({ projects }: { projects: ProjectSummary[] }) {
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 className="rounded-lg border-border bg-background pl-9"
-                placeholder="Search projects, reports, and files"
+                placeholder="Search projects, reports, or files"
                 aria-label="Search dashboard"
                 name="q"
               />
@@ -110,7 +110,7 @@ export function DashboardTopbar({ projects }: { projects: ProjectSummary[] }) {
                 size="dashboard"
                 className="w-full rounded-lg border-border bg-background"
               >
-                <SelectValue placeholder="Jump to project" />
+                <SelectValue placeholder="Select a project" />
               </SelectTrigger>
               <SelectContent>
                 {projects.map((project) => (

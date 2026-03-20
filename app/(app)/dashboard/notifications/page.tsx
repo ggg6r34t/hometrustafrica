@@ -92,7 +92,7 @@ export default async function NotificationsPage({
             <form className="flex w-full flex-col gap-4 md:flex-row">
               <AutoSubmitSelect name="type" defaultValue={selectedType}>
                 <SelectTrigger size="dashboard" className="md:w-64">
-                  <SelectValue placeholder="Filter by type" />
+                  <SelectValue placeholder="Filter by alert type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All types</SelectItem>

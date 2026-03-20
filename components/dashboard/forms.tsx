@@ -94,44 +94,68 @@ export function ProfileSettingsForm({
         <CardTitle className="text-sm font-semibold text-muted-foreground">
           Profile details
         </CardTitle>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          Keep your contact record current so HomeTrust Africa can route updates
+          and approvals correctly.
+        </p>
       </CardHeader>
       <CardContent className="pt-6">
-        <form action={action} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full name</Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                defaultValue={settings.fullName}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                defaultValue={settings.email}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" name="phone" defaultValue={settings.phone} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="country">Country</Label>
-              <Input
-                id="country"
-                name="country"
-                defaultValue={settings.country}
-              />
+        <form action={action} className="space-y-6">
+          <div className="rounded-xl border border-border/70 bg-muted/15 p-5">
+            <p className="text-sm font-semibold text-foreground">
+              Identity and contact
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              These details are used across project communications and approvals.
+            </p>
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full name</Label>
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  defaultValue={settings.fullName}
+                  placeholder="Enter your full legal name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  defaultValue={settings.email}
+                  placeholder="Enter the email used for portal access"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  defaultValue={settings.phone}
+                  placeholder="Include country code"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="country">Country</Label>
+                <Input
+                  id="country"
+                  name="country"
+                  defaultValue={settings.country}
+                  placeholder="Country of residence"
+                />
+              </div>
             </div>
           </div>
-          <div className="space-y-2">
+
+          <div className="rounded-xl border border-border/70 bg-background p-5">
             <Label htmlFor="preferredContactMethod">
               Preferred contact method
             </Label>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose the channel to use when an update needs your attention.
+            </p>
             <Select
               name="preferredContactMethod"
               defaultValue={settings.preferredContactMethod}
@@ -139,7 +163,7 @@ export function ProfileSettingsForm({
               <SelectTrigger
                 id="preferredContactMethod"
                 size="dashboard"
-                className="w-full rounded-lg border-border bg-background md:max-w-[calc(50%-0.5rem)]"
+                className="mt-4 w-full rounded-lg border-border bg-background md:max-w-[calc(50%-0.5rem)]"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -269,6 +293,8 @@ export function NotificationSettingsForm({
     ["inAppBudgetAlerts", "In-app budget alerts", settings.inAppBudgetAlerts],
     ["inAppMessages", "In-app message alerts", settings.inAppMessages],
   ] as const;
+  const emailRows = rows.filter(([name]) => name.startsWith("email"));
+  const inAppRows = rows.filter(([name]) => name.startsWith("inApp"));
 
   return (
     <Card className="dashboard-panel">
@@ -276,25 +302,66 @@ export function NotificationSettingsForm({
         <CardTitle className="text-sm font-semibold text-muted-foreground">
           Notification controls
         </CardTitle>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          Decide how project activity should reach you across email and the
+          secure portal.
+        </p>
       </CardHeader>
       <CardContent className="pt-6">
         <form action={action} className="space-y-6">
-          {rows.map(([name, label, checked]) => (
-            <div
-              key={name}
-              className="dashboard-list-row flex items-center justify-between gap-4"
-            >
-              <div>
-                <Label htmlFor={name} className="font-medium text-foreground">
-                  {label}
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Applies immediately to your secure portal preferences.
-                </p>
-              </div>
-              <Switch id={name} name={name} defaultChecked={checked} />
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                Email notifications
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Use email for items that need attention outside the portal.
+              </p>
             </div>
-          ))}
+            {emailRows.map(([name, label, checked]) => (
+              <div
+                key={name}
+                className="dashboard-list-row flex items-center justify-between gap-4"
+              >
+                <div>
+                  <Label htmlFor={name} className="font-medium text-foreground">
+                    {label}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Applies immediately to your secure portal preferences.
+                  </p>
+                </div>
+                <Switch id={name} name={name} defaultChecked={checked} />
+              </div>
+            ))}
+          </div>
+          <div className="space-y-3 border-t border-border/70 pt-6">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                In-app notifications
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Use in-app alerts to review updates while working inside the
+                portal.
+              </p>
+            </div>
+            {inAppRows.map(([name, label, checked]) => (
+              <div
+                key={name}
+                className="dashboard-list-row flex items-center justify-between gap-4"
+              >
+                <div>
+                  <Label htmlFor={name} className="font-medium text-foreground">
+                    {label}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Applies immediately to your secure portal preferences.
+                  </p>
+                </div>
+                <Switch id={name} name={name} defaultChecked={checked} />
+              </div>
+            ))}
+          </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
             <Button type="submit" size="dashboard" disabled={pending}>
@@ -323,9 +390,13 @@ export function PreferenceSettingsForm({
         <CardTitle className="text-sm font-semibold text-muted-foreground">
           Workspace preferences
         </CardTitle>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          Keep the workspace aligned with your operating region and preferred
+          reading density.
+        </p>
       </CardHeader>
       <CardContent className="pt-6">
-        <form action={action} className="space-y-4">
+        <form action={action} className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="timezone">Timezone</Label>
@@ -333,6 +404,7 @@ export function PreferenceSettingsForm({
                 id="timezone"
                 name="timezone"
                 defaultValue={settings.timezone}
+                placeholder="e.g. Europe/Amsterdam"
               />
             </div>
             <div className="space-y-2">
@@ -341,6 +413,7 @@ export function PreferenceSettingsForm({
                 id="currency"
                 name="currency"
                 defaultValue={settings.currency}
+                placeholder="e.g. USD"
               />
             </div>
             <div className="space-y-2">
@@ -360,6 +433,10 @@ export function PreferenceSettingsForm({
               </Select>
             </div>
           </div>
+          <p className="text-sm text-muted-foreground">
+            These preferences affect how project information is formatted inside
+            your workspace.
+          </p>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
             <Button type="submit" size="dashboard" disabled={pending}>
@@ -394,7 +471,7 @@ export function MessageComposer({ threadId }: { threadId: string }) {
               id="body"
               name="body"
               rows={5}
-              placeholder="Share an update, ask a question, or confirm an approval request."
+              placeholder="Share the update, decision, or question that needs review."
             />
           </div>
           <ActionFeedback state={state} />
@@ -421,33 +498,54 @@ export function SupportRequestForm() {
         <CardTitle className="text-sm font-semibold text-muted-foreground">
           Request a callback or escalation
         </CardTitle>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+          Use this form when a project issue needs direct support, a callback,
+          or faster review.
+        </p>
       </CardHeader>
       <CardContent className="pt-6">
-        <form action={action} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject</Label>
-            <Input id="subject" name="subject" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="urgency">Urgency</Label>
-            <Select name="urgency" defaultValue="standard">
-              <SelectTrigger
-                id="urgency"
-                size="dashboard"
-                className="w-full rounded-lg border-border bg-background"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="standard">Standard</SelectItem>
-                <SelectItem value="priority">Priority</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-              </SelectContent>
-            </Select>
+        <form action={action} className="space-y-6">
+          <div className="rounded-xl border border-border/70 bg-muted/15 p-5">
+            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject</Label>
+                <Input
+                  id="subject"
+                  name="subject"
+                  placeholder="Summarize the issue or decision required"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="urgency">Urgency</Label>
+                <Select name="urgency" defaultValue="standard">
+                  <SelectTrigger
+                    id="urgency"
+                    size="dashboard"
+                    className="w-full rounded-lg border-border bg-background"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard</SelectItem>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="details">Details</Label>
-            <Textarea id="details" name="details" rows={6} />
+            <p className="text-sm text-muted-foreground">
+              Include the project context, any time-sensitive impact, and the
+              response you need from the team.
+            </p>
+            <Textarea
+              id="details"
+              name="details"
+              rows={6}
+              placeholder="Describe the project context, timeline impact, and the support you need."
+            />
           </div>
           <ActionFeedback state={state} />
           <div className="flex justify-end">
@@ -480,7 +578,7 @@ export function ApprovalDecisionForm({ approval }: { approval: ApprovalItem }) {
         <Textarea
           name="note"
           rows={2}
-          placeholder="Optional note for the operations team"
+          placeholder="Add context for the operations team, if needed"
         />
         <Button
           size="dashboard"
@@ -529,7 +627,7 @@ export function SupportReplyForm({ threadId }: { threadId: string }) {
               id="support-body"
               name="body"
               rows={4}
-              placeholder="Confirm next steps, request a callback, or share any supporting details."
+              placeholder="Confirm next steps, outstanding risks, or the support you need."
             />
           </div>
           <ActionFeedback state={state} />
@@ -687,124 +785,161 @@ export function NewsletterBroadcastForm({
           <CardTitle className="text-sm font-semibold text-muted-foreground">
             Compose broadcast
           </CardTitle>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            Structure the campaign clearly before review so the preview and send
+            flow stay predictable.
+          </p>
         </CardHeader>
         <CardContent className="pt-6">
-          <form action={sendAction} className="space-y-4">
+          <form action={sendAction} className="space-y-6">
             <input
               type="hidden"
               name="reviewConfirmed"
               value={reviewConfirmed ? "on" : ""}
             />
             <input type="hidden" name="draftId" value={currentDraftId} />
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="campaignName">Campaign name</Label>
-                <Input
-                  id="campaignName"
-                  name="campaignName"
-                  placeholder="March 2026 platform update"
-                  disabled={disabled || isBusy}
-                  value={draft.campaignName}
-                  onChange={(event) =>
-                    updateDraftField("campaignName", event.target.value)
-                  }
-                />
+            <div className="space-y-4 rounded-xl border border-border/70 bg-muted/15 p-5">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Campaign setup
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Define how the campaign should appear in the inbox and in the
+                  email header.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="campaignName">Campaign name</Label>
+                  <Input
+                    id="campaignName"
+                    name="campaignName"
+                    placeholder="Q2 2026 client operations update"
+                    disabled={disabled || isBusy}
+                    value={draft.campaignName}
+                    onChange={(event) =>
+                      updateDraftField("campaignName", event.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject line</Label>
+                  <Input
+                    id="subject"
+                    name="subject"
+                    placeholder="Project reporting and platform updates from HomeTrust Africa"
+                    disabled={disabled || isBusy}
+                    value={draft.subject}
+                    onChange={(event) =>
+                      updateDraftField("subject", event.target.value)
+                    }
+                  />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="subject">Subject line</Label>
+                <Label htmlFor="previewText">Preview text</Label>
                 <Input
-                  id="subject"
-                  name="subject"
-                  placeholder="Platform updates from HomeTrust Africa"
+                  id="previewText"
+                  name="previewText"
+                  placeholder="Short inbox preview shown before the email is opened"
                   disabled={disabled || isBusy}
-                  value={draft.subject}
+                  value={draft.previewText}
                   onChange={(event) =>
-                    updateDraftField("subject", event.target.value)
-                  }
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="previewText">Preview text</Label>
-              <Input
-                id="previewText"
-                name="previewText"
-                placeholder="A short inbox preview snippet for this campaign"
-                disabled={disabled || isBusy}
-                value={draft.previewText}
-                onChange={(event) =>
-                  updateDraftField("previewText", event.target.value)
-                }
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="title">Headline</Label>
-                <Input
-                  id="title"
-                  name="title"
-                  placeholder="New project oversight updates"
-                  disabled={disabled || isBusy}
-                  value={draft.title}
-                  onChange={(event) =>
-                    updateDraftField("title", event.target.value)
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="intro">Intro</Label>
-                <Input
-                  id="intro"
-                  name="intro"
-                  placeholder="Here is your latest operational and platform update."
-                  disabled={disabled || isBusy}
-                  value={draft.intro}
-                  onChange={(event) =>
-                    updateDraftField("intro", event.target.value)
+                    updateDraftField("previewText", event.target.value)
                   }
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="body">Body</Label>
-              <Textarea
-                id="body"
-                name="body"
-                rows={10}
-                placeholder="Write the campaign body here. Use blank lines to separate paragraphs."
-                disabled={disabled || isBusy}
-                value={draft.body}
-                onChange={(event) =>
-                  updateDraftField("body", event.target.value)
-                }
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-4 rounded-xl border border-border/70 bg-background p-5">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Message content
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Keep the message clear, scannable, and aligned with the update
+                  you are sending.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Headline</Label>
+                  <Input
+                    id="title"
+                    name="title"
+                    placeholder="Quarterly operational update"
+                    disabled={disabled || isBusy}
+                    value={draft.title}
+                    onChange={(event) =>
+                      updateDraftField("title", event.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="intro">Intro</Label>
+                  <Input
+                    id="intro"
+                    name="intro"
+                    placeholder="This edition covers recent reporting, project visibility, and platform improvements."
+                    disabled={disabled || isBusy}
+                    value={draft.intro}
+                    onChange={(event) =>
+                      updateDraftField("intro", event.target.value)
+                    }
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
-                <Label htmlFor="ctaLabel">CTA label</Label>
-                <Input
-                  id="ctaLabel"
-                  name="ctaLabel"
-                  placeholder="Open the dashboard"
+                <Label htmlFor="body">Body</Label>
+                <Textarea
+                  id="body"
+                  name="body"
+                  rows={10}
+                  placeholder="Draft the campaign body here. Use blank lines to separate paragraphs."
                   disabled={disabled || isBusy}
-                  value={draft.ctaLabel}
+                  value={draft.body}
                   onChange={(event) =>
-                    updateDraftField("ctaLabel", event.target.value)
+                    updateDraftField("body", event.target.value)
                   }
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="ctaUrl">CTA URL</Label>
-                <Input
-                  id="ctaUrl"
-                  name="ctaUrl"
-                  placeholder="https://hometrustafrica.com/dashboard"
-                  disabled={disabled || isBusy}
-                  value={draft.ctaUrl}
-                  onChange={(event) =>
-                    updateDraftField("ctaUrl", event.target.value)
-                  }
-                />
+            </div>
+            <div className="space-y-4 rounded-xl border border-border/70 bg-background p-5">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Call to action
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Add a CTA only if the update should direct clients to a
+                  specific next step.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="ctaLabel">CTA label</Label>
+                  <Input
+                    id="ctaLabel"
+                    name="ctaLabel"
+                    placeholder="Review project updates"
+                    disabled={disabled || isBusy}
+                    value={draft.ctaLabel}
+                    onChange={(event) =>
+                      updateDraftField("ctaLabel", event.target.value)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ctaUrl">CTA URL</Label>
+                  <Input
+                    id="ctaUrl"
+                    name="ctaUrl"
+                    placeholder="Paste the full destination URL"
+                    disabled={disabled || isBusy}
+                    value={draft.ctaUrl}
+                    onChange={(event) =>
+                      updateDraftField("ctaUrl", event.target.value)
+                    }
+                  />
+                </div>
               </div>
             </div>
             <div className="rounded-xl border border-border/70 bg-muted/20 p-4">

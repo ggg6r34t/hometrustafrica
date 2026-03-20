@@ -19,7 +19,7 @@ export const contactFormSchema = z.object({
   email: z
     .string()
     .min(1, "Email is required")
-    .email("Please enter a valid email address")
+    .email("Enter a valid email address")
     .toLowerCase()
     .trim(),
   phone: z
@@ -33,31 +33,31 @@ export const contactFormSchema = z.object({
         return phoneRegex.test(val.replace(/\s/g, ""));
       },
       {
-        message: "Please enter a valid phone number",
+        message: "Enter a valid phone number with country code",
       }
     ),
   country: z
     .string()
-    .min(1, "Country is required")
+    .min(1, "Country of residence is required")
     .refine((val) => val !== "diaspora" && val !== "africa", {
-      message: "Please select a valid country",
+      message: "Choose a valid country",
     }),
   projectType: z
     .string()
-    .min(1, "Project type is required")
+    .min(1, "Project category is required")
     .refine(
       (val) =>
         ["residential", "commercial", "business", "agricultural", "general"].includes(
           val
         ),
       {
-        message: "Please select a valid project type",
+        message: "Choose a valid project category",
       }
     ),
   message: z
     .string()
-    .min(1, "Message is required")
-    .min(10, "Please provide more details (at least 10 characters)")
+    .min(1, "Project brief is required")
+    .min(10, "Provide enough detail for an initial review (at least 10 characters)")
     .max(5000, "Message must be less than 5000 characters")
     .trim(),
 });

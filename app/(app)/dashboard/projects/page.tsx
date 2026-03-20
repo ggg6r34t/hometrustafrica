@@ -101,13 +101,13 @@ export default async function ProjectsPage({
               <Input
                 name="q"
                 defaultValue={searchTerm}
-                placeholder="Search by project name or location"
+                placeholder="Search by project name, city, or country"
                 className="pl-9"
               />
             </div>
             <AutoSubmitSelect name="status" defaultValue={selectedStatus}>
               <SelectTrigger size="dashboard" className="md:w-44">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All statuses</SelectItem>
@@ -120,7 +120,7 @@ export default async function ProjectsPage({
             </AutoSubmitSelect>
             <AutoSubmitSelect name="type" defaultValue={selectedType}>
               <SelectTrigger size="dashboard" className="md:w-52">
-                <SelectValue placeholder="Project type" />
+                <SelectValue placeholder="Filter by project type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All project types</SelectItem>
@@ -133,7 +133,7 @@ export default async function ProjectsPage({
             </AutoSubmitSelect>
             <AutoSubmitSelect name="sort" defaultValue={selectedSort}>
               <SelectTrigger size="dashboard" className="md:w-56">
-                <SelectValue placeholder="Sort" />
+                <SelectValue placeholder="Sort projects" />
               </SelectTrigger>
               <SelectContent>
                 {SORT_OPTIONS.map((option) => (

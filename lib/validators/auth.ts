@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim().email("Enter a valid portal email address."),
   password: z.string().min(8).max(128),
   next: z.string().trim().optional(),
 });
 
 export const passwordResetRequestSchema = z.object({
-  email: z.string().trim().email(),
+  email: z.string().trim().email("Enter a valid portal email address."),
 });
 
 export const passwordResetCompleteSchema = z

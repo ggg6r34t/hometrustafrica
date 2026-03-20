@@ -83,7 +83,7 @@ export default function NewsletterForm() {
                   <Input
                     id="newsletter-email"
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder="Enter your email address"
                     disabled={isSubmitting || isSuccess}
                     className="h-10 border-white/14 bg-transparent text-white placeholder:text-white/36 focus:border-primary"
                     {...field}
@@ -137,7 +137,7 @@ export default function NewsletterForm() {
             className="mt-2 flex items-center gap-1 text-xs text-primary"
           >
             <CheckCircle2 size={12} />
-            Subscribed successfully!
+            Subscription confirmed.
           </motion.p>
         )}
       </form>
